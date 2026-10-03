@@ -3436,21 +3436,44 @@ let lrf_demos = {};
             plot.curve(approach_range, "rgba(0,0,0,0.12)", 1.5, null, 220);
             let rng = make_rng(17 + f * 101);
             let first = null;
-            let r_small = clamp(4.5 - f / 7, 1.6, 4.5);
+            let r = clamp(4.5 - f / 7, 1.8, 4.5);
+            let hits = [], misses = [];
             for (let k = 0; k * tm <= total; k++) {
                 let tt = (k + 0.5) * tm;
                 if (tt > total) break;
                 let R = approach_range(tt);
                 let snr = snr_at(QUAD, R, tm) * M.radial_motion_factor(spec, 20, tm);
                 let pd = M.detection_probability(spec, snr);
-                let hit = rng() < pd;
-                if (hit) {
+                if (rng() < pd) {
                     if (first === null) first = [tt, R];
-                    circle(ctx, plot.X(tt), plot.Y(R), r_small, col.quad);
+                    hits.push([plot.X(tt), plot.Y(R)]);
                 } else {
-                    circle(ctx, plot.X(tt), plot.Y(R), r_small * 0.8, null, rgba(col.miss, 0.8), 1);
+                    misses.push([plot.X(tt), plot.Y(R)]);
                 }
             }
+            // misses: thin, light rings (they merge into a pale band at high
+            // rates); hits drawn on top in solid color so they stand out
+            // one path per kind, so overlapping translucent rings don't darken
+            ctx.beginPath();
+            for (let q of misses) {
+                ctx.moveTo(q[0] + r * 0.7, q[1]);
+                ctx.arc(q[0], q[1], r * 0.7, 0, 2 * pi);
+            }
+            ctx.strokeStyle = "rgba(150,150,150,0.5)";
+            ctx.lineWidth = 0.75;
+            ctx.stroke();
+            ctx.beginPath();
+            for (let q of hits) {
+                ctx.moveTo(q[0] + r, q[1]);
+                ctx.arc(q[0], q[1], r, 0, 2 * pi);
+            }
+            ctx.fillStyle = col.quad;
+            ctx.fill();
+            let lx = plot.x + 14, ly = plot.y + plot.h - fs * 2.2;
+            circle(ctx, lx, ly, 4, col.quad);
+            text(ctx, "found the quad", lx + 10, ly, col.quad, fs - 1, "left", "middle", 500);
+            circle(ctx, lx, ly + fs * 1.3, 3.2, null, "rgba(150,150,150,0.8)", 1);
+            text(ctx, "found nothing", lx + 10, ly + fs * 1.3, col.light_text, fs - 1, "left", "middle", 500);
             let msg = f + " measurements per second";
             if (first)
                 msg += ",  first detection at " + fmt_range(first[1]) + " (after " + first[0].toFixed(1) + " s)";
