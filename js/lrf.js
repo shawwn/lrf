@@ -3197,9 +3197,38 @@ let lrf_demos = {};
 
     /* ------------------------- tracking latency ----------------------- */
 
-    // Quad crossing at 20 m/s with gentle maneuvers; positions in meters, lateral.
-    function track_pos(t) {
-        return [20 * t + 3 * sin(0.9 * t) + 1.5 * sin(2.3 * t + 1), 1.6 * sin(1.3 * t) + 0.8 * sin(3.1 * t)];
+    /*
+     * A fixed view of the sky around a crossing quad, in meters across the
+     * line of sight, shown in slow motion. The turret points the beam using
+     * camera measurements that are `delay` seconds old: either straight at
+     * the last seen position, or at that position extrapolated by the
+     * velocity estimated from the last two sightings. The reader can drag
+     * the quad around to feel the lag.
+     */
+    const TRACK_SLOWMO = 0.25;      // simulated seconds per displayed second
+    const TRACK_SPEED = 10;         // m/s, peak sideways speed of the automatic path
+
+    // A weave with 3 to 4 g turns: hard, but something a real FPV quad can fly.
+    function track_auto(t) {
+        let A = 3.2, w = TRACK_SPEED / A;
+        return [A * sin(w * t), 1.0 * sin(1.5 * w * t + 1)];
+    }
+
+    function track_hist_at(hist, t) {
+        if (!hist.length)
+            return [0, 0];
+        if (t <= hist[0][0])
+            return [hist[0][1], hist[0][2]];
+        for (let i = hist.length - 1; i > 0; i--) {
+            let a = hist[i - 1], b = hist[i];
+            if (a[0] <= t) {
+                let f = b[0] > a[0] ? (t - a[0]) / (b[0] - a[0]) : 1;
+                f = clamp(f, 0, 1);
+                return [lerp(a[1], b[1], f), lerp(a[2], b[2], f)];
+            }
+        }
+        let last = hist[hist.length - 1];
+        return [last[1], last[2]];
     }
 
     SCENES.tracking_latency = {
@@ -3209,62 +3238,121 @@ let lrf_demos = {};
             { fmt: v => "R = " + fmt_dist(v), map: log_map(200, 2000), def: 500 },
         ],
         segs: [["Last seen position", "Predicted position"]],
-        draw(ctx, d, w, h) {
+        init(d) {
+            d.st.ts = 0;
+            d.st.hist = [];
+            d.st.beam_trail = [];
+            d.st.drag = null;
+            d.st.release = null;
+        },
+        drag: {
+            begin(d, x, y) {
+                let L = d.st.layout;
+                if (!L) return false;
+                d.st.drag = L.to_m(x, y);
+                return true;
+            },
+            move(d, x, y) {
+                let L = d.st.layout;
+                d.st.drag = L.to_m(x, y);
+            },
+            end(d) {
+                d.st.release = { t: d.st.ts, p: d.st.drag };
+                d.st.drag = null;
+            },
+            cursor() { return "move"; },
+        },
+        draw(ctx, d, w, h, dt) {
             let fs = base_font_size(w);
+            let st = d.st;
             let L = d.v[0], R = d.v[1];
             let lead = d.seg[0] === 1;
-            let t = d.t + 5;
-            let aim = tt => {
-                let a = track_pos(tt - L);
-                if (!lead) return a;
-                let dt = 0.06;
-                let b = track_pos(tt - L - dt);
-                return [a[0] + (a[0] - b[0]) / dt * L, a[1] + (a[1] - b[1]) / dt * L];
-            };
-            let err = tt => {
-                let p = track_pos(tt), a = aim(tt);
-                return [(p[0] - a[0]) / R, (p[1] - a[1]) / R];
-            };
 
-            // camera view: angular window +-3.5 mrad horizontally
-            let half_mrad = 3.5;
-            let k = (w / 2 - 10) / (half_mrad * 1e-3);
-            let cx = w / 2, cy = h * 0.46;
-            let g = ctx.createLinearGradient(0, 0, 0, h);
+            // simulated time and the quad's position
+            st.ts += dt * TRACK_SLOWMO;
+            let p;
+            if (st.drag) {
+                p = st.drag;
+            } else {
+                p = track_auto(st.ts);
+                if (st.release) {
+                    let f = smooth_step(0, 0.6, st.ts - st.release.t);
+                    p = [lerp(st.release.p[0], p[0], f), lerp(st.release.p[1], p[1], f)];
+                    if (f >= 1) st.release = null;
+                }
+            }
+            st.hist.push([st.ts, p[0], p[1]]);
+            while (st.hist.length > 2 && st.hist[0][0] < st.ts - 1.5)
+                st.hist.shift();
+
+            // where the turret points
+            let seen = track_hist_at(st.hist, st.ts - L);
+            let aim = seen;
+            if (lead) {
+                let dtv = 0.02;
+                let before = track_hist_at(st.hist, st.ts - L - dtv);
+                aim = [seen[0] + (seen[0] - before[0]) / dtv * L, seen[1] + (seen[1] - before[1]) / dtv * L];
+            }
+            st.beam_trail.push(aim);
+            if (st.beam_trail.length > 90) st.beam_trail.shift();
+
+            // view: 9 m across the line of sight, centered on the middle of the path
+            let view_h = h * 0.84;
+            let ppm = (w - 20) / 9;
+            let cx = w / 2, cy = 6 + view_h / 2;
+            let X = m => cx + m * ppm, Y = m => cy - m * ppm;
+            st.layout = { to_m: (x, y) => [clamp((x - cx) / ppm, -4.3, 4.3), clamp(-(y - cy) / ppm, -view_h / 2 / ppm + 0.3, view_h / 2 / ppm - 0.3)] };
+
+            let g = ctx.createLinearGradient(0, 0, 0, view_h);
             g.addColorStop(0, col.sky_top);
             g.addColorStop(1, col.sky_bottom);
-            round_rect(ctx, 10, 6, w - 20, h * 0.86, 8, g);
+            round_rect(ctx, 10, 6, w - 20, view_h, 8, g);
             ctx.save();
             ctx.beginPath();
-            ctx.rect(10, 6, w - 20, h * 0.86);
+            ctx.rect(10, 6, w - 20, view_h);
             ctx.clip();
-            // pixel grid hint
-            let pix = k * M.camera_ifov(cam);
-            if (pix > 3) {
-                ctx.strokeStyle = "rgba(0,0,0,0.04)";
-                ctx.lineWidth = 1;
-                for (let x = cx % pix; x < w; x += pix) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-                for (let y = cy % pix; y < h; y += pix) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+            // recent path of the quad, and of the beam
+            let hp = st.hist.filter((q, i) => i % 2 === 0).map(q => [X(q[1]), Y(q[2])]);
+            poly(ctx, hp, rgba(col.quad, 0.25), 2);
+            poly(ctx, st.beam_trail.map(q => [X(q[0]), Y(q[1])]), rgba(col.laser, 0.25), 2);
+
+            let size = 0.43 * ppm;
+            // where the camera last saw the quad
+            ctx.globalAlpha = 0.35;
+            draw_quad_sprite(ctx, X(seen[0]), Y(seen[1]), size, "#2D3439", 0, 0);
+            ctx.globalAlpha = 1;
+            // the quad now
+            draw_quad_sprite(ctx, X(p[0]), Y(p[1]), size, "#2D3439", 0, 0);
+            if (hypot(p[0] - seen[0], p[1] - seen[1]) * ppm > 14)
+                arrow(ctx, X(seen[0]), Y(seen[1]) + size * 0.35, X(p[0]), Y(p[1]) + size * 0.35, rgba(col.quad, 0.9), 1.5, 7);
+            if (lead && hypot(aim[0] - seen[0], aim[1] - seen[1]) * ppm > 14) {
+                ctx.setLineDash([4, 4]);
+                line(ctx, X(seen[0]), Y(seen[1]), X(aim[0]), Y(aim[1]), rgba(col.laser, 0.8), 1.5);
+                ctx.setLineDash([]);
             }
-            // trail of past errors
-            for (let i = 20; i >= 1; i--) {
-                let e = err(t - i * 0.03);
-                circle(ctx, cx + e[0] * k, cy - e[1] * k, 2, rgba(col.quad, 0.25 * (1 - i / 21)));
-            }
-            let e = err(t);
-            let size = 0.43 / R * k;
-            draw_quad_sprite(ctx, cx + e[0] * k, cy - e[1] * k, size, "#2D3439", t, 0);
-            let wr = M.beam_radius(spec, R) / R * k;
-            draw_beam_spot(ctx, cx, cy, wr, col.laser, 0.45);
-            circle(ctx, cx, cy, wr, null, col.laser, 1.5);
+
+            // the beam's footprint
+            let wr = M.beam_radius(spec, R) * ppm;
+            draw_beam_spot(ctx, X(aim[0]), Y(aim[1]), max(1.5, wr), col.laser, 0.55);
+            circle(ctx, X(aim[0]), Y(aim[1]), max(2, wr), null, col.laser, 1.5);
             ctx.restore();
 
-            let err_mrad = hypot(e[0], e[1]) * 1e3;
-            let on = snr_at(QUAD, R, 0.1, VIS, e[0] * R, e[1] * R) / snr_at(QUAD, R, 0.1);
-            let y = h * 0.86 + fs * 1.5;
-            text(ctx, "pointing error " + err_mrad.toFixed(2) + " mrad", w * 0.3, y, col.text, fs, "center", "middle", 500);
+            // labels
+            halo_text(ctx, "seen " + round(L * 1000) + " ms ago", X(seen[0]), Y(seen[1]) - size * 0.55 - 6, "#5B6670", fs - 2, "center", "middle", 500, "rgba(230,238,246,0.85)");
+            halo_text(ctx, "now", X(p[0]), Y(p[1]) + size * 0.55 + 10, col.quad, fs - 2, "center", "middle", 500, "rgba(230,238,246,0.85)");
+            let pv = track_hist_at(st.hist, st.ts - 0.05);
+            let speed = hypot(p[0] - pv[0], p[1] - pv[1]) / 0.05;
+            halo_text(ctx, "slow motion, " + fmt_dist(R) + " away, quad at " + round(speed) + " m/s" + (st.drag ? "" : "; drag it"), 20, 20, col.text, fs - 2, "left", "middle", 400, "rgba(230,238,246,0.85)");
+            line(ctx, 22, view_h - 8, 22 + ppm, view_h - 8, "#555", 2);
+            text(ctx, "1 m", 22 + ppm / 2, view_h - 18, "#555", fs - 3);
+
+            let ex = p[0] - aim[0], ey = p[1] - aim[1];
+            let err_mrad = hypot(ex, ey) / R * 1e3;
+            let on = M.signal(spec, QUAD, R, VIS, ex, ey) / M.signal(spec, QUAD, R, VIS);
+            let y = view_h + fs * 1.8;
+            text(ctx, "pointing error " + err_mrad.toFixed(2) + " mrad", w * 0.32, y, col.text, fs, "center", "middle", 500);
             text(ctx, "echo " + fmt_pct(clamp(on, 0, 1)) + " of a centered quad", w * 0.72, y, on > 0.5 ? "#B07800" : col.thr, fs, "center", "middle", 500);
-            halo_text(ctx, "camera view, ±" + half_mrad + " mrad", 20, 20, col.cam, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.8)");
         },
     };
 
