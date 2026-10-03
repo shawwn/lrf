@@ -353,7 +353,10 @@ let lrf_demos = {};
     }
 
     function round_rect(ctx, x, y, w, h, r, fill, stroke, width) {
-        ctx.roundRect(x, y, w, h, r);
+        // arcTo throws on a negative radius, so skip degenerate rectangles
+        if (!(w > 0) || !(h > 0))
+            return;
+        ctx.roundRect(x, y, w, h, max(0, r));
         if (fill) {
             ctx.fillStyle = fill;
             ctx.fill();
@@ -1478,7 +1481,15 @@ let lrf_demos = {};
         ctx.lineJoin = "round";
         ctx.globalAlpha = 1;
         ctx.setLineDash([]);
-        this.scene.draw(ctx, this, this.width, this.height, dt || 0);
+        try {
+            this.scene.draw(ctx, this, this.width, this.height, dt || 0);
+        } catch (e) {
+            // One bad frame shouldn't take down the demo or its animation
+            // loop. Resetting the canvas also clears any save()d state the
+            // scene didn't get to restore().
+            console.error("lrf demo " + this.id + ":", e);
+            this.canvas.width = this.canvas.width;
+        }
         this.drawn = true;
         this.dirty = false;
     };
@@ -1516,8 +1527,8 @@ let lrf_demos = {};
             let dt = prev === undefined ? 0 : min(0.05, (ts - prev) / 1000);
             prev = ts;
             self.t += dt;
-            self.paint(dt);
             requestAnimationFrame(tick);
+            self.paint(dt);
         }
         requestAnimationFrame(tick);
     };
@@ -2772,7 +2783,8 @@ let lrf_demos = {};
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let st = d.st;
-            let f = d.v[0];
+            // the module offers whole rates from 1 to 25 Hz
+            let f = clamp(round(d.v[0]), 1, 25);
             let tm = 1 / f;
             let R = st.R;
             let t = d.t % 1;
