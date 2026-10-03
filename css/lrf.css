@@ -15,6 +15,20 @@ body {
     max-width: 100%;
 }
 
+/* The "source code" line under the title, quiet like the date above it */
+.post_source {
+    padding-top: 0.2em;
+}
+
+.post_source a,
+.post_source a:visited {
+    color: #999;
+}
+
+.post_source a:hover {
+    color: #666;
+}
+
 .drawer_container canvas {
     touch-action: pan-y;
 }
