@@ -473,18 +473,33 @@ let lrf_demos = {};
 
         let xfmt = o.xfmt || (v => String(v));
         let yfmt = o.yfmt || (v => String(v));
-        if (!o.no_xticks)
-            for (let v of xt)
-                text(ctx, xfmt(v), this.X(v), y + h + fs * 0.9, col.light_text, fs - 1);
-        if (!o.no_yticks)
-            for (let v of yt)
-                text(ctx, yfmt(v), x - 6, this.Y(v), col.light_text, fs - 1, "right");
+        let cw = ctx.canvas.width / dpr;
+        font(ctx, fs - 1);
+        if (!o.no_xticks) {
+            for (let v of xt) {
+                let str = xfmt(v);
+                let tw = ctx.measureText(str).width;
+                let px = this.X(v);
+                // keep the outermost labels inside the canvas
+                if (px + tw / 2 > cw - 2) text(ctx, str, cw - 2, y + h + fs * 0.9, col.light_text, fs - 1, "right");
+                else if (px - tw / 2 < 2) text(ctx, str, 2, y + h + fs * 0.9, col.light_text, fs - 1, "left");
+                else text(ctx, str, px, y + h + fs * 0.9, col.light_text, fs - 1);
+            }
+        }
+        let maxw = 0;
+        if (!o.no_yticks) {
+            for (let v of yt) {
+                let str = yfmt(v);
+                maxw = max(maxw, ctx.measureText(str).width);
+                text(ctx, str, x - 6, this.Y(v), col.light_text, fs - 1, "right");
+            }
+        }
 
         if (o.xlabel)
             text(ctx, o.xlabel, x + w / 2, y + h + fs * 2.3, col.text, fs);
         if (o.ylabel) {
             ctx.save();
-            ctx.translate(x - (o.ylabel_offset || fs * 3.2), y + h / 2);
+            ctx.translate(max(fs * 0.7, x - maxw - 8 - fs * 0.7), y + h / 2);
             ctx.rotate(-pi / 2);
             text(ctx, o.ylabel, 0, 0, col.text, fs);
             ctx.restore();
@@ -1925,7 +1940,8 @@ let lrf_demos = {};
             draw_lrf_side(ctx, x0, cy, 7);
             let xr = X(R);
             line(ctx, xr, cy - half(R) - 6, xr, cy + half(R) + 6, col.range, 2);
-            halo_text(ctx, fmt_dist(R), xr, cy + half(R) + fs * 0.9 + 4, col.range, fs, "center", "middle", 500);
+            let D0 = M.beam_diameter(spec, R);
+            halo_text(ctx, fmt_dist(R) + ": footprint " + fmt_len(D0), clamp(xr, x0 + 90, x1 - 90), cy + half(R) + fs * 0.9 + 4, col.range, fs, "center", "middle", 500);
             for (let r = 1000; r <= 5000; r += 1000)
                 text(ctx, (r / 1000) + " km", X(r), top - 4, col.light_text, fs - 3);
             text(ctx, "vertical scale exaggerated", x1, 10, col.light_text, fs - 3, "right");
@@ -1964,7 +1980,6 @@ let lrf_demos = {};
             let bx = 14, byy = top + fs * 0.6 + ph - 10;
             line(ctx, bx, byy, bx + bar * ppm, byy, "#555", 2);
             text(ctx, bar + " m", bx + bar * ppm / 2, byy - 8, "#555", fs - 3);
-            halo_text(ctx, "footprint " + fmt_len(D), w - 14, top + fs * 0.6 + 12, col.laser, fs - 1, "right", "middle", 500, "rgba(238,243,248,0.9)");
         },
     };
 
@@ -2062,30 +2077,27 @@ let lrf_demos = {};
             text(ctx, fmt_len(bar), 22 + bar * ppm / 2, top - 26, "#555", fs - 2);
 
             // fraction vs range
-            let plot = new Plot(ctx, 58, top + 18, w - 80, h - top - 18 - fs * 3.2, {
+            let plot = new Plot(ctx, 84, top + 18, w - 104, h - top - 18 - fs * 3.2, {
                 xmin: 10, xmax: 10000, xlog: true, ymin: 1e-4, ymax: 1.5, ylog: true, fs: fs - 1,
                 xfmt: log_fmt_m, yfmt: v => v >= 0.01 ? round(v * 100) + "%" : (v * 100) + "%",
-                xlabel: "distance", ylabel: "on target", ylabel_offset: fs * 3.4,
+                xlabel: "distance", ylabel: "on target",
             });
             plot.frame();
             plot.curve(r => M.fraction_on_target(spec, target, r), color, 2.5);
             plot.dot(R, F, color, 5);
             // slope guides
-            let guide = (r0, f0, slope, label) => {
-                let r1 = r0 * 6;
-                let f1 = f0 * pow(6, slope);
+            // dashed guides parallel to the curve, below it, with labels
+            let guide = (r0, r1, slope, label) => {
+                let f0 = M.fraction_on_target(spec, target, r0) / 3.5;
+                let f1 = f0 * pow(r1 / r0, slope);
                 plot.clip();
-                line(ctx, plot.X(r0), plot.Y(f0), plot.X(r1), plot.Y(f1), col.axis, 1, [4, 4]);
+                line(ctx, plot.X(r0), plot.Y(f0), plot.X(r1), plot.Y(f1), col.axis, 1.2, [4, 4]);
                 plot.unclip();
-                text(ctx, label, plot.X(r1) + 4, plot.Y(f1), col.light_text, fs - 2, "left");
+                text(ctx, label, plot.X(sqrt(r0 * r1)) - 4, plot.Y(sqrt(f0 * f1)) + fs * 0.9, col.light_text, fs - 2, "right");
             };
-            let Rg = d.seg[0] < 2 ? 1300 : 6000;
-            let Fg = M.fraction_on_target(spec, target, Rg);
-            guide(Rg, Fg * 2.2, -2, "slope −2");
-            if (d.seg[0] === 2) {
-                let Fm = M.fraction_on_target(spec, target, 900);
-                guide(900 / 1.4, Fm * 1.4 * 2.2, -1, "slope −1");
-            }
+            if (d.seg[0] < 2) guide(1200, 6000, -2, "slope −2");
+            else if (d.seg[0] === 2) { guide(700, 2500, -1, "slope −1"); guide(5500, 10000, -2, "−2"); }
+            else guide(5000, 10000, -2, "slope −2");
         },
     };
 
@@ -2162,7 +2174,7 @@ let lrf_demos = {};
             }
             halo_text(ctx, "R = " + fmt_dist(R), (lx + px) / 2, ly + h * 0.12, col.range, fs, "center", "middle", 500);
             halo_text(ctx, frac_text, w / 2, h - fs, col.text, fs, "center", "middle", 400);
-            text(ctx, "surface", px + 40, py - L * 0.45, "#5C6670", fs - 2);
+            text(ctx, "drone's surface", px + 18, py + L * 0.62, "#5C6670", fs - 2, "left");
         },
     };
 
@@ -2174,9 +2186,9 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let R = d.v[0];
             let right = min(170, w * 0.3);
-            let plot = new Plot(ctx, 60, 16, w - 60 - right - 10, h - 16 - fs * 3.2, {
+            let plot = new Plot(ctx, 74, 16, w - 74 - right - 10, h - 16 - fs * 3.2, {
                 xmin: 10, xmax: 10000, xlog: true, ymin: 1e-14, ymax: 1e-2, ylog: true, fs: fs - 1,
-                xfmt: log_fmt_m, yfmt: pow10_fmt, xlabel: "distance", ylabel: "echo strength (relative)", ylabel_offset: fs * 3.5,
+                xfmt: log_fmt_m, yfmt: pow10_fmt, xlabel: "distance", ylabel: "echo strength (relative)",
                 yticks: [1e-14, 1e-12, 1e-10, 1e-8, 1e-6, 1e-4, 1e-2],
             });
             plot.frame();
@@ -2200,7 +2212,8 @@ let lrf_demos = {};
                 text(ctx, "slope " + (slope < 0 ? "−" : "") + abs(slope).toFixed(1), plot.x + plot.w + 14, y, col.text, fs - 1, "left");
                 y += fs * 1.2;
                 let k = pow(2, -slope);
-                text(ctx, "2× farther: " + k.toFixed(k < 10 ? 1 : 0) + "× weaker", plot.x + plot.w + 14, y, col.light_text, fs - 1, "left");
+                let kk = k.toFixed(k < 10 ? 1 : 0) + "× weaker";
+                text(ctx, (right < 160 ? "2× far: " : "2× farther: ") + kk, plot.x + plot.w + 14, y, col.light_text, right < 160 ? fs - 2 : fs - 1, "left");
                 y += fs * 1.9;
             }
         },
@@ -2311,15 +2324,17 @@ let lrf_demos = {};
             for (let i = 0; i < steps; i++) {
                 let r0 = Rmax * i / steps, r1 = Rmax * (i + 1) / steps;
                 let a = exp(-alpha * (r0 + r1) / 2);
+                ctx.lineCap = "butt";
                 line(ctx, x0 + (x1 - x0) * r0 / Rmax, y, x0 + (x1 - x0) * r1 / Rmax + 0.5, y, rgba(col.laser, 0.15 + 0.85 * a), 4);
+                ctx.lineCap = "round";
             }
             draw_lrf_side(ctx, x0, y, 8);
             halo_text(ctx, "visibility " + (V < 10 ? V.toFixed(1) : round(V)) + " km", w - 24, 26, col.atm, fs, "right", "middle", 500, "rgba(241,244,247,0.9)");
 
             // transmission plot
-            let plot = new Plot(ctx, 56, top + 20, w - 80, h - top - 20 - fs * 3.2, {
+            let plot = new Plot(ctx, 76, top + 20, w - 100, h - top - 20 - fs * 3.2, {
                 xmin: 0, xmax: Rmax, ymin: 0, ymax: 1, fs: fs - 1,
-                xfmt: v => v + " km", yfmt: v => round(v * 100) + "%", xlabel: "distance", ylabel: "surviving light", ylabel_offset: fs * 3.4,
+                xfmt: v => v === 0 ? "0" : v + " km", yfmt: v => round(v * 100) + "%", xlabel: "distance", ylabel: "surviving light",
             });
             plot.frame();
             plot.curve(r => exp(-alpha * r), col.atm, 2.5);
@@ -2330,7 +2345,7 @@ let lrf_demos = {};
             let lx = plot.x + plot.w - 10;
             halo_text(ctx, "one way", lx, plot.Y(exp(-alpha * Rmax)) - fs * 0.8, col.atm, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.9)");
             halo_text(ctx, "round trip", lx, plot.Y(exp(-2 * alpha * Rmax)) + fs * 0.8, col.laser, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.9)");
-            halo_text(ctx, "round trip to 2 km: " + fmt_pct(exp(-2 * alpha * r2)), plot.x + 10, plot.y + fs, col.text, fs - 1, "left", "middle", 400, "rgba(255,255,255,0.9)");
+            halo_text(ctx, "round trip to 2 km: " + fmt_pct(exp(-2 * alpha * r2)) + " survives", plot.x + 10, plot.y + plot.h - fs, col.text, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.9)");
         },
     };
 
@@ -2339,10 +2354,11 @@ let lrf_demos = {};
     SCENES.datasheet_check = {
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
-            let plot = new Plot(ctx, 60, 16, w - 76, h - 16 - fs * 3.2, {
+            let plot = new Plot(ctx, 74, 16, w - 96, h - 16 - fs * 3.2, {
                 xmin: 100, xmax: 10000, xlog: true, ymin: 1e-11, ymax: 1e-5, ylog: true, fs: fs - 1,
-                xfmt: log_fmt_m, yfmt: pow10_fmt, xlabel: "distance", ylabel: "echo strength (relative)", ylabel_offset: fs * 3.5,
+                xfmt: log_fmt_m, yfmt: pow10_fmt, xlabel: "distance", ylabel: "echo strength (relative)",
             });
+            let legend = [];
             plot.frame();
             let S_det = M.rated_signal(spec) / spec.gain;
             let ds = [
@@ -2355,7 +2371,11 @@ let lrf_demos = {};
             ctx.fillStyle = "rgba(0,0,0,0.04)";
             ctx.fillRect(plot.X(spec.max_range_m), plot.y, plot.x + plot.w - plot.X(spec.max_range_m), plot.h);
             plot.unclip();
-            text(ctx, "beyond max range", (plot.X(spec.max_range_m) + plot.x + plot.w) / 2, plot.y + plot.h - fs, col.light_text, fs - 2);
+            ctx.save();
+            ctx.translate((plot.X(spec.max_range_m) + plot.x + plot.w) / 2, plot.y + plot.h * 0.75);
+            ctx.rotate(-pi / 2);
+            text(ctx, "beyond max range", 0, 0, col.light_text, fs - 2);
+            ctx.restore();
 
             plot.hline(S_det, col.thr, 2, [6, 4]);
             halo_text(ctx, "sensitivity", plot.x + 8, plot.Y(S_det) - fs * 0.8, col.thr, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.9)");
@@ -2366,15 +2386,26 @@ let lrf_demos = {};
                 let Rr = spec.ratings[k.key];
                 let S = M.signal(spec, t, Rr, t.visibility_km);
                 plot.dot(Rr, S, k.color, 6);
-                let lab = k.name + ", rated " + fmt_dist(Rr);
-                halo_text(ctx, lab, plot.X(Rr) - 8, plot.Y(S) - fs * 1.1, k.color, fs - 2, "right", "middle", 500, "rgba(255,255,255,0.9)");
+                legend.push({ color: k.color, filled: true, label: k.name + " square, rated " + fmt_int(Rr) + " m" });
             }
             for (let it of [{ t: QUAD, color: col.quad, name: "10\" quad" }, { t: SHAHED, color: col.shahed, name: "Shahed" }]) {
                 plot.curve(r => M.signal(spec, it.t, r, VIS), it.color, 2.5);
                 let Rq = det_range(it.t, rated_time());
                 let S = M.signal(spec, it.t, Rq, VIS);
-                circle(ctx, plot.X(Rq), plot.Y(S), 6, null, it.color, 2.5);
-                halo_text(ctx, it.name + " ~" + fmt_range(Rq), plot.X(Rq) + 10, plot.Y(S) + fs * 1.0, it.color, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.9)");
+                circle(ctx, plot.X(Rq), plot.Y(S), 6, "#fff", it.color, 2.5);
+                legend.push({ color: it.color, filled: false, label: it.name + ", predicted ~" + fmt_range(Rq) });
+            }
+            legend[0].label = "0.75 m square, rated " + fmt_int(spec.ratings.small) + " m";
+            legend[2].label = "beam filling target, rated " + fmt_int(spec.ratings.extended) + " m";
+            let ly = plot.y + plot.h - fs * 0.9 - (legend.length - 1) * fs * 1.35;
+            let lx = plot.x + 12;
+            font(ctx, fs - 1);
+            let lw = max(...legend.map(l => ctx.measureText(l.label).width)) + 34;
+            round_rect(ctx, lx - 6, ly - fs, lw, legend.length * fs * 1.35 + fs * 0.4, 6, "rgba(255,255,255,0.92)", "#E4E4E4");
+            for (let l of legend) {
+                circle(ctx, lx + 8, ly, 5, l.filled ? l.color : "#fff", l.filled ? "#fff" : l.color, l.filled ? 1.5 : 2.5);
+                text(ctx, l.label, lx + 20, ly, l.color, fs - 1, "left", "middle", 500);
+                ly += fs * 1.35;
             }
         },
     };
@@ -2401,7 +2432,7 @@ let lrf_demos = {};
             let R = d.v[0], thr = d.v[1];
             let snr1 = M.snr_per_pulse(spec, M.signal(spec, QUAD, R, VIS));
             let ymax = max(9, snr1 * 1.15);
-            let plot = new Plot(ctx, 44, 30, w - 60, h - 30 - fs * 3.2, {
+            let plot = new Plot(ctx, 44, 20, w - 64, h - 20 - fs * 3.2, {
                 xmin: 0, xmax: 1000, ymin: -4, ymax, fs: fs - 1, no_yticks: true,
                 xfmt: v => v === 0 ? "0" : v + " m", xlabel: "distance (1 m bins)",
             });
@@ -2424,18 +2455,18 @@ let lrf_demos = {};
             plot.hline(thr, col.thr, 2);
             plot.unclip();
             for (let b of fa)
-                line(ctx, plot.X(b + 0.5), plot.y - 10, plot.X(b + 0.5), plot.y - 2, col.thr, 1.5);
+                line(ctx, plot.X(b + 0.5), plot.y + 2, plot.X(b + 0.5), plot.y + 12, col.thr, 2);
             // echo position marker
             let ex = plot.X(R);
-            arrow(ctx, ex, plot.y + plot.h + 16, ex, plot.y + plot.h + 3, col.quad, 2, 6);
+            fill_poly(ctx, [[ex, plot.y + plot.h - 12], [ex - 6, plot.y + plot.h - 1], [ex + 6, plot.y + plot.h - 1]], col.quad);
             ctx.save();
             ctx.translate(26, plot.y + plot.h / 2);
             ctx.rotate(-pi / 2);
             text(ctx, "detector output", 0, 0, col.text, fs - 1);
             ctx.restore();
-            let msg = (det ? "echo detected" : "echo missed") + "    false alarms: " + fa.length + "    echo SNR: " + snr1.toFixed(snr1 < 10 ? 1 : 0);
-            halo_text(ctx, msg, plot.x + plot.w, 12, col.text, fs - 1, "right", "middle", 500);
-            halo_text(ctx, "quad", ex + 6, plot.y + plot.h + 12, col.quad, fs - 2, "left");
+            let msg = (det ? "echo detected" : "echo missed") + ",  false alarms: " + fa.length + ",  echo SNR: " + snr1.toFixed(snr1 < 10 ? 1 : 0);
+            halo_text(ctx, msg, plot.x + plot.w - 6, plot.y + fs * 1.6, col.text, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.92)");
+            halo_text(ctx, "quad", ex + 9, plot.y + plot.h - 8, col.quad, fs - 2, "left", "middle", 500, "rgba(255,255,255,0.92)");
         },
     };
 
@@ -2531,9 +2562,9 @@ let lrf_demos = {};
             }
             let N = max(1, st.N);
 
-            let top_h = h * 0.62;
+            let top_h = h * 0.6;
             let ymax = max(8, snr1 * sqrt(N) * 1.15);
-            let plot = new Plot(ctx, 44, 30, w - 60, top_h - 30 - fs * 1.6, {
+            let plot = new Plot(ctx, 44, 30, w - 64, top_h - 30 - fs * 1.6, {
                 xmin: 0, xmax: 1000, ymin: -4, ymax, fs: fs - 1, no_yticks: true,
                 xfmt: v => v === 0 ? "0" : v + " m",
             });
@@ -2565,9 +2596,8 @@ let lrf_demos = {};
             }
 
             // latest single pulse
-            let p2 = new Plot(ctx, 44, top_h + 18, w - 60, h - top_h - 18 - fs * 2.8, {
-                xmin: 0, xmax: 1000, ymin: -4.5, ymax: 4.5 + snr1, fs: fs - 1, no_yticks: true,
-                xfmt: v => v === 0 ? "0" : v + " m",
+            let p2 = new Plot(ctx, 44, top_h + 22, w - 64, h - top_h - 22 - 54, {
+                xmin: 0, xmax: 1000, ymin: -4.5, ymax: 4.5 + snr1, fs: fs - 1, no_yticks: true, no_xticks: true,
             });
             p2.frame();
             p2.clip();
@@ -2589,9 +2619,9 @@ let lrf_demos = {};
             let N = d.v[0];
             let sp = Object.assign({}, spec, { max_range_m: 1e9 });
             let rng_for = (t, n) => M.detection_range(sp, t, n / sp.prf_hz, { visibility_km: VIS }).range_m;
-            let plot = new Plot(ctx, 62, 16, w - 80, h - 16 - fs * 3.2, {
+            let plot = new Plot(ctx, 76, 16, w - 100, h - 16 - fs * 3.2, {
                 xmin: 10, xmax: 1e6, xlog: true, ymin: 100, ymax: 30000, ylog: true, fs: fs - 1,
-                xfmt: v => fmt_int(v), xlabel: "pulses accumulated", yfmt: log_fmt_m, ylabel: "maximum range", ylabel_offset: fs * 3.6,
+                xfmt: v => fmt_int(v), xlabel: "pulses accumulated", yfmt: log_fmt_m, ylabel: "maximum range",
                 xticks: [10, 100, 1000, 1e4, 1e5, 1e6],
             });
             plot.frame();
@@ -2599,15 +2629,16 @@ let lrf_demos = {};
             ctx.fillStyle = "rgba(0,0,0,0.04)";
             ctx.fillRect(plot.x, plot.y, plot.w, plot.Y(spec.max_range_m) - plot.y);
             plot.unclip();
-            text(ctx, spec.name + " stops measuring at " + fmt_dist(spec.max_range_m), plot.x + plot.w - 8, plot.Y(spec.max_range_m) - fs * 0.7, col.light_text, fs - 2, "right");
+            text(ctx, spec.name + " stops measuring at " + fmt_int(spec.max_range_m) + " m", plot.x + plot.w - 8, plot.y + fs, col.light_text, fs - 2, "right");
             plot.curve(n => rng_for(WALL, n), col.bg, 2.5, null, 60);
             plot.curve(n => rng_for(QUAD, n), col.quad, 2.5, null, 60);
             plot.vline(N, col.hist, 1.5);
             let rw = rng_for(WALL, N), rq = rng_for(QUAD, N);
             plot.dot(N, rw, col.bg, 5);
             plot.dot(N, rq, col.quad, 5);
-            halo_text(ctx, "wall " + fmt_range(rw), plot.X(N) + 8, plot.Y(rw) - fs * 0.8, col.bg, fs - 1, "left", "middle", 500);
-            halo_text(ctx, "quad " + fmt_range(rq), plot.X(N) + 8, plot.Y(rq) + fs * 0.9, col.quad, fs - 1, "left", "middle", 500);
+            let rightside = N < 2e4;
+            halo_text(ctx, "wall " + fmt_range(rw), plot.X(N) + (rightside ? 8 : -8), plot.Y(rw) + fs * 0.9, col.bg, fs - 1, rightside ? "left" : "right", "middle", 500);
+            halo_text(ctx, "quad " + fmt_range(rq), plot.X(N) + (rightside ? 8 : -8), plot.Y(rq) + fs * 0.9, col.quad, fs - 1, rightside ? "left" : "right", "middle", 500);
             let tm = N / spec.prf_hz;
             halo_text(ctx, fmt_int(N) + " pulses = " + fmt_time(tm) + " at " + fmt_int(spec.prf_hz) + " pulses/s", plot.x + plot.w - 8, plot.y + plot.h - fs, col.hist, fs - 1, "right", "middle", 500);
         },
@@ -2876,18 +2907,17 @@ let lrf_demos = {};
                 let rr = SMEAR_R - L * i / 8;
                 if (rr < r_now - 0.01) break;
                 ctx.globalAlpha = 0.18;
-                draw_quad_sprite(ctx, X(rr), top / 2, 26, "#2D3439", 0, -0.15);
+                draw_quad_sprite(ctx, X(rr), top / 2 - 4, 40, "#2D3439", 0, -0.15);
                 ctx.globalAlpha = 1;
             }
-            draw_quad_sprite(ctx, X(r_now), top / 2, 26, "#2D3439", 0, -0.15);
+            draw_quad_sprite(ctx, X(r_now), top / 2 - 4, 40, "#2D3439", 0, -0.15);
             if (L > 0.3)
                 dimension(ctx, X(SMEAR_R), top / 2 + 22, X(SMEAR_R - L), top / 2 + 22, col.speed, "moves " + L.toFixed(1) + " m during the measurement", fs - 2, -1);
 
             // accumulated histogram, in units of the final noise
-            let plot = new Plot(ctx, 44, top + 16, w - 60, h - top - 16 - fs * 3.4, {
+            let plot = new Plot(ctx, 44, top + 16, w - 64, h - top - 16 - 54, {
                 xmin: SMEAR_R - 30, xmax: SMEAR_R + 10, ymin: -3, ymax: max(10, snr * 1.1), fs: fs - 1, no_yticks: true,
-                xticks: [SMEAR_R - 30, SMEAR_R - 20, SMEAR_R - 10, SMEAR_R, SMEAR_R + 10], xfmt: v => v + " m",
-                xlabel: "distance (1 m bins)",
+                xticks: [SMEAR_R - 20, SMEAR_R - 10, SMEAR_R, SMEAR_R + 10], xfmt: v => v + " m",
             });
             plot.frame();
             plot.clip();
@@ -2922,12 +2952,12 @@ let lrf_demos = {};
                 xmin: 0.003, xmax: 1, xlog: true, ymin: 0.5, ymax: 40, ylog: true, fs: fs - 1,
                 xticks: [0.003, 0.01, 0.03, 0.1, 0.3, 1], xfmt: v => fmt_time(v),
                 yticks: [0.5, 1, 2, 5, 10, 20, 40], yfmt: v => String(v),
-                xlabel: "measurement time", ylabel: "SNR of a quad at 600 m", ylabel_offset: fs * 3.2,
+                xlabel: "measurement time", ylabel: "SNR of a quad at " + R + " m",
             });
             plot.frame();
             let need = spec.threshold_sigma + M.norm_inv(spec.rated_pd);
             plot.hline(need, col.thr, 1.5, [6, 4]);
-            text(ctx, "needed to detect", plot.x + 6, plot.Y(need) - fs * 0.7, col.thr, fs - 2, "left");
+            text(ctx, "needed to detect", plot.x + plot.w - 6, plot.Y(need) + fs * 0.8, col.thr, fs - 2, "right");
             let speeds = [0, 10, 25, 50];
             let shades = ["#9CCC65", "#66BB6A", "#43A047", "#2E7D32"];
             for (let i = 0; i < speeds.length; i++) {
@@ -2938,7 +2968,8 @@ let lrf_demos = {};
                 if (v > 0) {
                     let to = M.optimal_measurement_time(spec, v);
                     plot.dot(to, f(to), shades[i], 5);
-                    halo_text(ctx, lab + ": best " + fmt_time(to), plot.X(to), plot.Y(f(to)) - fs, shades[i], fs - 1, "center", "middle", 500);
+                    let below = v === 50, leftside = plot.X(to) > plot.x + plot.w * 0.7;
+                    halo_text(ctx, lab + ": best " + fmt_time(to), plot.X(to) + (below ? 0 : leftside ? -8 : 8), plot.Y(f(to)) + (below ? fs * 1.1 : -fs * 0.9), shades[i], fs - 1, below ? "center" : leftside ? "right" : "left", "middle", 500);
                 } else {
                     halo_text(ctx, lab, plot.X(0.7), plot.Y(f(0.7)) - fs, shades[i], fs - 1, "center", "middle", 500);
                 }
@@ -3099,15 +3130,15 @@ let lrf_demos = {};
             let f = round(d.v[0]);
             let tm = 1 / f;
             let total = 110;
-            let plot = new Plot(ctx, 60, 16, w - 76, h - 16 - fs * 3.2, {
+            let plot = new Plot(ctx, 76, 16, w - 96, h - 16 - fs * 3.2, {
                 xmin: 0, xmax: total, ymin: 0, ymax: 1600, fs: fs - 1,
-                xfmt: v => v + " s", yfmt: v => v + " m", xlabel: "time", ylabel: "distance", ylabel_offset: fs * 3.4,
+                xfmt: v => v + " s", yfmt: v => fmt_int(v) + " m", xlabel: "time", ylabel: "distance",
             });
             plot.frame();
-            plot.curve(approach_range, rgba(col.quad, 0.35), 6, null, 220);
+            plot.curve(approach_range, "rgba(0,0,0,0.12)", 1.5, null, 220);
             let rng = make_rng(17 + f * 101);
             let first = null;
-            let r_small = clamp(4 - f / 10, 1.4, 4);
+            let r_small = clamp(4.5 - f / 7, 1.6, 4.5);
             for (let k = 0; k * tm <= total; k++) {
                 let tt = (k + 0.5) * tm;
                 if (tt > total) break;
@@ -3119,7 +3150,7 @@ let lrf_demos = {};
                     if (first === null) first = [tt, R];
                     circle(ctx, plot.X(tt), plot.Y(R), r_small, col.quad);
                 } else {
-                    circle(ctx, plot.X(tt), plot.Y(R), r_small, null, col.miss, 1);
+                    circle(ctx, plot.X(tt), plot.Y(R), r_small * 0.8, null, rgba(col.miss, 0.8), 1);
                 }
             }
             let msg = f + " measurements per second";
@@ -3247,7 +3278,7 @@ let lrf_demos = {};
                 return false;
             },
             move(d, x, y) {
-                d.st.drone = [clamp((x - d.st.grab[0]) / d.width, 0.05, 0.95), clamp((y - d.st.grab[1]) / d.height, 0.06, 0.5)];
+                d.st.drone = [clamp((x - d.st.grab[0]) / d.width, 0.05, 0.95), clamp((y - d.st.grab[1]) / d.height, 0.06, 0.42)];
             },
             cursor(d, x, y) {
                 let p = d.st.drone;
@@ -3257,10 +3288,10 @@ let lrf_demos = {};
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let f_px = 1100;
-            let sensor_w = w * 0.5;
+            let sensor_w = min(w * 0.5, (h * 0.32) * 1920 / f_px);
             let k = sensor_w / 1920;          // drawing pixels per sensor pixel
-            let px = w / 2, py = h * 0.7;
             let fdraw = f_px * k;
+            let px = w / 2, py = h - fdraw - fs * 3.6;
             let sy = py + fdraw * 0.0;
             // box
             let bx0 = px - sensor_w / 2 - 10, bx1 = px + sensor_w / 2 + 10;
@@ -3401,7 +3432,8 @@ let lrf_demos = {};
             line(ctx, camx, y0 - 14, lrfx, ty, rgba(col.cam, 0.9), 1.5);
             draw_camera_top(ctx, camx, y0 - 4, 12, "#5E5368");
             draw_lrf_top(ctx, lrfx, y0 - 4, 9);
-            dimension(ctx, camx, y0 + 18, lrfx, y0 + 18, col.mount, "4 cm", fs - 2, -1);
+            dimension(ctx, camx, y0 + 16, lrfx, y0 + 16, col.mount, "", fs - 2);
+            text(ctx, "4 cm", lrfx + 12, y0 + 16, col.mount, fs - 2, "left", "middle", 500);
             text(ctx, "baseline exaggerated", left - 8, y1 - 10, col.light_text, fs - 3, "right");
 
             // camera image strip
@@ -3478,7 +3510,7 @@ let lrf_demos = {};
     };
 
     SCENES.parallax_image = {
-        sliders: [{ map: log_map(5, 2000), def: 30 }],
+        sliders: [{ map: log_map(5, 2000), def: 150 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0];
@@ -3515,10 +3547,12 @@ let lrf_demos = {};
             let bx = X(bs[0] - cam.width_px / 2), by = Y(bs[1] - cam.height_px / 2);
             line(ctx, bx - 6, by - 6, bx + 6, by + 6, col.mis, 2);
             line(ctx, bx - 6, by + 6, bx + 6, by - 6, col.mis, 2);
-            text(ctx, "boresight (∞)", bx + 10, by + 14, col.mis, fs - 2, "left");
+            halo_text(ctx, "boresight (∞)", bx - 10, by + 16, col.mis, fs - 2, "right", "middle", 500, "rgba(230,238,246,0.85)");
             // quad aimed at the boresight, beam at its distance
             let size = 0.43 / R * FPX * k;
+            ctx.globalAlpha = size > w * 0.3 ? 0.35 : 1;
             draw_quad_sprite(ctx, bx, by, size, "#2D3439", 0, 0);
+            ctx.globalAlpha = 1;
             let p = M.beam_pixel(cam, mount, R);
             let px = X(p[0] - cam.width_px / 2), py = Y(p[1] - cam.height_px / 2);
             let rr = M.beam_radius(spec, R) / R * FPX * k;
@@ -3624,12 +3658,13 @@ let lrf_demos = {};
             draw_camera_top(ctx, cx, y0, 11, "#5E5368");
             text(ctx, "top view", 10, 12, col.light_text, fs - 3, "left");
 
-            // camera image: full frame thumbnail
+            // camera image: the central 800 x 450 pixels
+            let crop = 800;
             let ix = left + 10, iw = w - left - 20;
             let ih = iw * 9 / 16;
             if (ih > h - 50) { ih = h - 50; iw = ih * 16 / 9; ix = left + 10 + (w - left - 20 - iw) / 2; }
             let iy = (h - ih) / 2 - 6;
-            let k = iw / 1920;
+            let k = iw / crop;
             ctx.save();
             round_rect(ctx, ix, iy, iw, ih, 4, "#DCE5EE");
             ctx.beginPath();
@@ -3655,7 +3690,7 @@ let lrf_demos = {};
             ax([-sin(yaw), 0, -cos(yaw)], "#1E88E5");
             ctx.restore();
             let span = abs(corners[1][0] - corners[0][0]) / k;
-            text(ctx, "camera image (1920 × 1080)", ix + iw / 2, iy - 10, col.cam, fs - 2, "center", "middle", 500);
+            text(ctx, "camera image, central 800 × 450 pixels", ix + iw / 2, iy - 10, col.cam, fs - 2, "center", "middle", 500);
             text(ctx, "distance " + D.toFixed(2) + " m,  yaw " + round(d.v[1]) + "°,  tag spans " + round(span) + " px", ix + iw / 2, iy + ih + fs * 1.2, col.text, fs - 1, "center", "middle", 500);
         },
     };
