@@ -1,0 +1,251 @@
+/* Laser Range Finders */
+
+.drawer_container {
+    max-width: 640px;
+}
+
+.full_width {
+    max-width: 100%;
+}
+
+.drawer_container canvas {
+    touch-action: pan-y;
+}
+
+/* Words colored to match the demonstrations */
+
+.c_laser { color: #E5383B; }
+.c_echo { color: #D99500; }
+.c_range { color: #2F7DD3; }
+.c_time { color: #5C6BC0; }
+.c_quad { color: #129B8E; }
+.c_shahed { color: #8E5BC9; }
+.c_ds { color: #555; }
+.c_bg { color: #6E7F32; }
+.c_atm { color: #607D8B; }
+.c_noise { color: #888; }
+.c_hist { color: #44546A; }
+.c_thr { color: #C2185B; }
+.c_speed { color: #3D9A40; }
+.c_cam { color: #C2508F; }
+.c_mount { color: #8D6E63; }
+.c_mis { color: #F57C00; }
+.c_tag { color: #222; }
+.c_hit { color: #3D9A40; }
+.c_miss { color: #999; }
+
+/* Slider colors */
+
+.sl_time .slider_left_gutter, .sl_time .slider_right_gutter, .sl_time .slider_knob { background: #5C6BC0; }
+.sl_range .slider_left_gutter, .sl_range .slider_right_gutter, .sl_range .slider_knob { background: #2F7DD3; }
+.sl_speed .slider_left_gutter, .sl_speed .slider_right_gutter, .sl_speed .slider_knob { background: #43A047; }
+.sl_thr .slider_left_gutter, .sl_thr .slider_right_gutter, .sl_thr .slider_knob { background: #C2185B; }
+.sl_echo .slider_left_gutter, .sl_echo .slider_right_gutter, .sl_echo .slider_knob { background: #E9A100; }
+.sl_atm .slider_left_gutter, .sl_atm .slider_right_gutter, .sl_atm .slider_knob { background: #78909C; }
+.sl_mis .slider_left_gutter, .sl_mis .slider_right_gutter, .sl_mis .slider_knob { background: #F57C00; }
+.sl_mount .slider_left_gutter, .sl_mount .slider_right_gutter, .sl_mount .slider_knob { background: #8D6E63; }
+.sl_count .slider_left_gutter, .sl_count .slider_right_gutter, .sl_count .slider_knob { background: #44546A; }
+.sl_gray .slider_left_gutter, .sl_gray .slider_right_gutter, .sl_gray .slider_knob { background: #888; }
+.sl_laser .slider_left_gutter, .sl_laser .slider_right_gutter, .sl_laser .slider_knob { background: #E5383B; }
+
+.segmented_container {
+    max-width: 560px;
+    margin: 1.5em auto 0 auto;
+}
+
+.segmented_container .segmented_control_container {
+    margin-bottom: 0;
+}
+
+.segmented_control_on,
+.segmented_control_off {
+    font-size: 16px;
+}
+
+/* Equations */
+
+.sqrt_top {
+    border-top: 2px solid #444;
+    padding: 0 0.15em;
+    margin-left: 0.05em;
+    line-height: 1.2em;
+}
+
+/* Spec table */
+
+.spec_table_wrapper {
+    overflow-x: auto;
+}
+
+.spec_table {
+    font-size: 1.05em;
+    line-height: 1.5em;
+    margin: 1em auto 1.5em auto;
+    border-collapse: collapse;
+    min-width: 60%;
+}
+
+.spec_table tr {
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.spec_table tr:last-child {
+    border-bottom: none;
+}
+
+.spec_table td {
+    padding: 0.35em 0.8em;
+}
+
+.spec_table td:first-child {
+    color: #777;
+}
+
+.spec_table td:last-child {
+    font-weight: 500;
+    text-align: right;
+}
+
+.lrfv {
+    transition: background-color 0.4s;
+    border-radius: 0.2em;
+}
+
+.lrfv.flash {
+    background-color: rgba(47, 125, 211, 0.18);
+}
+
+/* Calculator */
+
+.calculator {
+    margin: 2em auto;
+    max-width: 44rem;
+    padding: 0 3rem;
+    box-sizing: border-box;
+}
+
+.calc_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5em;
+}
+
+.calc_panel {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: #eaeaea 0 0 0 2px;
+    padding: 1em 1.2em;
+}
+
+.calc_panel h3 {
+    font-size: 1.05em;
+    padding: 0 0 0.6em 0;
+}
+
+.calc_row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.25em 0;
+    font-size: 0.95em;
+}
+
+.calc_row label {
+    color: #666;
+}
+
+.calc_row .calc_value {
+    font-weight: 500;
+    min-width: 5em;
+    text-align: right;
+}
+
+.calc_row input[type=range] {
+    grid-column: 1 / span 2;
+    width: 100%;
+    margin: 0.2em 0 0.4em 0;
+    accent-color: #2F7DD3;
+}
+
+.calc_row select {
+    font: inherit;
+    font-size: 0.95em;
+    padding: 0.15em 0.3em;
+}
+
+.calc_out {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 0.3em 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95em;
+}
+
+.calc_out:last-child {
+    border-bottom: none;
+}
+
+.calc_out span:first-child {
+    color: #666;
+}
+
+.calc_out span:last-child {
+    font-weight: 500;
+    text-align: right;
+}
+
+.calc_plot {
+    width: 100%;
+    position: relative;
+    margin-top: 1.5em;
+}
+
+.calc_plot:after {
+    padding-top: 55%;
+    display: block;
+    content: '';
+}
+
+.calc_buttons {
+    margin-top: 0.8em;
+    text-align: right;
+}
+
+.calc_buttons button {
+    font: inherit;
+    font-size: 0.9em;
+    padding: 0.3em 0.9em;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #f4f4f4;
+    cursor: pointer;
+}
+
+.calc_buttons button:hover {
+    background: #eaeaea;
+}
+
+@media only screen and (max-width: 640px) {
+    .calc_grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .calculator {
+        padding: 0 1.2rem;
+    }
+    .spec_table {
+        font-size: 0.95em;
+    }
+}
+
+/* Small demos */
+
+#beam_profile, #scatter_back, #prf_ambiguity {
+    max-width: 640px;
+}
+
+#mount_3d, #hero {
+    cursor: move;
+}

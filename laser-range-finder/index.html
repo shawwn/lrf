@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#2052BB">
+  <meta name="author" content="Shawn Presser">
+  <meta name="format-detection" content="telephone=no">
+  <meta property="og:title" content="Laser Range Finders" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="Interactive article explaining how laser range finders work, why small drones are so hard to range, and how to calibrate a range finder mounted next to a camera." />
+  <meta property="og:locale" content="en_US">
+  <meta name="keywords" content="laser range finder,LRF,lidar,time of flight,beam divergence,pulse accumulation,drone,counter UAS,camera calibration,AprilTag,parallax">
+  <link href="../css/base.css?2fdf9770" rel="stylesheet" type="text/css"/>
+  <link href="https://fonts.googleapis.com/css?family=Lato:700&display=swap" rel="stylesheet" type="text/css" async>
+  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,500&display=swap" rel="stylesheet" async>
+  <title>Laser Range Finders</title>
+  <link rel="icon" href="../favicon.ico">
+  <link href="../css/lrf.css" rel="stylesheet" type="text/css" />
+  <script defer src="../js/base.js?ec479c57"></script>
+  <script defer src="../js/lrf_model.js"></script>
+  <script defer src="../js/lrf.js"></script>
+</head>
+
+<body>
+  <div id="main_container">
+    <div id="body">
+      <div id="banner">
+        <div id="banner_wrapper">
+          <div id="banner_content">
+            <div id="site_title">
+              <a href="../index.html">Shawn Presser</a>
+            </div>
+            <div id="navigation">
+              <a href="../index.html">Blog</a>
+              <a href="../archives.html">Archives</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="content">
+
+<div class="article">
+<div class="post_date">October 3, 2026</div>
+<h1 class="post_title"><a href="index.html">Laser Range Finders</a></h1>
+
+<p>A laser range finder answers a simple sounding question: how far away is that? It fires a brief flash of infrared light, waits for a faint echo to come back, and turns the wait into a distance. Modules that do this can weigh as little as a few coins, yet measure the distance to a building kilometers away to within a meter.</p>
+
+<p>Things get much more interesting when the thing we're measuring is small. In this article we'll follow a little robot turret that carries a camera and a laser range finder side by side on a pan and tilt mount. Its job is to measure the distance to drones: a <span class="c_quad"><strong>10 inch quadcopter</strong></span>, and a <span class="c_shahed"><strong>Shahed-136</strong></span>, a fixed wing drone with a 2.5 meter wingspan. In the demonstration below you can watch the turret at work. You can drag the scene around to see it from a different angle:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_70" id="hero"></div>
+</div>
+
+<p>The inset in the top right corner shows what the camera sees, and the plot at the bottom shows the light the range finder collects. By the end of this article every element of this demonstration should make sense: why the measurement is a bump on a noisy plot, why a drone gets so much harder to range as it flies away, what the measurement rate is traded against, and how the turret knows where its invisible laser is pointing.</p>
+
+<p>Throughout the article I'll use the numbers of a real, off the shelf module: the <a href="https://www.jenoptik.com/products/lasers/laser-distance-sensors/dlem">Jenoptik DLEM 20</a>, a 30 gram, eye safe range finder intended for exactly this kind of small gimbal. Here are its published specifications, together with the other members of its family:</p>
+
+<div class="segmented_container" id="spec_seg0"></div>
+<div class="spec_table_wrapper">
+<table class="spec_table" id="spec_table">
+<tr><td>Wavelength</td><td id="spec_wavelength">1.55 &micro;m</td></tr>
+<tr><td>Beam divergence</td><td id="spec_divergence">0.8 mrad</td></tr>
+<tr><td>Measurement range</td><td id="spec_range">10 to 5,000 m</td></tr>
+<tr><td>Measurement rate</td><td id="spec_rate">single shot, or 1 to 25 Hz</td></tr>
+<tr><td>Accuracy (1&sigma;)</td><td id="spec_accuracy">0.5 m</td></tr>
+<tr><td>Targets per measurement</td><td id="spec_targets">up to 5, at least 15 m apart</td></tr>
+<tr><td>Typical range, 0.75 m target</td><td id="spec_small">2,100 m</td></tr>
+<tr><td>Typical range, 2.3 m target</td><td id="spec_nato">3,300 m</td></tr>
+<tr><td>Typical range, beam filling target</td><td id="spec_ext">5,000 m</td></tr>
+<tr><td>Size, weight</td><td id="spec_size">50 &times; 22 &times; 34 mm, 30 g</td></tr>
+</table>
+</div>
+
+<p>Some values that matter a lot, like the laser's power, its internal pulse rate, or the size of the receiving lens, are not published. Whenever I need one of them I'll pick a plausible value and point it out. More importantly, every demonstration in this article is driven by one small model of a range finder, and the module is just a set of parameters plugged into it. The selector above switches every demonstration, and the <span class="lrfv_name">DLEM 20</span> specific numbers in the text, to a different member of the family. At the very end of the article you'll find a calculator where you can tweak the parameters yourself.</p>
+
+<p>We'll start with the basic idea of measuring distance with light, then follow the light out to a drone and back, see how faint that echo is, and learn how the range finder digs it out of noise. Then we'll mount the range finder next to a camera and figure out how to make the two agree on where the laser is pointing.</p>
+
+<h1 id="time-of-flight">Time of Flight<a href="index.html#time-of-flight" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>Light is fast, but not infinitely fast. In vacuum it travels at precisely:</p>
+
+<div class="equation">c = 299 792 458 m/s</div>
+
+<p>which works out to about 30 centimeters every nanosecond. A range finder exploits that finite speed. In the demonstration below, the range finder on the left fires a short <span class="c_laser"><strong>pulse of laser light</strong></span> toward a <span class="c_bg"><strong>wall</strong></span>. The first slider controls the flow of <span class="c_time"><strong>time</strong></span>, and the second one controls the <span class="c_range"><strong>distance</strong></span> to the wall. The plot at the bottom shows the output of the range finder's light detector:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="tof_basic"></div>
+</div>
+<div class="sl_time" id="tof_basic_sl0"></div>
+<div class="sl_range" id="tof_basic_sl1"></div>
+
+<p>When the pulse reaches the wall, some of its light bounces back as an <span class="c_echo"><strong>echo</strong></span>, and when the echo arrives the detector's output jumps up. The pulse had to travel to the wall <em>and</em> back, so the measured time of flight <strong>t</strong> covers twice the distance <strong>R</strong>:</p>
+
+<div class="equation">R = <span class="equation_frac"><span>c &times; t</span><span class="equation_div_symbol">/</span><span>2</span></span></div>
+
+<p>Every meter of distance adds about 6.67 nanoseconds to the round trip. An echo from a wall 1 kilometer away arrives after 6.67 microseconds, and an echo from 5 kilometers away after a third of a millisecond. To measure a distance to within 10 centimeters, the range finder has to time the echo to within two thirds of a nanosecond.</p>
+
+<p>Notice that the pulse isn't infinitely short. A pulsed laser diode emits light for a handful of nanoseconds, so each pulse is a meter or two long as it flies through space, and the echo shows up on the detector as a smooth bump rather than a sharp step. The range finder doesn't need the pulse to be short to time it precisely, it estimates the time of the middle of the bump, which can be found much more precisely than the bump's width. As we'll soon see, the real difficulty lies elsewhere: the echo from a small drone is extraordinarily weak.</p>
+
+<h1 id="a-spreading-beam">A Spreading Beam<a href="index.html#a-spreading-beam" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>Laser beams are often drawn as perfectly thin lines, but every real beam spreads out as it travels. Even with perfect optics, the wave nature of light forces a beam that starts out a few millimeters wide to widen with distance. The angle at which the beam widens is known as its <em>divergence</em>, and for the DLEM 20 it's about 0.8 milliradians.</p>
+
+<p>If you've read Bartosz Ciechanowski's <a href="../lights-and-shadows/index.html">article on lights and shadows</a>, you may recall that an angle in radians is the ratio of the length of an arc to its radius. A milliradian, a thousandth of a radian, has a particularly handy interpretation: at a distance of 1 kilometer an angle of 1 mrad spans 1 meter. The diameter <strong>D</strong> of the beam's spot, also called its <em>footprint</em>, grows in proportion to the distance <strong>R</strong>, with divergence <strong>&theta;</strong> as the scaling factor:</p>
+
+<div class="equation">D &asymp; &theta; &times; R</div>
+
+<p>In the demonstration below you can see the <span class="c_laser"><strong>beam</strong></span> from the side. The slider controls the <span class="c_range"><strong>distance</strong></span> at which we look at the footprint, which is drawn to scale on the right, next to the <span class="c_quad"><strong>quad</strong></span>, the <span class="c_shahed"><strong>Shahed</strong></span> seen head on, and two <span class="c_ds"><strong>square targets</strong></span> that will become important later. Note that the side view is stretched vertically by an enormous factor, at true proportions the cone would be indistinguishable from a line:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_50" id="beam_cone"></div>
+</div>
+<div class="sl_range" id="beam_cone_sl0"></div>
+
+<p>At <a href="index.html#" class="link_button" onclick="lrf_set('beam_cone',[100]);return false;">100 m</a> the footprint is <span class="lrfv" data-k="fp100">8 cm</span> wide, a bit smaller than the quad's body. At <a href="index.html#" class="link_button" onclick="lrf_set('beam_cone',[1000]);return false;">1 km</a> it's <span class="lrfv" data-k="fp1k">0.8 m</span> across, larger than the entire quad, and at <a href="index.html#" class="link_button" onclick="lrf_set('beam_cone',[4000]);return false;">4 km</a> it's wider than the Shahed's wingspan.</p>
+
+<p>The footprint doesn't have a sharp boundary. The beam is brightest in the middle and gradually fades toward the outside in a bell shaped, Gaussian profile. Since there's no hard edge, the divergence has to be quoted at some brightness level. A common convention, which I'll use here, measures the width where the intensity falls to 1/e<sup>2</sup>, about 13.5% of the peak. The brochure doesn't say which convention it uses, but none of the conclusions below depend on it much.</p>
+
+<p>In the demonstration below the left side shows the brightness of the footprint, and the plot on the right shows a slice through its middle. The slider controls the radius of a <span class="c_range"><strong>circle</strong></span>, and the number tells you what fraction of the beam's total power falls inside it:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_50" id="beam_profile"></div>
+</div>
+<div class="sl_range" id="beam_profile_sl0"></div>
+
+<p>A circle that reaches the <a href="index.html#" class="link_button" onclick="lrf_set('beam_profile',[1]);return false;">1/e<sup>2</sup> edge</a> holds about 86% of the beam's power. Half of the power is packed inside a circle only <a href="index.html#" class="link_button" onclick="lrf_set('beam_profile',[0.589]);return false;">0.59 times</a> as wide, and the remaining few percent are spread thinly in the faint outer wings. That bright core will matter a lot when we try to keep the beam on a small, moving drone.</p>
+
+<h1 id="light-on-target">Light on Target<a href="index.html#light-on-target" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>Let's aim the beam at a drone. In the demonstration below we're looking along the beam, from the range finder's point of view. The glowing patch is the beam's footprint at the drone's <span class="c_range"><strong>distance</strong></span>, which you can change with the slider. You can also pick which drone, and from which side, we're looking at. The number shows the fraction of the beam's power that lands on the drone, and the plot at the bottom tracks that fraction over a wide span of distances:</p>
+
+<div class="segmented_container" id="beam_fill_seg0"></div>
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_80" id="beam_fill"></div>
+</div>
+<div class="sl_range" id="beam_fill_sl0"></div>
+
+<p>When the drone is close, the footprint is smaller than the drone and most of the beam's power lands on it. A quad is mostly empty space though, so even up close the beam can partially slip through the gaps between its arms. Once the footprint outgrows the drone, the drone intercepts an ever smaller part of the beam.</p>
+
+<p>The plot uses logarithmic scales on both axes, where every grid line is ten times larger than the previous one. On such a plot a power law shows up as a straight line, and the line's slope is the exponent. Far away, the quad's line tilts down with a slope of &minus;2: when the distance doubles, the quad catches a quarter of the power. That's the <a href="../lights-and-shadows/index.html">inverse square law</a> again, since the footprint's area grows with the square of the distance while the drone's area stays the same.</p>
+
+<p>The head on <a href="index.html#" class="link_button" onclick="lrf_set('beam_fill',[null],[2]);return false;">Shahed</a> is more interesting. Its fuselage is only about 45 cm wide, so past a few hundred meters the beam outgrows it. The wings, however, are 2.5 meters long but only centimeters thick. As the footprint keeps growing, the wings still cut a strip across it whose length grows with the footprint, while its thickness doesn't. The intercepted power falls only as 1/R, and the plot bends to a slope of about &minus;1 for a long while, until at a few kilometers the footprint swallows the whole wingspan and the slope settles at &minus;2.</p>
+
+<h1 id="light-coming-back">Light Coming Back<a href="index.html#light-coming-back" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>The light that lands on the drone has to make its way back to the range finder. Most of a drone's surface, be it carbon fiber, plastic, or paint, is rough at the scale of the light's wavelength, so it scatters light in all directions. A perfectly matte <em>Lambertian</em> surface sends light out in a pattern whose strength in each direction is proportional to the cosine of the angle away from the surface's normal.</p>
+
+<p>In the demonstration below, a small patch of the drone's surface is lit by the <span class="c_laser"><strong>laser</strong></span> coming from the left. The arrows show how much <span class="c_echo"><strong>light</strong></span> the patch scatters in each direction. Far away on the left, the range finder's receiving lens collects whatever lands on it. The first slider controls the <span class="c_range"><strong>distance</strong></span> and the second one tilts the surface:</p>
+
+<div class="segmented_container" id="scatter_back_seg0"></div>
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_50" id="scatter_back"></div>
+</div>
+<div class="sl_range" id="scatter_back_sl0"></div>
+<div class="sl_gray" id="scatter_back_sl1"></div>
+
+<p>The scattered light spreads out over a hemisphere whose area grows with the square of the distance, so the receiver's lens of area <strong>A<sub>r</sub></strong> catches a fraction proportional to A<sub>r</sub>&nbsp;/&nbsp;R<sup>2</sup>. This is a second inverse square law, and it applies to every matte target regardless of its size. For a lens 2 centimeters across, the fraction collected from a patch 1 kilometer away is about one in ten billion.</p>
+
+<p>Not every surface is matte. A <a href="index.html#" class="link_button" onclick="lrf_set('scatter_back',[null,null],[1]);return false;">mirror</a> like surface, such as a glossy motor bell or a polished canopy, reflects the beam in a single direction, so it either shines straight back at the receiver, which happens only if it's facing it exactly, or it sends the echo away entirely. A <a href="index.html#" class="link_button" onclick="lrf_set('scatter_back',[null,null],[2]);return false;">retroreflector</a>, like the ones on road signs, sends light back toward its source no matter how it's tilted. Retroreflectors make wonderful calibration targets, but drones don't usually carry them.</p>
+
+<h1 id="the-fourth-power">The Fourth Power<a href="index.html#the-fourth-power" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>We now have all the pieces of the journey. Let's put them together. Of the power <strong>P<sub>t</sub></strong> that the laser sends out, a fraction <strong>F(R)</strong> lands on the target. The target reflects a part <strong>&rho;</strong> of it, known as its <em>albedo</em>, and the receiver catches a sliver proportional to A<sub>r</sub>&nbsp;/&nbsp;R<sup>2</sup>. Along the way the air dims the light a bit, which I've symbolized with the transmission <strong>T</strong>, applied twice for the round trip. The received power <strong>P<sub>r</sub></strong> is:</p>
+
+<div class="equation">P<sub>r</sub> = P<sub>t</sub> &times; F(R) &times; &rho; &times; <span class="equation_frac"><span>A<sub>r</sub></span><span class="equation_div_symbol">/</span><span>&pi; R<sup>2</sup></span></span> &times; T<sup>2</sup></div>
+
+<p>This is a form of the <em>laser range equation</em>. For a target bigger than the footprint F(R) is about 1, so the echo weakens as 1/R<sup>2</sup>. But for a target much smaller than the footprint, like a distant quad of reflecting area <strong>A</strong>, the intercepted fraction itself falls as 1/R<sup>2</sup>. For a Gaussian beam of divergence &theta; it's:</p>
+
+<div class="equation">F(R) &asymp; <span class="equation_frac"><span>8 A</span><span class="equation_div_symbol">/</span><span>&pi; &theta;<sup>2</sup> R<sup>2</sup></span></span></div>
+
+<p>and the two inverse square laws multiply into an inverse <em>fourth</em> power. In the demonstration below you can see the received signal as a function of distance for the <span class="c_quad"><strong>quad</strong></span>, the head on <span class="c_shahed"><strong>Shahed</strong></span>, and a <span class="c_bg"><strong>wall</strong></span> big enough to fill the beam at any distance. The slider moves a <span class="c_range"><strong>marker</strong></span> along the distance axis, and the numbers on the right show each curve's local slope:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_70" id="power_vs_range"></div>
+</div>
+<div class="sl_range" id="power_vs_range_sl0"></div>
+
+<p>The wall's curve has a slope of &minus;2 everywhere: doubling the distance costs a factor of 4. The quad's curve gets steeper and steeper, and by a kilometer it's close to &minus;4, where doubling the distance costs a factor of 16. The Shahed's wings keep it near &minus;3 for a long stretch, the signature of a long, thin target. All curves bend down a little extra at long distances, where the air starts to take its toll.</p>
+
+<p>The fourth power is cruel. To range a quad twice as far away, we need sixteen times more of everything: sixteen times more laser energy, or a receiving lens with sixteen times the area, four times wider. This is why the beam's divergence is such an important number for small targets. The power landing on a small target scales as 1/&theta;<sup>2</sup>, so narrowing the beam from 0.8 to 0.6 mrad delivers 78% more power to a distant quad, and stretches its maximum range by about 15%.</p>
+
+<h1 id="air-and-wavelength">Air and Wavelength<a href="index.html#air-and-wavelength" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>So far I've barely talked about the light itself. The DLEM 20 emits infrared light with a wavelength of 1.55 micrometers, more than twice as long as the deepest red we can see. The demonstration below shows a stretch of the spectrum. You can hover over it to read off the values at a particular wavelength:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_50" id="spectrum"></div>
+</div>
+
+<p>Many cheaper range finders and lidars use <span class="c_laser"><strong>905 nm</strong></span> light, for which silicon detectors are cheap and sensitive. However, our eyes focus 905 nm light onto the retina just as they do visible light, even though we can't see it, which strictly limits how much power such a laser can safely emit. At <span class="c_laser"><strong>1550 nm</strong></span> the water in the cornea and the lens absorbs the light before it can be focused onto the retina, and the permitted exposure is enormously higher. That's what lets the DLEM 20 be a <em>Class 1</em> laser, safe under all conditions of normal use, while still ranging targets kilometers away.</p>
+
+<p>There's a catch that will come back to haunt us later: silicon, the material of practically every ordinary camera sensor, is blind to light beyond about 1.1 micrometers. Neither our eyes nor the camera sitting next to the range finder can see where its beam lands. Detecting 1.55 &micro;m light requires materials like indium gallium arsenide, which is what the range finder's own receiver uses.</p>
+
+<p>On its way to the target and back, the light also has to get through the air. Molecules, haze, and water droplets scatter and absorb some of it. The fraction that survives a trip of length R drops off exponentially, a relation known as the <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Beer-Lambert law</a>. How quickly it drops depends on the weather, which is usually described by <em>visibility</em>, the distance at which a dark object can still be made out against the sky. In the demonstration below you can control the <span class="c_atm"><strong>visibility</strong></span> and watch how much of the light survives one way and the round trip:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="atmosphere"></div>
+</div>
+<div class="sl_atm" id="atmosphere_sl0"></div>
+
+<p>Haze scatters short wavelengths more than long ones, so in clear air or light haze 1.55 &micro;m light carries further than visible light does. In <a href="index.html#" class="link_button" onclick="lrf_set('atmosphere',[25]);return false;">clear weather</a> the losses over a few kilometers are modest. In <a href="index.html#" class="link_button" onclick="lrf_set('atmosphere',[2]);return false;">haze</a> they quickly become severe, and in <a href="index.html#" class="link_button" onclick="lrf_set('atmosphere',[0.4]);return false;">fog</a> the droplets are large enough to block all wavelengths alike, and no range finder of this kind will see through more than a few hundred meters of it.</p>
+
+<h1 id="reading-the-datasheet">Reading the Datasheet<a href="index.html#reading-the-datasheet" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>We now have a model of how strong the echo is, but we don't know the laser's power, the size of its lens, or how weak an echo the receiver can still detect. Thankfully, the brochure gives us exactly what we need to work around that. It lists the typical range for three standard targets: a 0.75 meter square with 30% albedo, a 2.3 meter square (the so called NATO target) with the same albedo, and a target large enough to fill the beam with an albedo of 50%, each in specified weather.</p>
+
+<p>If the range finder's sensitivity is all that limits its range, then at each target's rated range the echo should be equally strong, just barely detectable. In the demonstration below I plotted the signal for each of the three <span class="c_ds"><strong>datasheet targets</strong></span>, with dots marking their rated ranges:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_70" id="datasheet_check"></div>
+</div>
+
+<p>The dots line up remarkably well. A single <span class="c_thr"><strong>sensitivity level</strong></span> explains the small target at <span class="lrfv" data-k="rated_small">2,100 m</span> and predicts the NATO target at <span class="lrfv" data-k="pred_nato">3,030 m</span>, close to its rating of <span class="lrfv" data-k="rated_nato">3,300 m</span>. The beam filling target would be detectable even further than its rating, but the DLEM 20 simply stops measuring at 5 km.</p>
+
+<p>This is the trick that makes the rest of this article possible: the model only needs the rated range for one known target to back out the sensitivity of the whole system, without knowing anything about its laser or receiver. With that sensitivity in hand, we can predict the range for any target. The <span class="c_quad"><strong>quad</strong></span> crosses the sensitivity line at about <span class="lrfv" data-k="quad_r10">700 m</span>, and the head on <span class="c_shahed"><strong>Shahed</strong></span> at about <span class="lrfv" data-k="shahed_r10">1,610 m</span>.</p>
+
+<p>A few words of caution. I don't know the measurement time behind the brochure's numbers, and I'll assume they correspond to a tenth of a second of measuring. The reflectivity of the drones is my guess too: 10% for the carbon fiber quad, and 25% for a gray painted Shahed. Some Shaheds have been painted black for night operations, and with an albedo of 5% the predicted range drops to about <span class="lrfv" data-k="shahed_black_r10">1,020 m</span>. Treat these numbers as informed estimates, not guarantees.</p>
+
+<h1 id="noise">Noise<a href="index.html#noise" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>What does "barely detectable" actually mean? The echo has to compete with noise. The receiver's detector, an avalanche photodiode, turns light into a tiny electrical current, which then gets amplified. The amplifier adds its own random fluctuations, sunlight reflected off the scenery adds random photons, and the light itself arrives as discrete photons at random moments.</p>
+
+<p>After every pulse, the range finder samples its detector's output at regular intervals. The DLEM 20 uses 1 meter range bins, so each sample corresponds to a 1 meter slice of distance, and a single pulse produces a list of thousands of noisy numbers. In the demonstration below you can see such a <em>trace</em> of one pulse, with an echo from the <span class="c_quad"><strong>quad</strong></span> at the distance set by the first slider. The second slider sets a <span class="c_thr"><strong>threshold</strong></span>, and every sample that exceeds it counts as a detection:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="single_shot"></div>
+</div>
+<div class="sl_range" id="single_shot_sl0"></div>
+<div class="sl_thr" id="single_shot_sl1"></div>
+
+<p>When the quad is <a href="index.html#" class="link_button" onclick="lrf_set('single_shot',[150, null]);return false;">close</a> its echo towers over the noise and it's trivial to find. As the quad <a href="index.html#" class="link_button" onclick="lrf_set('single_shot',[700, null]);return false;">moves away</a>, the echo sinks into the noise and becomes indistinguishable from it. The threshold forces a difficult choice. Set it <a href="index.html#" class="link_button" onclick="lrf_set('single_shot',[null, 2.5]);return false;">low</a>, and plenty of noise samples poke above it, each one a <em>false alarm</em> reporting a target that isn't there. Set it <a href="index.html#" class="link_button" onclick="lrf_set('single_shot',[null, 5]);return false;">high</a>, and we miss the weak echoes we were looking for.</p>
+
+<p>To set the threshold we need to understand the statistics of the noise. The demonstration below shows how often the samples take different values. The <span class="c_noise"><strong>gray distribution</strong></span> covers the noise alone, and the <span class="c_echo"><strong>gold one</strong></span> covers the samples that contain an echo. The first slider controls the <span class="c_thr"><strong>threshold</strong></span>, and the second one the strength of the echo:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="threshold_stats"></div>
+</div>
+<div class="sl_thr" id="threshold_stats_sl0"></div>
+<div class="sl_echo" id="threshold_stats_sl1"></div>
+
+<p>The noise has a bell shaped distribution, and I've measured everything in units of its standard deviation <strong>&sigma;</strong>. The ratio of the echo's strength to &sigma; is the <em>signal to noise ratio</em>, or SNR. The trouble is that a range finder covering 5 kilometers with 1 meter bins checks about 5,000 bins for every measurement, so a threshold that wrongly fires on just one bin in a thousand produces several false alarms every single time. To keep false alarms to roughly one in a thousand measurements the threshold has to sit at about <a href="index.html#" class="link_button" onclick="lrf_set('threshold_stats',[5, null]);return false;">5&sigma;</a>, and to reliably detect an echo, its SNR needs to be even higher than that. As we saw in the trace above, a single pulse doesn't come close at long distances.</p>
+
+<h1 id="pulse-accumulation">Pulse Accumulation<a href="index.html#pulse-accumulation" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>Some range finders solve the problem with brute force. Those using solid state lasers, like erbium glass, emit a single, powerful pulse, which makes a strong echo. The laser diodes used in small modules like the DLEM 20 can't store that much energy, so they emit many weak pulses instead and combine them. The brochure calls this <em>pulse accumulation</em>.</p>
+
+<p>The idea is simple: fire pulse after pulse, and add each new trace to a running total, bin by bin. In the demonstration below you can watch a <span class="c_hist"><strong>histogram</strong></span> build up from consecutive pulses. The slider controls the distance of the <span class="c_quad"><strong>quad</strong></span>, and you can restart the accumulation with the button in the bottom left corner:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_70" id="accumulate"></div>
+</div>
+<div class="sl_range" id="accumulate_sl0"></div>
+
+<p>At first the histogram looks just as noisy as a single trace, but soon the echo starts to emerge. The echo always shows up in the same bin, so after <strong>N</strong> pulses its contribution has grown <strong>N</strong> times. The noise, on the other hand, is random: in each bin positive and negative fluctuations partially cancel out, and the total grows only with the square root of <strong>N</strong>. As a result, the signal to noise ratio grows with the square root of the number of accumulated pulses:</p>
+
+<div class="equation">SNR<sub>N</sub> = &radic;<span class="sqrt_top">N</span> &times; SNR<sub>1</sub></div>
+
+<p>The brochure doesn't say how fast the DLEM 20 fires its pulses internally. It can't be faster than about 30,000 times per second, otherwise echoes from 5 km away would arrive after the next pulse had already been fired, and for the demonstrations I'll assume it fires 10,000 pulses per second. With a measurement lasting a tenth of a second, that's 1,000 pulses, enough to boost the SNR of a single pulse by a factor of about 32. At the quad's maximum range, the SNR of a single echo is only about 0.2, but a thousand of them add up to a reliable detection.</p>
+
+<p>Accumulating more pulses always helps, but the square root combined with the fourth power make the returns diminish quickly. Every doubling of the pulse count raises the SNR by a factor of &radic;2, and for a small target that only buys a factor of 2<sup>1/8</sup>, or 9%, in range. In the demonstration below you can see how the maximum range grows with the number of pulses, for the <span class="c_quad"><strong>quad</strong></span> and for a <span class="c_bg"><strong>wall</strong></span>:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="accum_range"></div>
+</div>
+<div class="sl_count" id="accum_range_sl0"></div>
+
+<p>For the wall the range grows as the fourth root of the pulse count, but for the quad only as its eighth root. Accumulating 16 times longer gives the wall twice the range, while the quad gets just 41% more. As a side benefit of that eighth root, my guess for the measurement time behind the brochure numbers doesn't matter too much: even if I'm off by a factor of 10, the predicted ranges change by about a third.</p>
+
+<h1 id="measurement-rate">Measurement Rate<a href="index.html#measurement-rate" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>The DLEM 20 can range continuously at any rate from 1 to 25 measurements per second. With a fixed internal pulse rate, a faster measurement rate leaves fewer pulses for each measurement. In the demonstration below a second of time is split into measurements, each one accumulating its own histogram. The slider controls the <span class="c_time"><strong>measurement rate</strong></span>:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_80" id="rate_timeline"></div>
+</div>
+<div class="sl_time" id="rate_timeline_sl0"></div>
+
+<p>At <a href="index.html#" class="link_button" onclick="lrf_set('rate_timeline',[25]);return false;">25 Hz</a> each measurement accumulates just 400 pulses, and the quad's maximum range drops to about <span class="lrfv" data-k="quad_r25">620 m</span>. At <a href="index.html#" class="link_button" onclick="lrf_set('rate_timeline',[1]);return false;">1 Hz</a> each measurement gets 10,000 pulses, and the range grows to about <span class="lrfv" data-k="quad_r1">950 m</span>. That's a 25 fold reduction in measurement rate in exchange for 50% more range.</p>
+
+<p>Couldn't the range finder just fire its pulses faster? It can't, for a few reasons. Each pulse needs a moment to cool the laser diode, and the module's power draw, limited to 2 W, grows with the pulse rate. The total laser energy per second is capped by eye safety rules. Finally, there's a subtle limit set by the speed of light itself. In the demonstration below the <span class="c_laser"><strong>pulses</strong></span> leave the range finder at regular intervals, and you can control their <span class="c_time"><strong>rate</strong></span> with the slider. The <span class="c_echo"><strong>echoes</strong></span> come back from a target 5 km away:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_50" id="prf_ambiguity"></div>
+</div>
+<div class="sl_time" id="prf_ambiguity_sl0"></div>
+
+<p>When the pulse rate is <a href="index.html#" class="link_button" onclick="lrf_set('prf_ambiguity',[50000]);return false;">too high</a> the echo of each pulse arrives after the next pulse has already been fired. The range finder has no way of telling which pulse an echo belongs to, so it would measure the time from the most recent pulse and report a target that's much closer than it actually is. Keeping every echo inside its own window limits the pulse rate to c&nbsp;/&nbsp;2R<sub>max</sub>, which for 5 km is about 30,000 pulses per second.</p>
+
+<h1 id="moving-targets">Moving Targets<a href="index.html#moving-targets" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>Accumulation silently assumes that the echo lands in the same bin pulse after pulse. That holds for a building, but drones move. A 10 inch quad can fly at 25 meters per second or more, and a Shahed cruises at around 50 meters per second. During a measurement lasting a tenth of a second, a Shahed flying straight toward us gets 5 meters closer.</p>
+
+<p>In the demonstration below the <span class="c_quad"><strong>quad</strong></span> approaches the range finder at the <span class="c_speed"><strong>speed</strong></span> set by the first slider, while the second slider controls the <span class="c_time"><strong>measurement time</strong></span>. The histogram accumulates the echoes as the quad moves:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_70" id="smear"></div>
+</div>
+<div class="sl_speed" id="smear_sl0"></div>
+<div class="sl_time" id="smear_sl1"></div>
+<div class="sl_gray" id="smear_sl2"></div>
+
+<p>The moving echo smears across many bins. The total accumulated echo is the same, but it's spread out, and the peak that has to rise above the noise gets lower. Once the smear gets longer than the echo itself, accumulating for longer actually <em>hurts</em>: the smear grows in proportion to the measurement time while the noise grows only with its square root.</p>
+
+<p>The third slider lets the range finder assume that the target moves at a particular <span class="c_speed"><strong>speed</strong></span> and shift each new trace by the distance the target would have covered before adding it. When the <a href="index.html#" class="link_button" onclick="lrf_set('smear',[null, null, 'match']);return false;">assumed speed matches</a> the real one, the echo snaps back into a single sharp peak. A processor can try a whole family of speeds and keep the one with the highest peak, a technique sometimes called <em>shift and add</em>. It's computationally expensive, and the DLEM's documentation doesn't say whether it does anything like it.</p>
+
+<p>Without that trick, every speed has a measurement time that maximizes the SNR. In the demonstration below you can see how the SNR changes with the measurement time for different <span class="c_speed"><strong>speeds</strong></span>, with the best measurement time marked for each:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="smear_optimum"></div>
+</div>
+
+<p>For a hovering target, longer is always better. For a quad approaching at 25 m/s the best measurement takes about 80 milliseconds, about 13 measurements per second. For a Shahed flying straight at us at 50 m/s it takes about 40 milliseconds, or 25 measurements per second, the fastest the DLEM 20 can go.</p>
+
+<p>Motion across the line of sight causes a different problem. At a distance of 500 meters the DLEM 20's beam is just 40 centimeters wide, and a quad crossing it at 20 m/s passes through it in a fiftieth of a second. Whether it's the drone that moves, or the turret that sweeps the beam across the sky, the result is the same: only the pulses fired while the drone is inside the footprint contribute to its echo. In the demonstration below we're once again looking along the beam. The first slider controls the <span class="c_range"><strong>distance</strong></span>, the second one the drone's <span class="c_speed"><strong>sideways speed</strong></span>, and the third one the <span class="c_time"><strong>measurement time</strong></span>. The bar shows how much of the echo we collect compared to a perfectly stationary drone:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="crossing"></div>
+</div>
+<div class="sl_range" id="crossing_sl0"></div>
+<div class="sl_speed" id="crossing_sl1"></div>
+<div class="sl_time" id="crossing_sl2"></div>
+
+<p>Clearly, to measure a moving drone, the turret has to follow it. The camera sees the drone, a tracker estimates where it is in the image, and the motors steer the turret to keep the drone under the beam. Unfortunately, every step of that loop takes time: the camera exposes and reads out the image, the tracker processes it, and the motors respond. By the time the turret has moved, the drone has moved on.</p>
+
+<p>In the demonstration below we're looking through the camera of a turret tracking a crossing <span class="c_quad"><strong>quad</strong></span>. The circle marks the <span class="c_laser"><strong>beam</strong></span>. The first slider controls the delay of the tracking loop, and the second one the drone's <span class="c_range"><strong>distance</strong></span>. You can also choose whether the tracker simply points where it last saw the drone, or where it predicts the drone will be:</p>
+
+<div class="segmented_container" id="tracking_latency_seg0"></div>
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="tracking_latency"></div>
+</div>
+<div class="sl_time" id="tracking_latency_sl0"></div>
+<div class="sl_range" id="tracking_latency_sl1"></div>
+
+<p>Without prediction the beam trails behind the drone by the distance the drone covers during the delay. At 500 meters, with a delay of 50 milliseconds, that's 2 milliradians, five times the beam's radius, and the beam misses entirely. Predicting the drone's motion, by estimating its velocity in the image and leading it accordingly, brings the beam back on target. Its remaining error comes from the drone's unpredictable maneuvers during the delay, which is why the delay should be as short as possible.</p>
+
+<p>Let's bring these effects together. In the demonstration below a <span class="c_quad"><strong>quad</strong></span> flies toward the turret from 1.5 kilometers away at 20 m/s, and then turns around. The range finder measures at the <span class="c_time"><strong>rate</strong></span> controlled by the slider, and every dot is a measurement. Hollow dots are measurements that found nothing:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="rate_tradeoff"></div>
+</div>
+<div class="sl_time" id="rate_tradeoff_sl0"></div>
+
+<p>At <a href="index.html#" class="link_button" onclick="lrf_set('rate_tradeoff',[1]);return false;">1 Hz</a> we pick the quad up earliest, but the track is sparse and each measurement describes a drone that has already moved 20 meters since the previous one. At <a href="index.html#" class="link_button" onclick="lrf_set('rate_tradeoff',[25]);return false;">25 Hz</a> the measurements form a dense, responsive track, but the quad has to come much closer before the first one succeeds. Many systems switch between the two: a slow rate to acquire a distant target, and a fast rate to follow it once it's found.</p>
+
+<h1 id="multiple-echoes">Multiple Echoes<a href="index.html#multiple-echoes" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>When the footprint is larger than the drone, most of the beam keeps going. If there's something behind the drone, like a line of trees or a hillside, the leftover light produces a second echo. In the demonstration below the <span class="c_laser"><strong>beam</strong></span> partially hits the <span class="c_quad"><strong>quad</strong></span>, and the rest of it hits the <span class="c_bg"><strong>trees</strong></span> behind it. The first slider controls the distance between the quad and the trees, and the second one shifts the beam's aim off the quad:</p>
+
+<div class="segmented_container" id="two_echoes_seg0"></div>
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_70" id="two_echoes"></div>
+</div>
+<div class="sl_range" id="two_echoes_sl0"></div>
+<div class="sl_gray" id="two_echoes_sl1"></div>
+
+<p>The trees fill the rest of the footprint, so their echo can easily be much stronger than the drone's. A range finder that reports only the strongest echo would report the distance to the trees. That's why the DLEM 20 reports up to five echoes per measurement, from the nearest to the farthest, and lets the system choose. When the trees are <a href="index.html#" class="link_button" onclick="lrf_set('two_echoes',[8, null]);return false;">close behind</a> the drone, the two echoes merge into one bump, and the range finder can't tell them apart. The DLEM 20 can separate echoes that are at least 15 meters apart.</p>
+
+<p>With the drone <a href="index.html#" class="link_button" onclick="lrf_set('two_echoes',[null, null],[1]);return false;">against the sky</a>, there's nothing behind it to cause a second echo, and the measurement is unambiguous. That's convenient, since drones are usually seen against the sky. Whenever the drone is in front of terrain, the system has to decide which echo is the drone. A good hint comes from the camera: the drone's apparent size and the history of its track tell us roughly how far away it should be, and we can ignore echoes outside of that window, a technique known as <em>range gating</em>.</p>
+
+<h1 id="the-camera">The Camera<a href="index.html#the-camera" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>Let's now turn our attention to the camera. Its lens projects the scene onto a sensor made of a grid of pixels, and Bartosz Ciechanowski's <a href="../cameras-and-lenses/index.html">article on cameras and lenses</a> explains the details beautifully. For our purposes we can model it as a simple pinhole camera: a ray of light from the scene passes through a single point and lands on the sensor. In the demonstration below you can see a top down view of the camera, and you can drag the <span class="c_quad"><strong>drone</strong></span> around to see where it lands on the sensor:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="pinhole"></div>
+</div>
+
+<p>The distance from the pinhole to the sensor, measured in pixels, is the <em>focal length</em> <strong>f</strong>. A direction making an angle <strong>&alpha;</strong> with the camera's axis lands on the pixel that's <strong>f &times; tan(&alpha;)</strong> away from the image's center. For small angles that's just f &times; &alpha;, which means that every pixel spans the same small angle of 1/f radians.</p>
+
+<p>For this article I'll use a camera with a resolution of 1920 &times; 1080 pixels and a horizontal field of view of 10 degrees, which is a typical tele lens setup for spotting drones. Its focal length is about 10,970 pixels, and each pixel spans about 0.091 milliradians. Since the range finder's beam spans 0.8 milliradians, in the camera's image it's about <span class="lrfv" data-k="beam_px">8.8</span> pixels wide, regardless of the distance. In the demonstration below you can see a zoomed in part of the camera's image, with the <span class="c_laser"><strong>beam's footprint</strong></span> marked with a circle. The slider controls the drone's <span class="c_range"><strong>distance</strong></span>:</p>
+
+<div class="segmented_container" id="camera_sizes_seg0"></div>
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="camera_sizes"></div>
+</div>
+<div class="sl_range" id="camera_sizes_sl0"></div>
+
+<p>Both the drone and the beam's footprint are angles, so we can compare their sizes directly in the image. When the drone appears smaller than the circle, it's smaller than the beam, and we're on the steep part of the fourth power curve. For the quad that happens at about <span class="lrfv" data-k="quad_cross">540 m</span>. At its maximum range the quad is just a handful of pixels across, a smudge that a tracker can still follow against the sky.</p>
+
+<p>The camera and the range finder also complement each other in another way. The camera's field of view covers about 34,000 beam footprints. Searching that area by sweeping the beam over it, one measurement per footprint at 25 measurements per second, would take over 20 minutes. The camera finds the drone, and the range finder measures its distance.</p>
+
+<h1 id="two-points-of-view">Two Points of View<a href="index.html#two-points-of-view" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>To put the beam on a drone, the turret needs to know where in the camera's image the beam is pointing. That may sound trivial, but the range finder and the camera can't occupy the same spot. On our turret, the range finder sits 4 centimeters to the right of the camera, a distance known as the <span class="c_mount"><strong>baseline</strong></span>.</p>
+
+<p>In the demonstration below you can see the setup from above, with the baseline exaggerated a lot so it's visible. The <span class="c_laser"><strong>beam</strong></span> is exactly parallel to the <span class="c_cam"><strong>camera's axis</strong></span>. The slider controls the <span class="c_range"><strong>distance</strong></span> of the target that the beam hits, and the inset shows where the camera sees the beam's spot:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="parallax_top"></div>
+</div>
+<div class="sl_range" id="parallax_top_sl0"></div>
+
+<p>Even though the beam is parallel to the camera's axis, the camera sees its spot off center. The spot is always 4 centimeters to the right of the axis, and the angle at which the camera sees those 4 centimeters shrinks with distance. This is <em>parallax</em>, the same effect that makes nearby objects shift more than distant ones when you move your head. The spot appears <strong>f &times; b / R</strong> pixels from the center: about 44 pixels at 10 meters, 9 pixels, one beam width, at 50 meters, and less than half a pixel at a kilometer.</p>
+
+<p>In reality the beam will never be exactly parallel to the camera. Machining tolerances, the way the module is screwed down, and the module's own internal alignment all add up to a small angle between the two. In the demonstration below you can introduce a <span class="c_mis"><strong>misalignment</strong></span> with the second slider. The plot on the right shows where the beam lands in the image, as a function of the inverse of the distance:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="parallax_misalign"></div>
+</div>
+<div class="sl_range" id="parallax_misalign_sl0"></div>
+<div class="sl_mis" id="parallax_misalign_sl1"></div>
+
+<p>The two effects simply add up. The misalignment angle <strong>&beta;</strong> shifts the spot by a constant <strong>f &times; &beta;</strong> pixels at every distance, while the parallax adds <strong>f &times; b / R</strong>. As a function of 1/R, the spot's position is a straight line:</p>
+
+<div class="equation">u = f &times; &beta; + f &times; b &times; <span class="equation_frac"><span>1</span><span class="equation_div_symbol">/</span><span>R</span></span></div>
+
+<p>Its slope tells us the baseline, and its intercept tells us the misalignment. Very far away, where 1/R approaches zero, only the misalignment remains. The pixel at which the spot lands for an infinitely distant target is called the <em>boresight</em>. Note that a misalignment of a single milliradian, a tenth of a millimeter of tilt across a 10 centimeter mounting plate, shifts the spot by 11 pixels, more than the width of the beam. Mechanical tolerances alone can easily make the beam miss a distant drone entirely.</p>
+
+<p>Of course, the baseline and the misalignment can point in any direction, so the spot moves along a line in the two dimensional image. In the demonstration below you can see that line, from 5 meters out to infinity, drawn on the camera's image. The slider controls the <span class="c_range"><strong>distance</strong></span> of the <span class="c_quad"><strong>quad</strong></span> and the beam's footprint:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="parallax_image"></div>
+</div>
+<div class="sl_range" id="parallax_image_sl0"></div>
+
+<p>There's a pleasant surprise hiding here. To hit the middle of the drone, the turret should place the drone at the point of the line that corresponds to the drone's distance, which it doesn't know before measuring. But both the parallax and the drone's apparent size shrink as 1/R, so if the drone's solid body is wider than the baseline, aiming at the boresight keeps the beam on the drone at every distance. Parallax only really matters up close, and it matters a lot during calibration.</p>
+
+<h1 id="calibration">Calibration<a href="index.html#calibration" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>We need to measure where the beam points relative to the camera. If the camera could see the beam's spot, we would just look at it. But as we've seen, an ordinary camera is blind at 1.55 micrometers, so we'll have to find the beam indirectly, by watching what the range finder measures as the turret moves.</p>
+
+<p>First, notice something about the mount. The camera and the range finder are attached to the same plate, and the motors move the plate as a whole. In the demonstration below you can control the <span class="c_mount"><strong>pan</strong></span> and <span class="c_mount"><strong>tilt</strong></span> angles of the turret, and drag the view around:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_70" id="mount_3d"></div>
+</div>
+<div class="sl_mount" id="mount_3d_sl0"></div>
+<div class="sl_mount" id="mount_3d_sl1"></div>
+
+<p>No matter how the turret turns, the <span class="c_laser"><strong>beam</strong></span> keeps its position relative to the <span class="c_cam"><strong>camera</strong></span>. In the camera's own image, the line traced by the beam's spot never moves. That's great news: we don't need to know anything about the motors, their axes, or their accuracy. We only need to find that one line in the image. The motors are just a convenient way of moving the world in front of the camera.</p>
+
+<p>For a calibration target we'll use an <a href="https://april.eecs.umich.edu/software/apriltag">AprilTag</a>, a square black and white pattern designed to be found and identified by computer vision. Software can locate its four corners in an image with a fraction of a pixel of accuracy, and since we know the tag's physical size, those four corners determine the tag's exact position and orientation relative to the camera. In the demonstration below you can move a 30 centimeter <span class="c_tag"><strong>tag</strong></span> around with the sliders, while the inset shows what the camera sees:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="apriltag_pose"></div>
+</div>
+<div class="sl_range" id="apriltag_pose_sl0"></div>
+<div class="sl_gray" id="apriltag_pose_sl1"></div>
+
+<p>At 20 meters our 30 centimeter tag spans about 165 pixels, and its distance can be computed to within a centimeter or so, far more precisely than the range finder's own accuracy of half a meter. This means we know, for every camera frame, exactly where the tag is in 3D space.</p>
+
+<p>Now we can calibrate. The turret slowly sweeps the beam across the tag, stopping for each measurement, so that the beam doesn't move during the accumulation. For every stop we record the camera's image and the range finder's measurement. Since the tag's distance is known, we can tell whether the beam hit the tag: if the range finder reports an echo within a meter or two of the tag's distance, it's a <span class="c_hit"><strong>hit</strong></span>, and if it reports something further away, or nothing at all, it's a <span class="c_miss"><strong>miss</strong></span>. For this to work the tag needs a clear background, at least 15 meters behind it.</p>
+
+<p>In the demonstration below the turret sweeps the tag in a raster pattern. From the camera's point of view, the beam stays put while the tag moves across the image. Every dot is placed at the tag's center as seen by the camera during one measurement:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="apriltag_sweep"></div>
+</div>
+<div class="sl_count" id="apriltag_sweep_sl0"></div>
+
+<p>The <span class="c_hit"><strong>hits</strong></span> form a square: they happen exactly when the tag's image covers the beam's spot. The center of that square of hits marks the beam's spot at the tag's distance. The slider controls the strength of the echo. When the echo is strong, even the beam's faint outer wings register hits and the square grows, when it's weak only the bright core counts and the square shrinks, but its <em>center</em> doesn't move. This is what makes the method robust: it doesn't depend on the details of the beam's shape or the range finder's sensitivity.</p>
+
+<p>Another way of looking at the same data is from the tag's point of view. If we guess where the beam's spot is in the image, every measurement tells us where the beam would have hit the tag, in the tag's own coordinates. In the demonstration below you can drag the <span class="c_laser"><strong>guessed spot</strong></span> around the camera's image on the left. The right side shows each measurement placed on the tag according to that guess:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_50" id="calib_hypothesis"></div>
+</div>
+
+<p>Only for the correct guess do all the <span class="c_hit"><strong>hits</strong></span> land on the tag and all the <span class="c_miss"><strong>misses</strong></span> land outside of it. A calibration program can search for the guess that minimizes the number of misplaced measurements, or fit the edges of the hit region more precisely. Thanks to the tag's pose, this works even when the tag is tilted relative to the camera.</p>
+
+<p>A single tag distance gives us a single point on the line we're after. If we trust the mechanical drawings for the 4 centimeter baseline, that's enough: it tells us the misalignment, and the parallax follows from the drawings. To measure the baseline as well, we repeat the sweep with the tag at two or more distances and fit a line through the points, just like in the plot of position versus 1/R we saw earlier. In the demonstration below you can choose how many distances to use:</p>
+
+<div class="segmented_container" id="calib_two_ranges_seg0"></div>
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_60" id="calib_two_ranges"></div>
+</div>
+
+<p>With a single distance, infinitely many lines pass through the point, and the baseline and misalignment can't be separated. With two distances the line is determined, and every additional distance averages out the errors. The closer the nearest tag, the steeper the parallax and the more precisely it can be measured, so one tag at around 10 meters and another at 50 or more works well. The tag still needs to be large enough in the image to be detected reliably, at least a few dozen pixels across.</p>
+
+<p>There are a few more practical details worth mentioning. The pairing of the range finder's measurements with the camera's frames needs care: a measurement takes time, and it should be matched with the frame taken in its middle. That's another reason to stop the turret during each measurement. The range finder's distance offset can be checked against the tag's distance at the same time. Finally, mounts flex with temperature and shift after hard knocks, so it's worth re-running the calibration from time to time and comparing the results.</p>
+
+<h1 id="your-own-range-finder">Your Own Range Finder<a href="index.html#your-own-range-finder" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>Everything we've seen follows from a handful of parameters. The calculator below exposes them. Pick a starting module, then change its divergence, its power, the weather, or the target, and see how the predictions change. The divergence and power controls describe a modified version of the selected module: a narrower beam or a stronger laser on the same hardware. Changes here also update all the demonstrations above.</p>
+
+<div class="calculator" id="calculator"></div>
+
+<p>The model behind all of this is in <a href="../js/lrf_model.js">lrf_model.js</a>, a small file with no dependencies, which you can also use from your own code. It assumes a Gaussian beam, matte targets, the visibility based model of the atmosphere, and noise that's independent from pulse to pulse. Real range finders deviate from all of these in various ways, but the scaling laws are robust: the inverse fourth power for small targets, the eighth root payoff of accumulation, and the 1/R parallax.</p>
+
+<h1 id="further-reading">Further Reading<a href="index.html#further-reading" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>The National Academies report <a href="https://nap.nationalacademies.org/catalog/18733/laser-radar-progress-and-opportunities-in-active-electro-optical-sensing">Laser Radar: Progress and Opportunities in Active Electro-Optical Sensing</a> is a free and readable overview of the field, from simple range finders to imaging lidars. For a more mathematical treatment of the range equation, detection statistics, and receiver design, <a href="https://doi.org/10.1117/3.836466">Direct-Detection LADAR Systems</a> by Richard Richmond and Stephen Cain is an excellent, compact reference.</p>
+
+<p>The <a href="https://april.eecs.umich.edu/software/apriltag">AprilTag</a> project describes the tags and provides the detector. The standard method of calibrating a camera's focal length and lens distortion, which I've taken for granted here, comes from Zhengyou Zhang's paper <a href="https://www.microsoft.com/en-us/research/publication/a-flexible-new-technique-for-camera-calibration/">A Flexible New Technique for Camera Calibration</a>.</p>
+
+<p>The specifications of the DLEM 20 come from Jenoptik's <a href="https://pdf.directindustry.com/pdf/jenoptik-ag/diode-laser-rangefinder-dlem/17967-1036107.html">DLEM family brochure</a> and the <a href="https://www.jenoptik.de/-/media/websitedocuments/optics/sensor/dlem-20le-edb.pdf">DLEM 20LE datasheet</a>. My notes, including every assumption behind the numbers in this article, are in the repository alongside it.</p>
+
+<h1 id="final-words">Final Words<a href="index.html#final-words" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
+
+<p>A laser range finder is a stopwatch for light, but a remarkable amount of physics hides between the start and stop of that stopwatch. The beam spreads and spills past a small target, the target scatters what's left in every direction, and the receiver catches a vanishing sliver of it, a few photons per pulse, buried in noise. Thousands of pulses later, the echo finally stands out, provided the target held still, and provided the turret kept the beam on it.</p>
+
+<p>What I find most satisfying is how far a few simple scaling laws can take us. Two inverse square laws explain why small drones are so hard to range, the square root of accumulation explains why patience pays off so slowly, and a single line in the camera's image captures everything we need to know to point the invisible beam.</p>
+
+</div>
+      </div>
+    </div>
+    <div id="footer">
+      <div class="article_footer">
+        Interactive style and widgets adapted from <a href="https://ciechanow.ski">Bartosz Ciechanowski</a>&rsquo;s articles.
+      </div>
+      Copyright &copy; 2026 Shawn Presser
+    </div>
+  </div>
+</body>
+
+</html>
