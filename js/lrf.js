@@ -185,6 +185,7 @@ let lrf_demos = {};
     }
 
     function fmt_pct(x) {
+        if (x > 0 && x < 0.0001) return "<0.01%";
         if (x >= 0.995) return round(x * 100) + "%";
         if (x >= 0.1) return (x * 100).toFixed(0) + "%";
         if (x >= 0.01) return (x * 100).toFixed(1) + "%";
@@ -609,8 +610,10 @@ let lrf_demos = {};
     // the image's width, so the image covers +-2 w.
     let beam_image_cache = {};
 
-    function beam_image(hex, peak_alpha) {
-        let key = hex + peak_alpha;
+    // gamma < 1 brightens the faint wings, closer to how the eye sees a spot
+    function beam_image(hex, peak_alpha, gamma) {
+        gamma = gamma || 1;
+        let key = hex + peak_alpha + "/" + gamma;
         if (beam_image_cache[key])
             return beam_image_cache[key];
         let n = 160;
@@ -624,7 +627,7 @@ let lrf_demos = {};
             for (let i = 0; i < n; i++) {
                 let x = (i + 0.5) / n * 4 - 2;
                 let y = (j + 0.5) / n * 4 - 2;
-                let I = exp(-2 * (x * x + y * y));
+                let I = pow(exp(-2 * (x * x + y * y)), gamma);
                 let k = (j * n + i) * 4;
                 img.data[k + 0] = rgb[0];
                 img.data[k + 1] = rgb[1];
@@ -638,8 +641,8 @@ let lrf_demos = {};
     }
 
     // Draw a Gaussian spot with 1/e^2 radius w_px centered at (x, y).
-    function draw_beam_spot(ctx, x, y, w_px, hex, alpha) {
-        let img = beam_image(hex || col.laser, alpha === undefined ? 0.85 : alpha);
+    function draw_beam_spot(ctx, x, y, w_px, hex, alpha, gamma) {
+        let img = beam_image(hex || col.laser, alpha === undefined ? 0.85 : alpha, gamma);
         ctx.drawImage(img, x - 2 * w_px, y - 2 * w_px, 4 * w_px, 4 * w_px);
     }
 
@@ -3511,7 +3514,7 @@ let lrf_demos = {};
     SCENES.two_echoes = {
         sliders: [
             // the aim slider comes first so it doesn't move when the trees slider hides
-            { fmt: v => "aim off " + v.toFixed(2) + " mrad", map: lin_map(0, 0.6), def: 0.15 },
+            { fmt: v => "aim off " + v.toFixed(2) + " mrad", map: lin_map(0, 1), def: 0.15 },
             { anim: { period: 18 }, fmt: v => "trees " + round(v) + " m behind", visible: d => d.seg[0] === 0, map: lin_map(0, 150), def: 60 },
         ],
         segs: [["Trees behind", "Sky behind"]],
@@ -3543,25 +3546,28 @@ let lrf_demos = {};
             let Rend = TWO_R + 170;
             let X = r => x0 + (x1 - x0) * r / Rend;
             let cy = 6 + (top - 12) / 2;
-            let Hend = (top - 12) / 2 / 2.3;
+            let Hend = (top - 12) / 2 / 2.4;
             let half = r => Hend * r / Rend;       // drawn 1/e^2 half width
             let endR = sky ? Rend : Rb;
-            let cone = [[x0, cy], [X(endR), cy - 2.2 * half(endR)], [X(endR), cy + 2.2 * half(endR)]];
+            // brightness on a perceptual (gamma 0.45) scale, so the beam's faint
+            // outer wings, which still carry light, stay visible
+            let BG = 0.45, U = 2.3;
+            let cone = [[x0, cy], [X(endR), cy - U * half(endR)], [X(endR), cy + U * half(endR)]];
             if (ctx.createConicGradient) {
                 // brightness depends only on the angle around the apex
                 let g = ctx.createConicGradient(-pi, x0, cy);
                 let dx = X(endR) - x0;
-                for (let k = 0; k <= 44; k++) {
-                    let u = -2.2 + 4.4 * k / 44;
+                for (let k = 0; k <= 46; k++) {
+                    let u = -U + 2 * U * k / 46;
                     let ang = atan2(u * half(endR), dx);
-                    g.addColorStop((ang + pi) / (2 * pi), rgba(col.laser, 0.6 * exp(-2 * u * u)));
+                    g.addColorStop((ang + pi) / (2 * pi), rgba(col.laser, 0.6 * pow(exp(-2 * u * u), BG)));
                 }
                 fill_poly(ctx, cone, g);
             } else {
                 let n = 40;
                 for (let k = 0; k < n; k++) {
-                    let u0 = -2.2 + 4.4 * k / n, u1 = u0 + 4.4 / n, um = (u0 + u1) / 2;
-                    fill_poly(ctx, [[x0, cy], [X(endR), cy + u0 * half(endR)], [X(endR), cy + u1 * half(endR) + 0.5]], rgba(col.laser, 0.6 * exp(-2 * um * um)));
+                    let u0 = -U + 2 * U * k / n, u1 = u0 + 2 * U / n, um = (u0 + u1) / 2;
+                    fill_poly(ctx, [[x0, cy], [X(endR), cy + u0 * half(endR)], [X(endR), cy + u1 * half(endR) + 0.5]], rgba(col.laser, 0.6 * pow(exp(-2 * um * um), BG)));
                 }
             }
             draw_lrf_side(ctx, x0, cy, 6);
@@ -3575,8 +3581,10 @@ let lrf_demos = {};
             ctx.restore();
             if (!sky)
                 dimension(ctx, X(Rq), top - 14, X(Rb), top - 14, col.bg, gap.toFixed(0) + " m", fs - 2, -1);
+            let Fnow = M.fraction_on_target(spec, QUAD, Rq, 0, offm);
+            let where = Fnow < 0.001 ? "outside the beam" : offm / wq < 0.6 ? "in the bright core" : "in the faint fringe";
             let off_label = offm < 0.005 ? (w < 500 ? "on axis" : "beam aimed at the quad") :
-                round(offm * 100) + " cm off " + (w < 500 ? "axis" : "the beam's axis");
+                round(offm * 100) + " cm off axis, " + where;
             font(ctx, fs - 2, 500);
             let tw = ctx.measureText(off_label).width;
             halo_text(ctx, off_label, clamp(X(Rq), 14 + tw / 2, sx1 - 14 - tw / 2), max(18, qy - qsize * 0.6 - 10), col.text, fs - 2, "center", "middle", 500);
@@ -3590,9 +3598,9 @@ let lrf_demos = {};
             ctx.beginPath();
             ctx.rect(ix, iy, isz, isz);
             ctx.clip();
-            let pc = isz / (4.4 * wq);
+            let pc = isz / (5.2 * wq);
             let ccx = ix + isz / 2, ccy = iy + isz / 2;
-            draw_beam_spot(ctx, ccx, ccy, wq * pc, "#FF5A4E", 0.55);
+            draw_beam_spot(ctx, ccx, ccy, wq * pc, "#FF5A4E", 0.55, 0.45);
             ctx.setLineDash([3, 3]);
             circle(ctx, ccx, ccy, wq * pc, null, "rgba(255,255,255,0.35)", 1);
             ctx.setLineDash([]);
@@ -3605,7 +3613,7 @@ let lrf_demos = {};
                         let ux = (mx + cx2) / 2, uy = (my + cy2) / 2 - offm;
                         let I = exp(-2 * (ux * ux + uy * uy) / (wq * wq));
                         ctx.globalAlpha = fill < 1 ? 0.35 : 1;
-                        ctx.fillStyle = mix("#3A3F45", "#FFE08A", sqrt(I));
+                        ctx.fillStyle = mix("#3A3F45", "#FFE08A", pow(I, 0.45));
                         ctx.fillRect(ccx + mx * pc, ccy + (offm - cy2) * pc, (cx2 - mx) * pc + 0.4, (cy2 - my) * pc + 0.4);
                     }
                 }
