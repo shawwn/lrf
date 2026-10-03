@@ -674,9 +674,11 @@ let lrf_demos = {};
      * A quad seen roughly from the side and slightly above.
      * size_px is the motor to motor width in pixels.
      */
-    function draw_quad_sprite(ctx, cx, cy, size_px, color, t, tilt) {
+    // exact: draw every part at its true size, without the minimum sizes that
+    // keep tiny sprites visible (for renders that compute pixel coverage)
+    function draw_quad_sprite(ctx, cx, cy, size_px, color, t, tilt, exact) {
         color = color || "#2D3439";
-        if (size_px < 3) {
+        if (size_px < 3 && !exact) {
             circle(ctx, cx, cy, max(0.6, size_px * 0.3), color);
             return;
         }
@@ -693,7 +695,7 @@ let lrf_demos = {};
                 let py = -s * 0.2 - (d < 1 ? s * 0.06 : 0);
                 ctx.fillStyle = "rgba(60,70,80,0.18)";
                 ctx.beginPath();
-                ctx.ellipse(px, py, prop_r * d, prop_r * 0.12 * d + 0.4, 0, 0, 2 * pi);
+                ctx.ellipse(px, py, prop_r * d, prop_r * 0.12 * d + (exact ? 0 : 0.4), 0, 0, 2 * pi);
                 ctx.fill();
             }
         }
@@ -701,7 +703,7 @@ let lrf_demos = {};
         // arms
         ctx.strokeStyle = color;
         ctx.lineCap = "round";
-        ctx.lineWidth = max(1, s * 0.07);
+        ctx.lineWidth = exact ? s * 0.07 : max(1, s * 0.07);
         ctx.beginPath();
         ctx.moveTo(-s, -s * 0.05);
         ctx.lineTo(s, -s * 0.05);
@@ -755,9 +757,9 @@ let lrf_demos = {};
     }
 
     // Shahed-136 seen head on. span_px is the wingspan in pixels.
-    function draw_shahed_front(ctx, cx, cy, span_px, color) {
+    function draw_shahed_front(ctx, cx, cy, span_px, color, exact) {
         color = color || "#6B6F73";
-        if (span_px < 3) {
+        if (span_px < 3 && !exact) {
             circle(ctx, cx, cy, 0.8, color);
             return;
         }
@@ -778,7 +780,7 @@ let lrf_demos = {};
         ctx.closePath();
         ctx.fill();
         // fins
-        let fw = max(0.8, 0.02 * k);
+        let fw = exact ? 0.02 * k : max(0.8, 0.02 * k);
         ctx.fillRect(-1.25 * k - fw / 2, -0.3 * k, fw, 0.55 * k);
         ctx.fillRect(1.25 * k - fw / 2, -0.3 * k, fw, 0.55 * k);
         // fuselage
@@ -3765,6 +3767,81 @@ let lrf_demos = {};
 
     /* -------------------------- camera sizes -------------------------- */
 
+    /*
+     * A zoomed in part of the camera's image, rendered the way a sensor sees
+     * it: the target is drawn at its true size with 16 x 16 samples per
+     * camera pixel, each pixel takes the average of its samples (so a part
+     * covering 10% of a pixel tints it 10%), and a small Gaussian blur
+     * stands in for the lens (sigma 0.6 px, about the diffraction spot of a
+     * ~33 mm f/2.8 lens on ~3 um pixels).
+     */
+    const CAM_SS = 16;
+    const CAM_BLUR = 0.6;
+
+    function camera_render(st, nw, nh, draw_target) {
+        let SS = CAM_SS;
+        if (!st.off || st.off.width !== nw * SS || st.off.height !== nh * SS) {
+            st.off = document.createElement("canvas");
+            st.off.width = nw * SS;
+            st.off.height = nh * SS;
+            st.nat = document.createElement("canvas");
+            st.nat.width = nw;
+            st.nat.height = nh;
+        }
+        let o = st.off.getContext("2d", { willReadFrequently: true });
+        o.setTransform(SS, 0, 0, SS, 0, 0);
+        let g = o.createLinearGradient(0, 0, 0, nh);
+        g.addColorStop(0, col.sky_top);
+        g.addColorStop(1, col.sky_bottom);
+        o.fillStyle = g;
+        o.fillRect(0, 0, nw, nh);
+        draw_target(o);
+
+        // average each pixel's samples
+        let W = nw * SS;
+        let src = o.getImageData(0, 0, W, nh * SS).data;
+        let px = new Float32Array(nw * nh * 3);
+        for (let y = 0; y < nh * SS; y++) {
+            let row = ((y / SS) | 0) * nw;
+            for (let x = 0; x < W; x++) {
+                let i = (y * W + x) * 4, j = (row + ((x / SS) | 0)) * 3;
+                px[j] += src[i];
+                px[j + 1] += src[i + 1];
+                px[j + 2] += src[i + 2];
+            }
+        }
+        let inv = 1 / (SS * SS);
+        for (let j = 0; j < px.length; j++) px[j] *= inv;
+
+        // lens blur: separable Gaussian, edges clamped
+        let kr = 2, ker = [];
+        let ks = 0;
+        for (let k = -kr; k <= kr; k++) { let v = exp(-k * k / (2 * CAM_BLUR * CAM_BLUR)); ker.push(v); ks += v; }
+        ker = ker.map(v => v / ks);
+        let tmp = new Float32Array(px.length), out = new Float32Array(px.length);
+        for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) for (let c = 0; c < 3; c++) {
+            let a = 0;
+            for (let k = -kr; k <= kr; k++) a += ker[k + kr] * px[(y * nw + clamp(x + k, 0, nw - 1)) * 3 + c];
+            tmp[(y * nw + x) * 3 + c] = a;
+        }
+        for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) for (let c = 0; c < 3; c++) {
+            let a = 0;
+            for (let k = -kr; k <= kr; k++) a += ker[k + kr] * tmp[(clamp(y + k, 0, nh - 1) * nw + x) * 3 + c];
+            out[(y * nw + x) * 3 + c] = a;
+        }
+
+        let n = st.nat.getContext("2d");
+        let img = n.createImageData(nw, nh);
+        for (let i = 0; i < nw * nh; i++) {
+            img.data[i * 4] = out[i * 3];
+            img.data[i * 4 + 1] = out[i * 3 + 1];
+            img.data[i * 4 + 2] = out[i * 3 + 2];
+            img.data[i * 4 + 3] = 255;
+        }
+        n.putImageData(img, 0, 0);
+        return st.nat;
+    }
+
     SCENES.camera_sizes = {
         sliders: [{ anim: { period: 18 }, fmt: v => "R = " + fmt_dist(v), map: log_map(50, 4000), def: 400 }],
         segs: [["10\" quad", "Shahed-136"]],
@@ -3772,41 +3849,17 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let R = d.v[0];
             let shahed = d.seg[0] === 1;
-            let cw = 120, ch = round(cw * h / w);
-            if (!d.st.off || d.st.off.width !== cw || d.st.off.height !== ch) {
-                d.st.off = document.createElement("canvas");
-                d.st.off.width = cw;
-                d.st.off.height = ch;
-            }
-            let o = d.st.off.getContext("2d");
-            o.setTransform(4, 0, 0, 4, 0, 0);
-            let g = o.createLinearGradient(0, 0, 0, ch / 4);
-            g.addColorStop(0, col.sky_top);
-            g.addColorStop(1, col.sky_bottom);
-            o.fillStyle = g;
-            o.fillRect(0, 0, cw, ch);
-            // draw at 4x supersampling then downsample into native pixels
+            let nw = 32, nh = max(8, round(nw * h / w));
             let size = (shahed ? 2.5 : 0.43) / R * FPX;
-            o.save();
-            if (size < 1) o.globalAlpha = clamp(size * (shahed ? 0.5 : 0.9), 0.06, 1);
-            if (shahed) draw_shahed_front(o, cw / 8, ch / 8, max(size, 1.2), "#55595D");
-            else draw_quad_sprite(o, cw / 8, ch / 8, max(size, 1.2), "#2D3439", 0, 0);
-            o.restore();
-            // downsample: copy the 4x region into a native resolution canvas
-            if (!d.st.nat || d.st.nat.width !== cw / 4 | 0) {
-                d.st.nat = document.createElement("canvas");
-            }
-            let nw = floor(cw / 4), nh = floor(ch / 4);
-            d.st.nat.width = nw;
-            d.st.nat.height = nh;
-            let n = d.st.nat.getContext("2d");
-            n.imageSmoothingEnabled = true;
-            n.drawImage(d.st.off, 0, 0, nw * 4, nh * 4, 0, 0, nw, nh);
+            let nat = camera_render(d.st, nw, nh, o => {
+                if (shahed) draw_shahed_front(o, nw / 2, nh / 2, size, "#55595D", true);
+                else draw_quad_sprite(o, nw / 2, nh / 2, size, "#2D3439", 0, 0, true);
+            });
 
-            ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(d.st.nat, 0, 0, nw, nh, 0, 0, w, h);
-            ctx.imageSmoothingEnabled = true;
             let k = w / nw;
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(nat, 0, 0, nw, nh, 0, 0, nw * k, nh * k);
+            ctx.imageSmoothingEnabled = true;
             // pixel grid
             if (k > 6) {
                 ctx.strokeStyle = "rgba(0,0,0,0.05)";
@@ -3819,7 +3872,7 @@ let lrf_demos = {};
             circle(ctx, cx, cy, beam_px / 2 * k, null, col.laser, 2);
             halo_text(ctx, (shahed ? "Shahed wingspan " : "quad ") + size.toFixed(1) + " px", 12, 18, shahed ? col.shahed : col.quad, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
             halo_text(ctx, "beam " + beam_px.toFixed(1) + " px", 12, 18 + fs * 1.4, col.laser, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
-            halo_text(ctx, fmt_dist(R) + " away, one square = one camera pixel", w - 12, h - 14, col.text, fs - 2, "right", "middle", 400, "rgba(255,255,255,0.85)");
+            halo_text(ctx, fmt_dist(R) + " away; one square = one camera pixel, with lens blur", w - 12, h - 14, col.text, fs - 2, "right", "middle", 400, "rgba(255,255,255,0.85)");
         },
     };
 
