@@ -41,6 +41,16 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
     (docs/lrf/sources/).
 16. Commit as you go, one logical change per commit, with explanatory messages; don't push.
 17. The datasheet check plot was too noisy (overlapping labels); fixed with a legend.
+18. The 10 inch quad is an FPV quad (prose updated).
+19. Scattering demo: make it obvious what moves away when the distance changes (log distance
+    axis with the surface moving along it, plus the hemisphere through the receiver).
+20. Most sliders should animate in a loop; touching a slider stops it and shows a way to
+    resume (play button next to the slider). Link buttons in the text also stop it.
+21. Every slider shows its value next to it.
+22. Fix the beam cone footprint label (clipped at 5 km), the beam profile tick labels, and the
+    accumulation demo's colliding label; start the accumulation demo at ~390 m.
+23. Bug: the measurement rate demo froze when its slider was dragged (negative arcTo radius
+    for a sliver window); fixed at the root, and the framework now survives a bad frame.
 
 ## Decisions (from Q&A)
 
