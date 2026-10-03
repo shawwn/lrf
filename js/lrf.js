@@ -1288,6 +1288,7 @@ let lrf_demos = {};
      *   segs: [[labels...]]            segmented controls (id_seg0, id_seg1, ...)
      *   animated: bool                 runs every frame while visible, with play/pause
      *   reset(d)                       adds a restart button
+     *   finished(d) -> bool            the animation has run to its end; play rewinds first
      *   init(d)                        called once before controls are created
      *   drag: { begin(d,x,y)->bool, move(d,x,y), end(d), cursor(d,x,y)->css }
      *   orbit: bool                    dragging rotates d.st.yaw / d.st.pitch
@@ -1366,7 +1367,11 @@ let lrf_demos = {};
         if (scene.animated) {
             let play = document.createElement("div");
             play.classList.add("play_pause_button");
-            play.onclick = () => self.set_paused(!self.paused);
+            play.onclick = () => {
+                if (self.paused && scene.reset && scene.finished && scene.finished(self))
+                    scene.reset(self);
+                self.set_paused(!self.paused);
+            };
             wrapper.appendChild(play);
             this.play = play;
             if (!this.paused)
@@ -1555,6 +1560,9 @@ let lrf_demos = {};
             return;
         let sd = this.scene.sliders[i];
         a.t = anim_phase(sd.anim, clamp(sd.map.from(this.v[i]), 0, 1));
+        // a one way animation sitting at its end starts over
+        if (sd.anim.mode === "loop" && a.t >= (sd.anim.period || 10) - 1e-3)
+            a.t = 0;
         a.on = true;
         this.anim_btns[i].classList.add("playing");
         this.kick();
@@ -2740,6 +2748,7 @@ let lrf_demos = {};
         animated: true,
         sliders: [{ fmt: v => "R = " + round(v) + " m", map: log_map(150, 1200), def: 390, on: (d) => { acc_reset(d); d.set_paused(false); } }],
         reset(d) { acc_reset(d); },
+        finished(d) { return d.st.N >= ACC_MAX; },
         init(d) { acc_reset(d); },
         draw(ctx, d, w, h, dt) {
             let fs = base_font_size(w);
@@ -4299,6 +4308,7 @@ let lrf_demos = {};
         animated: true,
         sliders: [{ fmt: v => "echo ×" + (v / 3e-3 < 1 ? (v / 3e-3).toFixed(2) : (v / 3e-3).toFixed(0)), map: log_map(1.5e-4, 3), def: 3e-3 }],
         reset(d) { d.st.clock = 0; },
+        finished(d) { return floor(d.st.clock * 260) >= d.st.stops.length; },
         init(d) {
             d.st.clock = 0;
             d.st.stops = sweep_stops();
