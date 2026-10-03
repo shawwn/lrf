@@ -341,3 +341,10 @@
 #mount_3d, #hero {
     cursor: move;
 }
+
+/* On phones the pulse rate demo's status line wraps; give it the room */
+@media only screen and (max-width: 500px) {
+    #prf_ambiguity.ratio_50:after {
+        padding-top: 72%;
+    }
+}

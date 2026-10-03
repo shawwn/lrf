@@ -276,6 +276,24 @@ let lrf_demos = {};
         ctx.fillText(str, x, y);
     }
 
+    // Greedy word wrap of str into lines no wider than maxw.
+    function wrap_lines(ctx, str, maxw, size, weight) {
+        font(ctx, size || 14, weight);
+        let lines = [], cur = "";
+        for (let word of str.split(" ")) {
+            let next = cur ? cur + " " + word : word;
+            if (cur && ctx.measureText(next).width > maxw) {
+                lines.push(cur);
+                cur = word;
+            } else {
+                cur = next;
+            }
+        }
+        if (cur)
+            lines.push(cur);
+        return lines;
+    }
+
     function line(ctx, x0, y0, x1, y1, color, width, dash) {
         ctx.strokeStyle = color;
         ctx.lineWidth = width || 1.5;
@@ -3097,7 +3115,17 @@ let lrf_demos = {};
             let span = 200e-6;
             let x0 = 30, x1 = w - 20;
             let X = t => x0 + (x1 - x0) * t / span;
-            let y_p = h * 0.3, y_e = h * 0.62;
+            // the status line on top wraps on narrow screens; the timeline
+            // moves down to make room
+            let amb = te > 1 / prf;
+            let apparent = (te % (1 / prf)) * M.C / 2;
+            let msg = fmt_int(prf) + " pulses per second: " + (amb ?
+                "each echo arrives after the next pulse; it looks like a target at " + fmt_dist(apparent) :
+                "each echo arrives before the next pulse");
+            let lines = wrap_lines(ctx, msg, w - 24, fs - 1, 500);
+            let lh = fs * 1.25;
+            let y_p = max(h * 0.3, 14 + (lines.length - 1) * lh + fs * 2.4);
+            let y_e = y_p + min(h * 0.32, h - y_p - fs * 4.2);
             line(ctx, x0, y_p, x1, y_p, "#DDD", 1);
             line(ctx, x0, y_e, x1, y_e, "#DDD", 1);
             text(ctx, "pulses", x0, y_p - fs * 1.4, col.laser, fs - 1, "left", "middle", 500);
@@ -3124,12 +3152,7 @@ let lrf_demos = {};
             }
             for (let s = 0; s <= span + 1e-9; s += 50e-6)
                 text(ctx, round(s * 1e6) + " µs", X(s), h - fs * 1.2, col.light_text, fs - 2);
-            let amb = te > period;
-            let apparent = (te % period) * M.C / 2;
-            let msg = fmt_int(prf) + " pulses per second: " + (amb ?
-                "each echo arrives after the next pulse; it looks like a target at " + fmt_dist(apparent) :
-                "each echo arrives before the next pulse");
-            halo_text(ctx, msg, w / 2, 14, amb ? col.thr : col.text, fs - 1, "center", "middle", 500);
+            lines.forEach((ln, i) => halo_text(ctx, ln, w / 2, 14 + i * lh, amb ? col.thr : col.text, fs - 1, "center", "middle", 500));
         },
     };
 
