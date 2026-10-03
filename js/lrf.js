@@ -2687,7 +2687,7 @@ let lrf_demos = {};
 
     SCENES.accumulate = {
         animated: true,
-        sliders: [{ fmt: v => "R = " + round(v) + " m", map: log_map(150, 1200), def: 520, on: (d) => { acc_reset(d); d.set_paused(false); } }],
+        sliders: [{ fmt: v => "R = " + round(v) + " m", map: log_map(150, 1200), def: 390, on: (d) => { acc_reset(d); d.set_paused(false); } }],
         reset(d) { acc_reset(d); },
         init(d) { acc_reset(d); },
         draw(ctx, d, w, h, dt) {
