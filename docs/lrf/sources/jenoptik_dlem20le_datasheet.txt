@@ -1,0 +1,100 @@
+Source: https://www.jenoptik.de/-/media/websitedocuments/optics/sensor/dlem-20le-edb.pdf
+Fetched: 2026-10-03
+
+--- page 1 ---
+DLEM 20LE – Highest performance on small targets
+The DLEM 20LE is an enhanced version of the DLEM 20 
+that can range 25% further on small targets than the 
+DLEM 20 but at the same size and weight. This combi-
+nation enables our customers to develop the most 
+advanced compact and lightweight products for their 
+applications.
+Derived from the field proven DLEM 20 it offers a substan-
+tial performance increase and has the same robustness and 
+capability to operate from -40°C to +80°C making it the 
+ideal sensor for tactical use and in harsh environments.
+The highly optimized power management system makes the 
+DLEM 20LE the ideal laser rangefinder module for battery-
+powered applications, where long mission times are crucial. 
+Utilizing the identical electrical pinout and communication 
+interface as the rest of the DLEM family the new DLEM 20LE 
+can be easily adopted and integrated into existing plat-
+forms. The DLEM 20LE also shares the same mechanical 
+interface as the DLEM 20 so integrators can literally swap 
+the DLEM 20LE into their existing designs with a simple 
+connector change and obtain increased range performance.
+Your advantages:
+ – Lightweight & Compact: The enhanced performance 
+comes with no sacrifice in size and weight. The DLEM 
+20LE shares the same 30g weight and mechanical 
+interface and envelope as the DLEM 20.
+ – Efficient: The fast startup time facilitates seemingly 
+instantaneous ranging and the low power consumption 
+guarantees long mission times.
+ – Safe & Tactical: Totally eye-safe while being invisible  
+to I²-based night vision equipment
+ – Fast & Accurate: 25 Hertz ranging enables tracking 
+applications while 1 meter accuracy supports high 
+precision systems
+ – Robust & Reliable: Shock resistance and wide 
+operational temperature range support the integration 
+into systems in demanding operational environments
+ – Advanced optical design: Low divergence enables high 
+range performance on small targets while having a 
+uniform illumination of the target eliminating the need 
+for a preferred orientation
+New
+
+--- page 2 ---
+Technical data
+JENOPTIK Optical Systems GmbH
+Goeschwitzer Strasse 25 | 07745 Jena | Germany
+Phone +49 3641 65-3041 I Fax -3573
+defense-sensors@jenoptik.com | www.jenoptik.com
+665104-001-2109-en
+It is our policy to constantly improve the design and specifications. Accordingly, the details represented herein cannot be regarded as final and binding.
+Technical specifications DLEM 20LE
+Measurement principle Pulse accumulation
+Wavelength (nominal at 20 °C) ~ 1.55 µm
+Laser classification Laser class 1 (IEC 60825-1:2014)
+Modes of operation Single measurement,  
+continuous ranging 1 Hz to 25 Hz
+Divergence ~ 0.8 mrad
+Measurement range 10 m to 8,000 m
+Measurement resolution 0.1 m
+Range gate resolution 1 m
+Measurement time (selectable) 10 ms to 3,000 ms
+Multiple target detection – number of targets 5
+Multiple target discrimination ≤ 25 m
+Measurement accuracy (1σ) ≤ 1 m
+Typical measurement range
+  Small target (0.75 m × 0.75 m, albedo 30 %, 10 km visibility) ≥ 2,500 m
+  NATO standard target (2.3 m × 2.3 m, albedo 30 %, 10 km visibility) ≥ 3,500 m
+  Extended target (Beam filling, albedo 50 %, 23 km visibility) ≥ 5,250 m
+Mechanical
+  Weight ≤ 30 g
+  Dimensions (L × W × H) 50 mm × 22 mm × 34 mm
+Environmental
+  Operating temperature - 40 °C to + 80 °C
+  Storage temperature - 46 °C to + 85 °C 
+  Protection class IP00
+  Mechanical shock 1,500 g, 0.7 ms
+Electrical and communication
+  Input voltage range 2 V DC to 5.5 V DC
+  Power consumption 
+Operational | During measurement ≤ 0.01 W | ≤ 2 W
+  Startup-time (off | ready to measure) ≤ 85 ms
+  Data interface UART (LVTTL 3.3 V)
+  Interface connector Molex # 503763 - 0691  
+(mates with # 503764 - 0601)
+The DLEM 20LE is compact yet incredibly powerful when ranging non-cooperative targets.
+Small, lightweight, robust, efficient, accurate – ideal for use in demanding mobile and handheld applications.
+Fields of application:
+ – Micro-Gimbals for  
+UAV and UGV 
+ – Handheld surveillance and 
+reconnaissance systems
+ – Handheld fire  
+control systems 
+ – Space and satellite  
+technology

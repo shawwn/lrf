@@ -1,0 +1,211 @@
+Source: https://www.jenoptik.us/-/media/websitedocuments/optics/sensor/dlem-17-edb.pdf
+Fetched: 2026-10-03
+
+--- page 1 ---
+DLEM 17 – for where SWaP really matters
+The DLEM 17 measures 50 x 18 x 34 mm and weighs only 
+25 grams yet ranges to targets out to 8 kilometers, this 
+combination enables our customers to develop the most 
+advanced compact and lightweight products for their 
+applications.
+Derived from the field proven DLEM 20 it comes with the 
+same robustness to withstand shock loads up to 1,500 g 
+while offering a wide operational temperature range of 
+- 40 °C to + 80 °C making it the ideal sensor for tactical use 
+and in harsh environments. 
+The highly optimized power management systems makes it 
+the ideal laser rangefinder module for battery-powered 
+applications, where long mission times are crucial. 
+Utilizing the identical electrical and communication interface 
+as the rest of the DLEM-family the new DLEM 17 can be 
+easily adopted and integrated into existing platforms.
+Your advantages:
+ – Lightweight & Compact: Weighing 25 g while being very 
+small support miniaturized solutions
+ – Efficient: The fast startup time and the low power 
+consumption guarantee long mission times
+ – Safe & Tactical: Totally eye-safe while being invisible  
+to I²-based night vision equipment
+ – Fast & Accurate: 25 Hz ranging enables tracking 
+applications while 1 m accuracy supports high precision 
+systems
+ – Robust & Reliable: Shock proof with a wide operational 
+temperature range support integration into highly 
+demanding systems
+ – Advanced optical design: Low divergence enables  
+high range performance on small targets while having  
+a uniform illumination of the target eliminating the need 
+for a preferred orientation
+New
+
+--- page 2 ---
+Technical data
+JENOPTIK Optical Systems GmbH
+Goeschwitzer Strasse 25 | 07745 Jena | Germany
+Phone +49 3641 65-3041 I Fax -3573
+defense-sensors@jenoptik.com | www.jenoptik.com
+667419-001-2109-en
+It is our policy to constantly improve the design and specifications. Accordingly, the details represented herein cannot be regarded as final and binding.
+8
+7.4
+General tolerance 0.1 mm unless stated otherwise
+Threads: ISO DIN13-1 unless stated otherwise
+A-  Reference for alignment
+B - Production tolerance 42 - 44 mm
+C - Production tolerance 48 - 50 mm
+D - Max. available thread 2.8 mm, max. torque 1,0 Nm
+E - Max. available thread 2.3 mm, max. torque 1,0 Nm
+F - Max. available depth 2.0 mm
+G - Max. available depth 1.8 mm
+T-  Center of transmitter
+R - Center of receiver
+c 0,01Alternative mounting surface:
+G: Center bores 2H6 (+0,006/`0)
+E: Thread M2.5-6H (3x)
+Rx:
+Tx:
+D: Thread M2,5-6H (3x)
+F: Center bores 2H6 (+0,006/`0)
+A
+A
+c 0,01Mounting surface:
+15.5 1
+20
+15.5 1
+8
+8
+4
+C max. 50
+33.5
+8
+8
+4
+7.4 20
+(6.3)
+16
+(22)
+B max. 44
+B
+8
+7.4
+General tolerance 0.1 mm unless stated otherwise
+Threads: ISO DIN13-1 unless stated otherwise
+A-  Reference for alignment
+B - Production tolerance 42 - 44 mm
+C - Production tolerance 48 - 50 mm
+D - Max. available thread 2.8 mm, max. torque 1,0 Nm
+E - Max. available thread 2.3 mm, max. torque 1,0 Nm
+F - Max. available depth 2.0 mm
+G - Max. available depth 1.8 mm
+T-  Center of transmitter
+R - Center of receiver
+c 0,01Alternative mounting surface:
+G: Center bores 2H6 (+0,006/`0)
+E: Thread M2.5-6H (3x)
+Rx:
+Tx:
+D: Thread M2,5-6H (3x)
+F: Center bores 2H6 (+0,006/`0)
+A
+A
+c 0,01Mounting surface:
+15.5 1
+20
+15.5 1
+8
+8
+4
+C max. 50
+33.5
+8
+8
+4
+7.4 20
+(6.3)
+16
+(22)
+B max. 44
+B
+8
+7.4
+General tolerance 0.1 mm unless stated otherwise
+Threads: ISO DIN13-1 unless stated otherwise
+A-  Reference for alignment
+B - Production tolerance 42 - 44 mm
+C - Production tolerance 48 - 50 mm
+D - Max. available thread 2.8 mm, max. torque 1,0 Nm
+E - Max. available thread 2.3 mm, max. torque 1,0 Nm
+F - Max. available depth 2.0 mm
+G - Max. available depth 1.8 mm
+T-  Center of transmitter
+R - Center of receiver
+c 0,01Alternative mounting surface:
+G: Center bores 2H6 (+0,006/`0)
+E: Thread M2.5-6H (3x)
+Rx:
+Tx:
+D: Thread M2,5-6H (3x)
+F: Center bores 2H6 (+0,006/`0)
+A
+A
+c 0,01Mounting surface:
+15.5 1
+20
+15.5 1
+8
+8
+4
+C max. 50
+33.5
+8
+8
+4
+7.4 20
+(6.3)
+16
+(22)
+B max. 44
+B
+Technical specifications DLEM 17
+Measurement principle Pulse accumulation
+Wavelength (nominal at 20 °C) ~ 1.55 µm
+Laser classification Laser class 1 (IEC 60825-1:2014)
+Modes of operation Single measurement,  
+continuous ranging 1 Hz to 25 Hz
+Divergence ~ 0.8 mrad
+Measurement range 10 m to 8,000 m
+Measurement resolution 0.1 m
+Range gate resolution 1 m
+Measurement time (selectable) 10 ms to 3,000 ms
+Multiple target detection – number of targets 5
+Multiple target discrimination ≤ 25 m
+Measurement accuracy (1σ) ≤ 1 m
+Typical measurement range
+  Small target (0.75 m × 0.75 m, albedo 30 %, 10 km visibility) ≥ 2,000 m
+  NATO standard target (2.3 m × 2.3 m, albedo 30 %, 10 km visibility) ≥ 3,000 m
+  Extended target (Beam filling, albedo 50 %, 23 km visibility) ≥ 4,500 m
+Mechanical
+  Weight ≤ 25 g
+  Dimensions (L × W × H) 50 mm × 18 mm × 34 mm
+Environmental
+  Operating temperature - 40 °C to + 80 °C
+  Storage temperature - 46 °C to + 85 °C 
+  Protection class IP00
+  Mechanical shock 1,500 g, 0.7 ms
+Electrical and communication
+  Input voltage range 2 V DC to 5.5 V DC
+  Power consumption 
+Operational | During measurement ≤ 0.01 W | ≤ 2 W
+  Startup-time (off | ready to measure) ≤ 85 ms
+  Data interface UART (LVTTL 3.3 V)
+  Interface connector Molex # 503763 - 0691  
+(mates with # 503764 - 0601)
+The DLEM 17 is compact yet incredibly powerful when ranging non-cooperative targets. 
+Small, lightweight, robust, efficient, accurate – ideal for use in demanding mobile and handheld applications.
+Fields of application:
+ – Micro-Gimbals for  
+UAV and UGV 
+ – Handheld surveillance and 
+reconnaissance systems  
+ – Handheld fire control systems 
+ – Space and satellite technology 

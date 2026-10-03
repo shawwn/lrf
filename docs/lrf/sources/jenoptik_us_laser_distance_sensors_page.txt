@@ -1,0 +1,359 @@
+Source: https://www.jenoptik.us/products/lasers/laser-distance-sensors
+Fetched: 2026-10-03
+
+Laser range finder for distance measurement | Jenoptik USA 
+
+ ColorRay 
+
+ Logo: Jenoptik - More Light 
+
+ Blog 
+
+ Purchasing 
+
+ Language 
+
+ Choose language 
+
+ Deutsch 
+
+ English (Global) 
+
+ Español 
+
+ 日本語 
+
+ 한국어 
+
+ Choose country or region 
+
+ Australia 
+
+ Canada 
+
+ España 
+
+ Deutschland, Deutsch 
+
+ India 
+
+ International, English 
+
+ Switzerland 
+
+ 中国, 中文 
+
+ 日本, 日本語 
+
+ 대한민국, 한국어 
+
+ Products 
+
+ back 
+
+ Products 
+
+ Imaging Solutions and Cameras 
+
+ Laser and Laser Technology 
+
+ LiDAR Technologies 
+
+ Optics and Microoptics 
+
+ Measurement and Inspection Solutions 
+
+ Optoelectronics 
+
+ Road safety 
+
+ Civil security 
+
+ Markets 
+
+ back 
+
+ Markets 
+
+ Automotive 
+
+ Data Communication 
+
+ Defense and Security 
+
+ Electronics and Information Technology 
+
+ Industry and Mechanical Engineering 
+
+ Life Science and Medical Technology 
+
+ Semiconductor Equipment 
+
+ Public Safety 
+
+ About us 
+
+ back 
+
+ About us 
+
+ Company profile 
+
+ Values, Vision and Mission 
+
+ Management 
+
+ Innovation 
+
+ Quality 
+
+ Chronicle 
+
+ Compliance & Risk Management 
+
+ News 
+
+ back 
+
+ News 
+
+ Press Releases 
+
+ Social Media 
+
+ Media Library 
+
+ Events and Trade fairs 
+
+ Sustainability 
+
+ back 
+
+ Sustainability 
+
+ Jenoptik as enabler 
+
+ Sustainability targets 
+
+ Environment 
+
+ Social 
+
+ Governance 
+
+ ESG ratings 
+
+ Innovation 
+
+ Investors 
+
+ back 
+
+ Investors 
+
+ Jenoptik at a glance 
+
+ Share 
+
+ Reports and presentations 
+
+ Adhoc releases and IR news 
+
+ Annual General Meeting 
+
+ Corporate Governance 
+
+ Events 
+
+ Contact Investor Relations 
+
+ Careers 
+
+ back 
+
+ Careers 
+
+ Working at Jenoptik 
+
+ What we offer 
+
+ Partners 
+
+ Job offers 
+
+ Events 
+
+ Search 
+
+ search 
+
+ Close 
+
+ NEW IN ELEM-DP 50E 
+
+ We proudly presenting our new ELEM-DP 50E!
+
+ Be excited to see more about it.
+
+ More information 
+
+ Prev 
+
+ Next 
+
+ Contact 
+
+ Home 
+
+ Products 
+
+ Laser and Laser Technology 
+
+ Laser Rangefinder 
+
+ Recommend Mail Facebook LinkedIn 
+
+ Laser range finder for accurate measurement and monitoring 
+
+ With Jenoptik's laser rangefinders, you can measure distances and positions in the range of a few centimeters up to 60 kilometers - contactless, fast and accurate to the millimeter. 
+
+ Our laser rangefinder measure the distance to objects precisely and quickly - even under the most difficult visual conditions. 
+
+ Jenoptik's laser rangefinder provide fast and precise measurement data with a long range - even under difficult conditions. Even in poor visibility and extreme temperatures, they measure distances to detected targets accurately and reliably. This allows users to assess the situation immediately and respond to threats.
+
+ Our laser rangefinders cover a wide range of distances and applications.
+
+ Laser rangefinder at a glance
+
+ Exactly: LDM Series
+
+ Range up to 3 km
+ Measuring frequency up to 40 kHz
+ Measure to the millimetre
+
+ More information 
+
+ Fast: DLEM Series
+
+ Range up to 20 km
+ Low weight
+ For ambient temperatures between -40 °C and +80 °C
+
+ More information 
+
+ Far: ELEM Series
+
+ Range up to 60 km
+ Measuring frequency up to 15 Hz
+ Measuring accuracy up to 3 m
+
+ More information 
+
+ Laser Rangefinder from Jenoptik
+
+ Jenoptik and Laser Rangefinder 
+
+ Jenoptik has more than 50 years of experience in the field of rangefinders. Even though 50 years ago Jenoptik did not yet exist in its current form, rangefinder were already being built. To be more precise, a laser rangefinder module was already developed and built into a military application in the 1970s. By the end of the 1980s, more than 6,000 rangefinder had been produced and sold. Since then, Jenoptik has been constantly expanding its experience and knowledge and developing its rangefinder portfolio. 
+
+ How accurate are the laser rangefinders? 
+
+ Jenoptik's laser rangefinders impress with their long range of up to 60 kilometers and millimeter-level accuracy . This gives them an excellent power-to-size ratio. Thanks to their low weight, starting at 25 grams, the DLEM series laser rangefinders are extremely lightweight considering their sub-meter accuracy and measuring range of up to 20 kilometers. The ELEM series single-pulse laser rangefinders weigh from 160 grams, achieve distance measurements of up to 60 kilometers, and measure reliably with an accuracy less than 3 meters . The LDM series laser rangefinders even achieve millimeter-level accuracy . 
+
+ Diode laser rangefinder, what is it? 
+
+ The diode laser rangefinder modules (DLEM) from Jenoptik measure distances to targets precisely and with a measuring range of up to 20 kilometres. With their extremely compact design and low weight of 25 to 160 grams, the rangefinders in the DLEM family are the smallest and lightest measuring devices in their range class. The rangefinders are very efficient and consume very little energy in stand-by and operating mode. 
+
+ Single pulse laser rangefinder, what is it? 
+
+ With the solid-state laser rangefinder of the ELEM family, objects can be measured at a distance of up to 60 kilometres. The compact and robust laser rangefinder modules can be easily integrated into stationary and mobile systems. Our ELEMs work with 1.54 micrometre erbium glass solid-state lasers and are eye-safe measuring devices according to laser class 1M. The radiation of the rangefinder remains hidden from night vision devices. Due to their high repetition rate, the laser rangefinder reliably measure even objects with high speed. 
+
+ How does a laser rangefinder work? 
+
+ In single pulse laser distance measurement (ELEM), a laser rangefinder emits a short laser pulse whose start time is recorded. The laser pulse travels to the desired target and back to the starting point. The total travel time of the laser is measured with picosecond accuracy by the laser rangefinder. The distance is then calculated based on the known speed of light.
+
+ In contrast, diode laser rangefinders (DLEM) send several thousand laser pulses. The echoes of all the individual laser pulses are superimposed and sophisticated software algorithms process the collected echoes. This allows the distance of hard targets to be measured, while soft targets are disregarded.
+
+ What do I use a laser rangefinder for? 
+
+ The diode laser rangefinder are commonly used in handheld surveillance systems, highly mobile fire control systems, high performance gimbal systems for UAVs and helicopters, and long range surveillance systems for border patrol.
+
+ The single-pulse laser rangefinder are most commonly used in sensor pods for aircraft, long-range observation and border control systems, and remotely controlled defence systems.
+
+ Do you have questions? Please contact us for more information. 
+
+ Please select a category 
+
+ Select 
+ Germany 
+ Japan 
+ United States 
+
+ Sales Laser Distance Sensors
+
+ +49 174 7782236 
+
+ +81 045 670-9140 
+
+ +81 045 670-9141 
+
+ North America
+
+ +1 561 881 7400 
+
+ Contact us 
+
+ Personal Information
+
+ Name * 
+
+ Company 
+
+ Country 
+
+ Phone 
+
+ E-mail * 
+
+ Please do not fill in this field. 
+
+ Your inquiry
+
+ Message 
+
+ I am a Jenoptik customer already. 
+
+ CustomerNumber 
+
+ I consent that JENOPTIK AG or the Jenoptik Group company responsible for my request may process my e-mail address and my other personal data entered in the contact form in order to contact me by e-mail, telephone or otherwise and send me information on products and services offered by the Jenoptik Group. I am entitled at any time to receive information on the personal data stored about me and I can request the rectification, erasure or blocking of individual personal data. I can withdraw this declaration of consent at any time without giving reasons. Besides, I took notice of the Data protection declaration on the contact form. * 
+
+ * = mandatory field, please complete 
+
+ Send 
+
+ Legal Notice 
+
+ GTC 
+
+ Data protection information 
+
+ Newsletter 
+
+ Tracking preferences 
+
+ click here for the youtube channel 
+
+ click here for the youtube channel 
+
+ click here for the LinkedIn channel 
+
+ Color Scheme Options 
+
+ Please choose your prefered color scheme option. 
+
+ Automatic color change 
+
+ Choose color theme 
+
+ Random per session 
+
+ Save and close

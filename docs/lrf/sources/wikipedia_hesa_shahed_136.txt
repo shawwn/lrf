@@ -1,0 +1,1810 @@
+Source: https://en.wikipedia.org/wiki/HESA_Shahed_136
+Fetched: 2026-10-03
+
+HESA Shahed 136 - Wikipedia 
+
+ Jump to content 
+
+ Main menu 
+
+ Main menu
+
+ move to sidebar 
+ hide 
+
+ Navigation
+
+ Main page 
+ Contents 
+ Current events 
+ Random article 
+ About Wikipedia 
+ Contact us 
+
+ Contribute
+
+ Help 
+ Learn to edit 
+ Community portal 
+ Recent changes 
+ Upload file 
+ Special pages 
+
+ Search 
+
+ Search 
+
+ Appearance 
+
+ Donate 
+
+ Create account 
+
+ Log in 
+
+ Personal tools 
+
+ Donate 
+
+ Create account 
+
+ Log in 
+
+ Contents
+
+ move to sidebar 
+ hide 
+
+ (Top)
+
+ 1 
+ Overview 
+
+ Toggle Overview subsection 
+
+ 1.1 
+ Description 
+
+ 1.2 
+ Electronics 
+
+ 1.3 
+ Deployment 
+
+ 2 
+ Foreign developments 
+
+ Toggle Foreign developments subsection 
+
+ 2.1 
+ Geran-2 
+
+ 2.2 
+ Ukrainian analogs 
+
+ 2.3 
+ U.S. LUCAS drone 
+
+ 2.4 
+ Taiwan 
+
+ 3 
+ Combat history 
+
+ Toggle Combat history subsection 
+
+ 3.1 
+ Yemeni Civil War 
+
+ 3.2 
+ Russo-Ukrainian war (2022–present) 
+
+ 3.2.1 
+ First appearances 
+
+ 3.2.2 
+ October waves 
+
+ 3.2.3 
+ Ukrainian defense 
+
+ 3.2.4 
+ Reactions 
+
+ 3.3 
+ 2022 Syria and Iraqi Kurdistan 
+
+ 3.4 
+ 2023 Indian Ocean 
+
+ 3.5 
+ 2024 Iranian strikes on Israel 
+
+ 3.6 
+ 2026 Iran war 
+
+ 4 
+ Classification controversy 
+
+ 5 
+ Relations with other Shahed drones 
+
+ Toggle Relations with other Shahed drones subsection 
+
+ 5.1 
+ Shahed 131 
+
+ 5.2 
+ Shahed 238 
+
+ 6 
+ Operators 
+
+ 7 
+ Global impact 
+
+ 8 
+ See also 
+
+ 9 
+ References 
+
+ 10 
+ External links 
+
+ Toggle the table of contents 
+
+ HESA Shahed 136 
+
+ 37 languages 
+
+ Afrikaans 
+ العربية 
+ Azərbaycanca 
+ Беларуская 
+ Català 
+ کوردی 
+ Čeština 
+ Deutsch 
+ Español 
+ Eesti 
+ Euskara 
+ فارسی 
+ Suomi 
+ Français 
+ עברית 
+ हिन्दी 
+ Hrvatski 
+ Magyar 
+ Հայերեն 
+ Bahasa Indonesia 
+ Italiano 
+ 日本語 
+ 한국어 
+ Lietuvių 
+ Latviešu 
+ Nederlands 
+ Polski 
+ Português 
+ Română 
+ Русский 
+ Slovenčina 
+ Svenska 
+ Тоҷикӣ 
+ Türkçe 
+ Українська 
+ Tiếng Việt 
+ 中文 
+
+ Edit links 
+
+ Article 
+
+ Talk 
+
+ English 
+
+ Read 
+
+ View source 
+
+ View history 
+
+ Tools 
+
+ Tools
+
+ move to sidebar 
+ hide 
+
+ Actions
+
+ Read 
+
+ View source 
+
+ View history 
+
+ General
+
+ What links here 
+ Related changes 
+ Upload file 
+ Permanent link 
+ Page information 
+ Cite this page 
+ Get shortened URL 
+ Switch to legacy parser 
+
+ Print/export
+
+ Download as PDF 
+ Printable version 
+
+ In other projects
+
+ Wikimedia Commons 
+ Wikidata item 
+
+ Appearance
+
+ move to sidebar 
+ hide 
+
+ From Wikipedia, the free encyclopedia
+
+ Iranian-designed one-way attack drone
+
+ Russia<ref name=jensen/>"},"origin":{"wt":"[[Iran]]"},"used_by":{"wt":"Iran<br>[[Russia]] (as Geran-2)"},"is_missile":{"wt":"Yes"},"wingspan":{"wt":"{{cvt|2.5|m|ft}}"},"length":{"wt":"{{cvt|3.5|m|ft}}"},"weight":{"wt":"{{cvt|200|kg|lb}}"},"is_ranged":{"wt":"Yes"},"guidance":{"wt":"[[Satellite navigation|GNSS]], [[Inertial navigation system|INS]],<ref name=\"#0700\">{{cite web |work=eurasiantimes.com |url=https://www.eurasiantimes.com/hitting-bulls-eye-russia-has-upgraded-iranian-shahed-136-kamikaze/ |title=Russia Has 'Upgraded' Iranian Shahed-136 Kamikaze Drones to Boost Its Lethality & Accuracy -- Military Experts |access-date=13 September 2023 |first=Ashish |last=Dangwal |date=19 October 2022 }}</ref> potential [[Automatic target recognition]]<ref>{{cite web | url=https://en.defence-ua.com/weapon_and_tech/whats_the_russias_new_ai_powered_shahed_136_and_what_its_capable_of-13011.html | title=What's the russia's New AI-Powered Shahed-136 and What It's Capable of | website=Defense Express }}</ref>"},"number":{"wt":"Unknown"},"propellant":{"wt":""},"ceiling":{"wt":""},"altitude":{"wt":""},"accuracy":{"wt":""},"launch_platform":{"wt":"[[JATO|Rocket-assisted take-off]]"},"speed":{"wt":"Around {{cvt|185|km/h|mph}}"},"wars":{"wt":"* [[Russo-Ukrainian war (2022–present)|Russo-Ukrainian war]]\n* [[September–October 2022 attacks on Iraqi Kurdistan]]\n* [[April 2024 Iranian strikes against Israel|April 2024 Iranian strikes in Israel]]\n* [[2026 Iran war]]"},"unit_cost":{"wt":"$193,000<ref name=Buncombe /> (export; various estimates for domestic production cost range from $10,000 to $50,000)<ref name=elpais-20221012>{{cite news |url=https://english.elpais.com/international/2022-10-12/iranian-suicide-drones-russias-new-favorite-weapon-in-ukraine-war.html |title=Iranian 'suicide' drones: Russia's new favorite weapon in Ukraine war |last=Segura |first=Cristian |website=El Pail |date=12 October 2022 |access-date=13 October 2022 |archive-date=17 October 2022 |archive-url=https://web.archive.org/web/20221017191033/https://english.elpais.com/international/2022-10-12/iranian-suicide-drones-russias-new-favorite-weapon-in-ukraine-war.html |url-status=live }}</ref><ref name=\"Newdick\" /><ref name=\"guardian-20221019\">{{cite news |title=Financial toll on Ukraine of downing drones 'vastly exceeds Russian costs' |url=https://www.theguardian.com/world/2022/oct/19/financial-toll-ukraine-downing-drones-vastly-exceeds-russia-costs |last=Boffey |first=Daniel |newspaper=The Guardian |date=19 October 2022 |access-date=19 October 2022}}</ref><ref name=\"airspacemag20jan23\">{{cite web |first=Chris |last=Gordon |access-date=13 September 2023 |url=https://www.airandspaceforces.com/article/cheap-uavs-exact-high-costs/ |title=Cheap UAVs Exact High Costs |work=Air & Space Forces Magazine |date=20 January 2023 }}</ref>"},"filling_weight":{"wt":"{{convert|50|kg}};<ref name=\"janes17may23\">{{Cite web|date=17 May 2023|title=IRGC confirms specs for Shahed-136 attack UAV|url=https://www.janes.com/defence-news/news-detail/irgc-confirms-specs-for-shahed-136-attack-uav|access-date=|website=[[Janes Information Services]]|archive-url=https://web.archive.org/web/20230528183124/https://www.janes.com/defence-news/news-detail/irgc-confirms-specs-for-shahed-136-attack-uav|archive-date=28 May 2023|url-status=live}}</ref>\n{{convert|90|kg}} (Russia post 2024)<ref>{{Cite web|date=18 February 2025|title=IRGC confirms specs for Shahed-136 attack UAV|url=https://militarnyi.com/en/news/ukrainian-defense-intelligence-russians-significantly-modernized-shahed-and-gerbera-drones/}}</ref>"},"engine":{"wt":"[[Limbach L550E|MD-550 piston engine]]"},"vehicle_range":{"wt":"{{cvt|2500|km}}<ref name=\"janes17may23\"/>"}},"i":0}}]}'> Shahed 136 
+ A Shahed 136 at an exhibition
+
+ Type One-way attack drone 
+ Place   of   origin Iran 
+ Service history 
+ Used   by Iran
+ Russia (as Geran-2) 
+ Wars 
+ Russo-Ukrainian war 
+
+ September–October 2022 attacks on Iraqi Kurdistan 
+
+ April 2024 Iranian strikes in Israel 
+
+ 2026 Iran war 
+
+ Production history 
+ Designer Shahed Aviation Industries 
+ Manufacturer Shahed Aviation Industries; [ 1 ] Russia [ 2 ] 
+ Unit   cost $193,000 [ 3 ] (export; various estimates for domestic production cost range from $10,000 to $50,000) [ 4 ] [ 5 ] [ 6 ] [ 7 ] 
+ Number</span>"}]]}'>No.   built Unknown 
+ Specifications 
+ Mass 200   kg (440   lb) 
+ Length 3.5   m (11   ft) 
+ Wingspan 2.5   m (8.2   ft) 
+
+ Warhead   weight 50 kilograms (110   lb); [ 8 ] 
+90 kilograms (200   lb) (Russia post 2024) [ 9 ] 
+
+ Engine MD-550 piston engine 
+ Operational
+range
+ 2,500   km (1,600   mi) [ 8 ] 
+ Maximum speed of vehicle or missile</span>"}]]}'>Maximum speed Around 185   km/h (115   mph) 
+ Guidance
+system
+ GNSS , INS , [ 10 ] potential Automatic target recognition [ 11 ] 
+ Launch
+platform
+ Rocket-assisted take-off 
+
+ The HESA Shahed 136 ( Persian : شاهد ۱۳۶ , literal translation</span>"}]],"parts":[{"template":{"target":{"wt":"Lit","href":"./Template:Lit"},"params":{"1":{"wt":"[[Shahada#Terminology and significance|Witness]] 136"}},"i":0}}]}'>lit.   ' Witness 136 ' ), also known by its Russian designation Geran-2 ( Russian : Герань-2 , literal translation</span>"}]],"parts":[{"template":{"target":{"wt":"Lit","href":"./Template:Lit"},"params":{"1":{"wt":"[[Geranium]]-2"}},"i":0}}]}'>lit.   ' Geranium -2 ' ), is an Iranian-designed one-way attack drone , [ 12 ] [ 13 ] [ 14 ] also known as a kamikaze drone or suicide drone, [ 15 ] [ 16 ] [ 17 ] [ 18 ] in the form of an autonomous pusher-propelled drone . It is designed and manufactured by the Iranian state-owned corporation HESA in association with Shahed Aviation Industries . [ 1 ] [ 19 ] [ 15 ] 
+
+ The munition is designed to attack ground targets from a distance. The drone is typically fired in multiples from a launch rack. The first public footage of the drone was released in December 2021. [ 5 ] Russia has made much use of the Shahed 136/Geran-2 in the Russo-Ukrainian war , especially in strikes against Ukrainian infrastructure , and mass-produces its own version. [ 2 ] 
+
+ In response to the effectiveness of the drones, Ukraine developed its own Shahed-136 analogs in 2025 for long-range strikes. The Ukrainian Batyar was announced by DeepStrikeTech in May 2025 and the American-European Artemis ALM-20 was announced in October 2025. Drones with a similar shape to the ALM-20 were used in strikes in the Moscow and Rostov-on-Don regions, [ 20 ] while a drone similar to the Batyar was seen in a strike on the Ust-Luga oil export terminal. [ 21 ] 
+
+ In December 2025, the U.S. military announced it had developed the LUCAS drone, a clone of the Shahed 136 developed from reverse engineering the Iranian-designed HESA Shahed 136, and deployed a squadron in the Middle East. [ 22 ] LUCAS's first officially confirmed use was in February 2026, against the Islamic Republic of Iran Armed Forces during the 2026 Iran war . [ 23 ] [ 24 ] 
+
+ Overview
+
+ Description
+
+ A Shahed 136 side view 
+ Five Shahed 136s displayed in a deployment truck 
+
+ The aircraft has a cropped delta-wing shape, with a central fuselage blending into the wings, which have vertical stabilizing rudders at the tips. The nose section contains a warhead estimated to weigh 30–50 kilograms (66–110   lb) . [ 25 ] An Iranian-made Mado MD-550 engine sits in the rear of the fuselage and drives a two-bladed pusher propeller. The MD-550 is reverse engineered from the Limbach L550E , a 550cc four-cylinder two-stroke petrol aircraft engine made in Germany. [ 26 ] [ 27 ] The munition is 3.5 metres (11   ft) long, with a wingspan of 2.5 metres (8.2   ft) , flies at over 185 kilometres per hour (115   mph) , and weighs about 200 kilograms (440   lb) . [ 16 ] The drone's appearance resembles that of the Drohne-Anti-Radar (DAR) developed by Dornier Flugzeugwerke in Germany in the 1980s, but whether there was actual copying is an open question. [ 28 ] 
+
+ Its range has been estimated to be anywhere from between 970–1,500   km (600–930   mi) to as much as 2,000–2,500   km (1,200–1,600   mi) . [ 7 ] [ 29 ] [ 18 ] The U.S. Army unclassified worldwide equipment guide states that the Shahed 136 design supports an aerial reconnaissance option, [ 30 ] [ 31 ] although no cameras were noted in the Geran-2 in Russian service. [ 32 ] A British report presented to the United Nations Security Council in 2023 stated that a version of the Shahed 136 was used in 2023 against moving vessels in the Gulf of Oman , which required a sensor to lock onto the moving target, and/or an operator in the loop with a real time sensor feed. An Iridium satellite phone SIM card was found in the debris, indicating possible control beyond line of sight. [ 33 ] 
+
+ Electronics
+
+ Fragments of a Shahed 136 collected by the US Navy in November 2022 in the Arabian Sea 
+
+ The Shahed 136 navigates by a commercial-grade inertial guidance system , corrected by civilian GPS and GLONASS . [ 34 ] December 2023 remains from the drones were found with SIMs and 4G modems of the type used in mobile phones. [ 35 ] Despite no markings, experts believe the munition uses a computer processor manufactured by the American company Altera , RF modules by Analog Devices and LDO chips by Microchip Technology . [ 36 ] 
+
+ Inspection of captured drones used by Russia during the Russo-Ukrainian war revealed that some Shahed-136 electronics were manufactured from foreign made components, such as a Texas Instruments TMS320 processor, a Polish made fuel pump on behalf of UK-based company TI Fluid Systems and a voltage converter from China. [ 37 ] [ 38 ] [ 39 ] [ excessive citations ] In 2023 the Jewish Chronicle reported that British universities had participated in drone development with Iran. [ 40 ] 
+
+ Deployment
+
+ Because of the portability of the launch frame and drone assembly, the entire unit can be mounted on the back of any military or commercial truck. [ 16 ] The aircraft is launched on rails at a slight upward angle with initial rocket launch assistance . The rocket is jettisoned immediately after launch, whereupon the drone's conventional piston engine takes over.
+
+ Foreign developments
+
+ Geran-2
+
+ "},"origin":{"wt":"[[Russia]]"},"used_by":{"wt":"[[Russia]]"},"is_missile":{"wt":"Yes"},"wingspan":{"wt":"{{cvt|2.5|m|ft}}"},"length":{"wt":"{{cvt|3.5|m|ft}}"},"weight":{"wt":"maximum of {{cvt|240|kg|lb}}<ref name=md-20240715/>"},"is_ranged":{"wt":"Yes"},"guidance":{"wt":"[[Satellite navigation|GNSS]], [[Inertial navigation system|INS]],<ref name=\"#0700\"/> [[Teleoperation]]<ref>[https://militarnyi.com/en/news/russia-uses-upgraded-shahed-kamikaze-drone-with-built-in-camera/ \"Russia Uses Upgraded Shahed “Ъ” Kamikaze Drone with Built-In Camera\"] militarnyi.com, 3 September 2025, retrieved 5 March 2026</ref>"},"number":{"wt":"Unknown"},"propellant":{"wt":""},"ceiling":{"wt":""},"altitude":{"wt":""},"accuracy":{"wt":""},"launch_platform":{"wt":"[[JATO|Rocket-assisted take-off]]"},"speed":{"wt":"Around {{cvt|185|km/h|mph}}"},"wars":{"wt":"* [[Russo-Ukrainian war (2022–present)|Russo-Ukrainian war]]"},"unit_cost":{"wt":"$30,000 to $80,000<ref name=rusi-20240411/>"},"filling_weight":{"wt":"{{cvt|52|kg}} and {{cvt|90|kg}} options"},"engine":{"wt":"MD-550 piston engine"},"vehicle_range":{"wt":"{{cvt|2500|km}} or {{cvt|1000|km}} with 90 kg warhead<ref name=md-20240715/>"}},"i":0}}]}'> Geran-2 
+ Remains of Geran-2 in Vinnytsia Oblast , March 2024
+
+ Type Loitering munition 
+ Place   of   origin Russia 
+ Service history 
+ Used   by Russia 
+ Wars 
+ Russo-Ukrainian war 
+
+ Production history 
+ Manufacturer JSC Alabuga [ 41 ] 
+ Unit   cost $30,000 to $80,000 [ 42 ] 
+ Number</span>"}]]}'>No.   built Unknown 
+ Specifications 
+ Mass maximum of 240   kg (530   lb) [ 43 ] 
+ Length 3.5   m (11   ft) 
+ Wingspan 2.5   m (8.2   ft) 
+
+ Warhead   weight 52   kg (115   lb) and 90   kg (200   lb) options 
+
+ Engine MD-550 piston engine 
+ Operational
+range
+ 2,500   km (1,600   mi) or 1,000   km (620   mi) with 90 kg warhead [ 43 ] 
+ Maximum speed of vehicle or missile</span>"}]]}'>Maximum speed Around 185   km/h (115   mph) 
+ Guidance
+system
+ GNSS , INS , [ 10 ] Teleoperation [ 44 ] 
+ Launch
+platform
+ Rocket-assisted take-off 
+
+ See also: Iran and the 2022 Russian invasion of Ukraine 
+
+ Geran-2 is the name of the weapon in Russian service and later versions manufactured in Russia. [ 18 ] [ 41 ] Russia has significantly hardened and upgraded the Geran-2 from the Iranian design over many iterations, and has become independent of Iran in its development and manufacturing. [ 42 ] [ 45 ] In October 2022, a Times of Israel correspondent noted that the Iranian navigation system made from civilian components had been replaced with a Russian manufactured flight control unit and microprocessors, using the Russian GLONASS satellite navigation system rather than US civilian grade GPS , seemingly improving its loitering munition capability. [ 46 ] [ 47 ] Geran-2 has labeling and paint color matching Russian rather than Iranian munitions, [ 48 ] some painted black for night operations. [ 43 ] No cameras or short-range sensors were noted in 2022. [ 32 ] In November 2022, Russia and Iran had agreed to the Russian manufacture of the munition, with Iran exporting key components. [ 48 ] [ 49 ] The Russian manufacturing facility is in the Alabuga Special Economic Zone , Tatarstan , with a target of building 6,000 Geran-2s by summer 2025. [ 50 ] [ 51 ] 
+
+ In July 2023, UK based Conflict Armament Research studied the remains of two Geran-2s used in Ukraine, concluding they were a new variant manufactured in Russia. They found "major differences in the airframe construction and in the internal units" compared to earlier examples studied, including a fuselage now made of fiberglass over woven carbon fiber rather than lightweight honeycomb. A third of the components showed manufacturing dates from 2020 to 2023, and three Russian components showed dates from January to March 2023. Twelve components showed dates after the start of the invasion in February 2022. Some internal modules were the same as in other Russian weapon systems, including the Kometa satellite navigation module. [ 52 ] [ 53 ] In December 2023, the Ukrainian National Agency on Corruption Prevention stated that the Russian-produced Geran-2 included 55 parts made in the United States, 15 from China, 13 from Switzerland, and 6 from Japan. [ 54 ] 
+
+ The Russian-manufactured Geran-2 is believed to have a "state-of-art antenna interference suppression" system that suppresses jamming of the satellite navigation position signal, designed by Iran using seven transceivers for input and an FPGA and three microcontrollers to analyse and suppress any electronic warfare emissions. [ 55 ] 
+As of late September 2023, Russian forces have reportedly started packing warheads with tungsten ball shrapnel, similar to the M30A1 and M30A2 series of GMLRS warheads. According to Ukrainian officials the Russian modifications included "new warheads (tungsten shrapnel), engines, batteries, servomotors and bodies". [ 56 ] As of October 2023, Russia had significantly hardened and upgraded the Geran-2 in several iterations, though the authors of an occasional paper in 2024 estimated this had increased the production cost from $30,000 to about $80,000. One such upgrade is for a scout Geran-2 to conduct an electromagnetic spectrum survey, transmitting back to assist in safer route planning for follow-on munitions. [ 42 ] 
+
+ In May 2024, a version of the Geran-2 with a heavier 90 kg warhead was reported. This version has relocated internals and, as a result, a smaller fuel tank. By almost doubling the warhead weight, the amount fuel carried drops to 71 liters (16   imp   gal; 19   U.S.   gal) , resulting in a reduced 650 kilometres (400   mi) maximum range. [ 57 ] A 52 kg thermobaric warhead option was also reported. This version may be painted black for night operations. [ 41 ] [ 43 ] By May 2025, the 90 kg warhead version had been widely deployed, particularly against Ukrainian electricity infrastructure. [ 58 ] 
+
+ In September 2024, Ukrainian sources reported that the remains of a shot down Geran 2 included a Starlink satellite communications system providing internet connectivity over Ukraine, presumably to support real time video or electromagnetic spectrum surveys. Previously communication experiments had been conducted with 4G modems on the Ukrainian mobile phone network . [ 59 ] [ 60 ] In May 2025, The Kyiv Independent quoted Ukrainian mobile air defense sources stating that at night the drone had started avoiding strong light sources en-route, prompting air defense units to use some night-vision devices instead of searchlights. [ 61 ] 
+In June 2025, Defence Intelligence of Ukraine was reported to have examined a new type of Geran-2, which they called the MS series, which had an infrared camera and a Nvidia Jetson based computer capable of video processing and autonomously finding targets. It also had a radio modem capable of transmitting video and telemetry. This new drone has been used to scout routes prior to other attacks, scanning for mobile air defence units. [ 62 ] 
+
+ As of late spring 2025 Russia has been producing around 170 Geran-2 drones per day, with indication that a total of around 26,000 Gerans were produced by Yelabuga drone factory . [ 63 ] [ 64 ] [ 65 ] Defense Intelligence of Ukraine estimates 40,000 Geran-2 and 24,000 cheaper Gerbera decoy drones are planned to be manufactured in 2025. [ 66 ] In February 2026, the Ukrainian Main Directorate of Intelligence reported that the remains of a reconnaissance version of the Geran-2 was found to contain a Raspberry Pi 5 microcomputer and a Russian-branded Mini PC computer running Windows 11 , made in China, believed to be part of a vision processing system . [ 67 ] [ 68 ] 
+
+ By early 2026 the Ukrainian military had identified several experimental subcategories of the Geran-2: A Geran-2 (series E) carrying an 18-kg 9K333 Verba MANPAD surface to air missile launcher on its back, designed to launch a single infrared homing surface-to-air missile in the direction the Geran-2 is traveling. The drone has a Chinese-made camera in its nose, allowing a remote operator to acquire a target, which is then attacked as soon as the MANPAD has locked onto it. The drone itself can afterwards continue its standard mission and strike a ground target. [ 69 ] 
+
+ A comparable modification was found on a downed Geran-3 jet powered drone at the same time, but with an older 45-kg infrared homing R-60 air-to-air missile on a launching rail mounted on its back. [ 70 ] These modifications were apparently done to attack helicopters, after Ukrainian commander-in-chief Oleksandr Syrskyi had stated in September 2025, that helicopters were responsible for some 40 percent of drone kills. [ 71 ] Almost all observed Geran-2 drones in early 2026 were equipped with 2G -, 3G - and 4G - antennas. [ 71 ] By January 2026, Russia had mastered the use of Starlink internet connections to remote control Geran-2 drones. [ 72 ] An attack on a moving passenger train in late January 2026 near Charkiv with 3 drones hitting, was attributed to Starlink controlled Geran's. [ 73 ] 
+
+ Ukrainian analogs
+
+ After seeing the effectiveness of Shahed-136 drones and Russian derivatives, Ukraine developed its own Shahed-136 analogs in 2025. The 800-km range Batyar was announced by DeepStrikeTech in May 2025, with a warhead of 18 kg in its long-range configuration. The Batyar drone uses optical terrain matching to reduce its dependence on GPS and radio signals. [ 74 ] In October 2025, the joint American-European Artemis ALM-20 was announced. Using an onboard computer by the multinational company Auterion and an airframe from an unnamed Ukrainian company, the ALM-20 is capable of carrying a 45 kg warhead over 1600 km, using AI to navigate without GPS and for autonomous terminal guidance. [ 75 ] 
+
+ U.S. LUCAS drone
+
+ Main article: Low-cost Uncrewed Combat Attack System 
+
+ LUCAS drones deployed in the U.S. Central Command operating area, November 2025 
+ On 3 December 2025, U.S. Central Command (CENTCOM) announced it had deployed a squadron of Shahed 136 clones operated by a new task force in the Middle East, named Task Force Scorpion Strike under Special Operations Command Central . The Low-cost Uncrewed Combat Attack System (LUCAS) drones, largely based on reverse-engineering a captured Shahed 136, has an extensive range and can operate autonomously. The one-way-attack drone can be launched using different mechanisms including catapults, rocket-assisted takeoff, and mobile ground and vehicle systems. [ 76 ] [ 77 ] On 16 December 2025, USS   Santa Barbara   (LCS-32) test launched a LUCAS drone at sea for the first time, in the Persian Gulf . [ 78 ] 
+
+ The LUCAS drone was developed by Arizona-based SpektreWorks , in cooperation with the U.S. military. The number built was not disclosed, but CENTCOM stated they had "an amount that provides us with a significant level of capability", and that build cost was about $35,000. [ 76 ] A U.S. official said that the existing larger and more expensive precision systems had "put our forces at a disadvantage" and that "now we're flipping the script". [ 79 ] SpektreWorks also supply a target drone resembling the Shahed 136, named FLM 136, which was shown at a public Pentagon event on 16 July 2025 where the LUCAS development was also presented. The FLM 136 specification is mostly lower than the Shahed 136, with a range of 444 nautical miles (822   km) , maximum speed of 105 knots (194   km/h) , endurance of 6 hours, payload of 40   lb (18   kg) with a maximum weight of 190   lb (86   kg) . [ 80 ] [ 81 ] 
+
+ Taiwan
+
+ In May 2026, it was reported Taiwan has a Shahed analog known as Papa Delta , made by Thunder Tiger Corp. [ 82 ] 
+
+ Combat history
+
+ This section needs to be updated . Please help update this article to reflect recent events or newly available information. ( June 2025 ) 
+
+ An orthographic projection of a Shahed 136/Geran-2 
+
+ Yemeni Civil War
+
+ There were some reports of its use in the 2019 attack of Saudi oil plants at Abqaiq and Khurais , [ 83 ] [ better   source   needed ] however The Washington Post reported that other types of drone were used in that attack. [ 31 ] A British report to the United Nations Security Council states that a Shahed 131 was used, not a 136. [ 33 ] 
+
+ Russo-Ukrainian war (2022–present)
+
+ See also: Iran and the Russo-Ukrainian war (2022–present) 
+
+ During the Russo-Ukrainian war (2022–present) , Russia has used loitering munitions bearing the name Geran-2 ( Russian : Герань-2 , literally "Geranium-2") against Ukraine. These Geran-2 drones are considered by Ukraine and its Western allies to be redesignated Iranian-made Shahed-136 drones. [ 84 ] [ 85 ] [ 86 ] [ 87 ] [ excessive citations ] 
+
+ In the months prior to the confirmation of their use, US intelligence sources and Ukrainian officials have claimed that Iran had supplied Russia with several hundred drones including Shahed-136s, although Iran has repeatedly rejected the claims that it had sent drones for use in Ukraine, saying it is neutral in the war. [ 87 ] [ 88 ] [ 89 ] [ 84 ] [ excessive citations ] However, on 2 September 2022 the Commander of the IRGC General Hossein Salami said at a Tehran arms show that "some major world powers" had purchased Iranian military equipment and his men were "training them to employ the gear". [ 90 ] Russia stated it uses unmanned aerial vehicles (UAVs) of domestic manufacture. [ 91 ] This may reflect domestic production of these drones within Russia.
+
+ On 21 November 2022, British government minister James Heappey stated that the number of Shahed-136 loitering munitions used in Ukraine was estimated to be in the low hundreds. [ 92 ] In May 2023, the White House National Security Council spokesman suggested roughly 400 had been used so far, saying "Iran has provided Russia with more than 400 UAVs primarily of the Shahed variety". [ 93 ] 
+
+ Through a billion-dollar weapons deal with Iran, Russia is aiming to domestically produce 6,000 drones. These are variants of the Shahed 136 drone, although customized. The supply of Iranian drones in addition to the targeted domestic weapons productins with Iran's assistance indicates, according to scholars, that this strategic relationship will have implications beyond this specific Ukraine conflict. [ 94 ] 
+
+ First appearances
+
+ On 13 September 2022, initial use of the Shahed 136 was indicated by photos of the remains of a drone inscribed with Russian : Герань-2 , lit.   ' Geranium ' -2, [ 16 ] operated by Russian forces. [ 95 ] According to Rodion Kulahin, the Ukrainian artillery commander of the 92nd Brigade , Shahed 136 drones destroyed four howitzers and two BTRs during the Kharkiv counter-offensive . [ 96 ] 
+
+ On 23 September, further use of the drones was recorded in Odesa , where videos of their flyover and impact were uploaded on Telegram channels. Notably, the drones were audibly engaged with small arms fire, which did not seem to have shot down any of the aircraft. On 25 September, videos posted on social media shows intensified use of the drone by the Russian forces around Odesa and Dnipro cities. This time, along with small arms, some form of anti-aircraft rotary cannon was employed, along with surface-to-air missiles , downing at least one Geran-2. A number of the drones were able to hit unknown targets, although there are claims the Ukrainian Navy Headquarters in Odesa was hit. [ citation needed ] 
+
+ On 5 October 2022, a Geran-2 struck barracks hosting soldiers from the 72nd Mechanized Brigade in Bila Tserkva . [ 97 ] Ukrainian soldiers said they can be heard from several kilometers away and are vulnerable to small arms fire. [ 98 ] Ukrainian sources stated they deployed MiG-29 fighter aircraft to shoot down these drones with success, and that they used a similar strategy to shoot down cruise missiles such as the Kalibr . [ 99 ] On 13 October 2022, a Ukrainian MiG-29 crashed in Vinnytsia while attempting to shoot down a Geran-2. According to Ukrainian sources, the drone detonated near the jet and shrapnel struck the cockpit which forced the pilot to eject. [ 100 ] [ 101 ] 
+
+ October waves
+
+ Damage from a Russian drone strike in Kyiv on 17 October 2022, which killed five people 
+ Geran-2 drones participated in the October 2022 missile strikes that disabled large sections of the Ukrainian power grid . [ 102 ] Ukraine's military said it shot down the first Shahed 136 on September 13, and that 46 of the drones were launched on 6 on 6 October, 24 on 10 October, and 47 on 17 October 2022. [ 18 ] In the morning of 17 October, Kyiv was attacked again. [ 18 ] The drones were engaged by small-caliber ground fire and dedicated air-defense systems, but the drones reportedly hit several locations, including the offices of Ukrenergo . Other energy infrastructure facilities were attacked, leading to blackouts around the affected infrastructure. Ukrainian Prime Minister Denys Shmyhal said the strikes hit critical energy infrastructure in three regions, knocking out electricity to hundreds of towns and villages. [ 103 ] [ 104 ] [ 105 ] At least 8 people were killed during the day's attack. [ 18 ] 
+
+ The cost–benefit analysis of these drones compared to defending surface-to-air missile systems, is in favor of the Shahed drones. [ 6 ] Loitering munitions downed after they have reached cities can lead to large-scale collateral damage from falling wreckage. Initially, the price of a Shahed-136 drone was estimated at between $20,000 and $50,000. [ 6 ] Leaked Iranian documents later indicated that in 2022, Iran had sold 6,000 Shahed-136s to Russia at a unit price of $193,000. According to the documents, Russia expected the unit cost to drop to $48,000 for drones manufactured domestically. [ 106 ] Significant upgrades and hardening of the drones increased the unit production cost to around $80,000 by April 2024. [ 107 ] 
+
+ In October 2022, the US Department of Defense stated that a number of Iranian experts were deployed to Crimea to provide technical support for the drones used in the attacks. [ 108 ] Ukrainian sources said that more than 220 of these drones were shot down between mid-September and mid-October 2022. [ 109 ] In December, use of the munitions resumed after a three-week pause. Ukraine suggested the suspension was to modify them for cold weather, [ 110 ] but the British Ministry of Defence said it was probably due to the exhaustion of previous stock followed by a resupply. [ 111 ] On 14 December, a Shahed-136 drone that exploded in Kyiv was marked "For Ryazan" in Russian, a reference to attacks on the Dyagilevo air base in Ryazan. [ 112 ] 
+
+ Ukrainian defense
+
+ Wreckage of a Geran-2 shot down in Ukraine, February 2024 
+ While Ukraine's ground-based air defence covers the whole country at low to high altitude, the 'extra-low' altitude flight of the drones means that Ukraine's conventional ground-based air defences are at a disadvantage. Ukraine has implemented virtual observation posts, an alert app which allows civilians to submit drone sightings, and mobile fire groups that specialise in defending against drone attacks using missiles and various guns. One pilot describes the combination as 'pretty effective'. [ citation needed ] 
+
+ Because the drones are small, slow, and fly at low altitude, they are hard to spot on MiG-29 radar. One Ukrainian MiG-29 pilot described the drone's appearance on radar as similar to a flock of birds. Ukraine's Soviet-era R-73 heat seeking missiles cannot lock on to targets inside clouds, while its R-27R semi-active radar homing missiles of similar age require a dangerously close approach when attacking drones. Ukrainian aircraft can intercept these drones using their 30mm cannon, but only in daylight and clear weather. With either guns or missiles, there are risks of severe damage to defending aircraft. [ 113 ] 
+
+ Ukrainian forces introduced a system of networked microphones to track the acoustic signature of incoming drones. Some 10,000 microphones are believed to be a part of the wireless network. The system is networked through a computer that turns the data into flight paths for Shahed drones. The microphone system was originally developed by two engineers in their garage. The microphones cost $4-500 per unit according to U.S. Air Force General James Hecker . The United States and Romanian militaries have shown interest in the system. Called "Sky Fortress" the estimated total value of the system is cheaper than "a pair of Patriot air-defense missiles". [ 114 ] [ 115 ] 
+
+ Night interceptions are harder, as blackout conditions mean pilots have to rely on GPS to know whether they are over a population centre, lest a crashing drone cause collateral damage to civilian areas. In most such cases, all the pilots can do is contact ground based air defences to intercept these drones. [ 116 ] Ukraine's Air Force also believe that the drones are used to test the effectiveness of defences prior to missile attacks, to probe for weaknesses. Ukrainian pilot Vadym Voroshylov was credited with downing 5 Shahed drones in a week. However the explosion of the final drone downed his own MiG-29. Ukraine claims an interception rate of "65% and 85%". [ 117 ] [ 118 ] [ 119 ] [ 120 ] [ excessive citations ] A Ukrainian defense attaché in the United States stated that SA-8 missiles and both the Soviet-era ZSU-23-4 and the German-supplied Flakpanzer Gepard SPAAGs have been used to "great effect" against these "relatively crude" drones. [ 121 ] 
+
+ In early November 2022, Forbes reported on Ukrainian efforts to seek "Shahed catchers." Because legacy anti-aircraft weapons are less suited to intercepting swarms of cheap drones, dedicated counter-UAS systems are being acquired. One is the Anvil made by Anduril Industries , which uses a suite of sensors powered by the company's AI Lattice system to detect and track threats, then passes information to Anvil interceptors, which weigh 12   lb (5.4   kg) and have backwards-facing propellers to ram into a target at over 100   mph (160   km/h) . [ 122 ] Another is the NiDAR made by MARSS, which has a similar networked sensor package and uses ducted fan quadcopter interceptors that have a top speed of more than 170   mph (270   km/h) . There are also domestic Ukraine options such as the Fowler. All systems are similar in that they use a large number of small interceptors to be able to counter drones launched en-masse simultaneously approaching from different directions. [ 123 ] DShK machine guns fitted with thermal imaging or cameras are among the most cost effective weapons for shooting down these drones. Some are working with searchlights like during World War 2 . [ 124 ] [ 125 ] [ 126 ] 
+
+ In a May 2024 Wall Street Journal analysis of data from the Ukrainian Air Force Command, Russia had launched 2,628 Shahed drones in the previous six months, some to test Ukrainian air defenses before other missiles were launched, of which Ukraine had intercepted over 80%. The Wall Street Journal also noted "Ukraine uses such statistics for propaganda purposes". [ 127 ] In August 2024, a Ukrainian Mi-8 used a machine gun to shoot down a Shahed drone. Earlier a Mi-24P used its twin GSh-30K 30mm cannons to shoot down a drone. Such weapons are considered more cost effective compared using air defence missiles. [ 128 ] 
+
+ On 8 September 2024, Russian drones entered both Romanian and Latvian airspace. Romanian scrambled two F-16s to monitor the drone's progress. It landed "in an uninhabited area" near Periprava , according to the Romanian Ministry of Defence. The drone that entered Latvian airspace from Belarus crashed near Rezekne . This comes as the ISW noted increased success in Ukrainian electronic warfare against Russian drones that resulted in "several Russian Shahed drones (that) recently failed to reach their intended targets for unknown reasons." Two Kh-58s failed to reach their targets. The ISW claimed that use of electronic warfare saved air defence resources. [ 129 ] [ 130 ] [ 131 ] On 10 October 2024, a Neptune missile struck an ammunition depot in Oktyabrsky, Krasnodar. Ukrainian intelligence claimed to have destroyed over 400 Shahed UAVs. [ 132 ] On 23 July 2025, Ekonomichna Pravda claimed 9 out of 10 Shahed drones shot down were due to interceptor drones. [ 133 ] 
+
+ Reactions
+
+ A residential tower block in Kyiv struck by a Geran/Shahed drone, May 2023 
+
+ In response to the initial attacks, Ukrainian President Volodymyr Zelenskyy has denounced it as "a collaboration with evil". Diplomatic ties between Iran and Ukraine were subsequently reduced as a consequence of the attacks. [ 134 ] On 18 October 2022 the U.S. State Department accused Iran of violating United Nations Security Council Resolution 2231 by selling drones to Russia, agreeing with similar assessments by France and the United Kingdom. On 22 October France, Britain and Germany formally called for an investigation by the UN team responsible for UNSCR 2231. [ 135 ] 
+
+ Iran's ambassador to the UN responded that these accusations were an erroneous interpretation of paragraph 4 of annex B of the resolution, which clearly states it applies to items that "could contribute to the development of nuclear weapon delivery systems", which these drones could not. [ 136 ] [ 137 ] Resolution 2231 was adopted after the Joint Comprehensive Plan of Action (JCPOA) was signed. The U.S. withdrew from the agreement under the Donald Trump administration in 2018. [ 138 ] [ 89 ] [ 88 ] The embargo on conventional Iranian arms ended in October 2020, but the restrictions on Iran regarding missiles and related technologies are in place until October 2023. [ 139 ] [ needs update ] 
+
+ An Iranian Major-General said 22 countries requested to purchase Iranian drones. [ 140 ] [ 141 ] Multiple critics including a senior researcher of the Center for Security Studies called the weapon tactically useless, and said that its role is as a weapon of terror against civilians. [ 142 ] [ 143 ] [ 144 ] [ 145 ] [ excessive citations ] Others said it can be used to carried out devastating strikes to Ukrainian forces but are unlikely to be a game-changer for the war. [ 146 ] 
+
+ Iran denied sending arms for use in the Ukraine war and Iranian foreign minister Hossein Amir-Abdollahian said Iran will not remain indifferent if it is proven that Russia used Iranian drones in the war against Ukraine. [ 147 ] [ 148 ] [ 149 ] On 5 November 2022, Abdollahian said Iran shipped "a small number" of drones to Russia before the war. He repeated Iran will not remain indifferent if proven Russia used Iranian drones against Ukraine. He denounced Ukraine for not showing up at talks to discuss evidence of Russian use of Iranian drones. [ 150 ] Iran foreign ministry continued to deny sending weapons for use in the war. [ 151 ] 
+
+ 2022 Syria and Iraqi Kurdistan
+
+ The U.S. military believes groups allied to Iran used the Shahed 136 in August 2022 against a U.S.-run military base at Al-Tanf in Syrian opposition controlled territory in the Syrian Desert . [ 31 ] 
+
+ See also: September–October 2022 attacks on Iraqi Kurdistan 
+
+ In 2022, the IRGC Ground Forces used the Shahed 136 drone in attacks on headquarters of Kurdish separatist group in the Kurdistan region of Iraq . [ 152 ] 
+
+ 2023 Indian Ocean
+
+ Main article: 2023 attack on the Chem Pluto 
+
+ On 24 November, it was suspected that an Iranian Shahed 136 had been used to attack the CMA CGM bulk carrier Symi in the Indian Ocean according to a US defense official. The attack caused damage to the ship but did not injure any of the crew. [ 153 ] 
+
+ 2024 Iranian strikes on Israel
+
+ Main article: April 2024 Iranian strikes in Israel 
+
+ On 13 April 2024, Iran carried out a missile and drone attack against Israel, which used the Shahed 136 among other long range weapons. The attack was largely intercepted and thwarted by missile interception systems of Israel, the United States , Jordan , the United Kingdom and France on 14 April. [ 154 ] The direct line distance from the Iranian border to one of the targets, Nevatim Airbase , is about 1,050 kilometres (650   mi) . [ 155 ] On 18 April, the United States imposed new sanctions on sixteen Iranian individuals as well as two companies associated with Iran's drone program. [ 156 ] 
+
+ 2026 Iran war
+
+ Main article: 2026 Iran war 
+
+ Iran launched its Shahed 136 drones towards US allies in West Asia and towards US military bases in the Middle East. [ 157 ] [ 158 ] 
+
+ Classification controversy
+
+ The classification of the Shahed 136 as a loitering munition has been disputed due to an apparent lack of loitering capability. [ 159 ] In January 2023, the Royal United Services Institute , a British defense and security think tank, called into question the classification of the Shahed 136 as a loitering munition. [ 29 ] RUSI noted that the Shahed 136 had mainly been used for point-to-point attack missions similar to cruise missiles , rather than loitering around a target area before striking a target. RUSI also stated that the Shahed 136 may have been used during the attacks on the MT Mercer Street and Pacific Zircon , hinting at the existence of a loitering munition variant even if the original Shahed 136 does not have that capability. [ 29 ] An August 2023 Oil Companies International Marine Forum report assessing the Shahed 136 attacks on those ships stated that the wreckage of the drones used in the attacks did not produce any sensors or a laser seeking equipment found on traditional loitering munitions. The report also noted, based on photographic evidence, that the drone that struck the Pacific Zircon was equipped with a GNSS antenna. [ 160 ] 
+
+ Relations with other Shahed drones
+
+ See also: Shahed drones 
+
+ Shahed 131
+
+ The Shahed 136 is visually similar to the smaller Shahed 131 , differing mainly by its wingtip stabilisers extending up and down rather than only up on the Shahed 131. [ 161 ] The Shahed 131 has a simple inertial navigation system (INS) and a GPS with some electronic warfare protection , which the Shahed 136 may also have. [ 162 ] 
+
+ Shahed 238
+
+ In September 2023, a trailer for an Iranian state TV documentary on Iranian drone development revealed the existence of a Shahed 136 version powered by a turbojet engine. Jet propulsion would give the one-way attack UAV greater speed and altitude, making it more difficult to intercept compared to the propeller-driven version, a large percentage of which have been able to be shot down in Ukraine by anti-aircraft cannons and even small arms. It also has a nose-mounted camera which could improve navigation or enable terminal guidance. A jet version would be more expensive and complex to manufacture, have reduced range, and have a larger thermal signature making it vulnerable to infrared-guided missiles. [ 163 ] [ 17 ] The jet-powered strike drone was publicly unveiled in November 2023 as the Shahed 238. [ 164 ] 
+
+ Operators
+
+ Dark blue: countries operating Shahed-136. Light blue: non-state operators ( Houthis ) 
+ In September 2023, the president of Iran, Ebrahim Raisi , denied providing the drones to Russia for use in Ukraine. [ 165 ] 
+
+   Iran 
+
+   Russia [ 16 ] 
+
+ Islamic Resistance in Iraq [ 166 ] 
+
+ The drones would also be foreign produced at Gomel, Belarus and they are produced in the drone factory in Yelabuga . [ 167 ] [ 168 ] According to leaked documents, the provenance of which are unclear, the Russian military in 2022 paid $1.75 billion in gold bullion for the import of 6,000 Shahed 136 units. [ 169 ] These documents state that with near full Russian localization, the projected cost is $48,800 per unit. [ 170 ] Based on these documents, Anton Gerashchenko stated the cost of each Shahed 136 was believed to be $193,000 per unit when ordering 6,000 drones and about $290,000 per unit when ordering 2,000. [ 3 ] 
+
+ In addition to supplying these drones to Russia, Iran has trained thousands of Russian personnel to operate the Shahed 136 drones. This includes hundreds of Russian pilots, communications specialists, technicians, and handlers. Iran has also established specialized mobile command-and-control communications stations to assist Russia with efficiently using the drones across the vast space of Ukraine. A "relatively large" number of engineers and technicians have also accompanied the drones to Russia to handle equipment issues. [ 171 ] Prior to the war, Russia has had a history of underperforming drones in their military; the Russian indigenous drone fleet was "light and small", with low range and limited flight capacity. The initiation of the Ukraine war in February 2022 put them in dire need of various types of drones, including bombers, suicide (kamikaze) drones, and surveillance drones. Iran's provision of more advanced and versatile drones was therefore a great benefit to Russia in its military actions in Ukraine. [ 172 ] 
+
+ Global impact
+
+ Iran's low-cost Shahed drones have created a global market for low-cost, high performing versatile drones that can be used in attritional combat scenarios. Shahed series drones appear to cost approximately US$20,000, whereas air-to-air missiles or ground-based interceptors cost between US$400,000 to US$1.2 million each. [ 173 ] Through the expansion of drone supplying (i.e., via provision of drones to Russia), Iran has also expanded its global market share, gaining credibility for its military technology, along with increased reputation on the global scene. [ 174 ] 
+
+ The sophistication and dissemenation of these drones in the global military marketplace, most notably seen in the Russo-Ukrainian war , are theorized by scholars to go beyond this specific conflict and cause Western powers to begin more advanced drone developments to keep up:
+
+ Just as with Western support for Ukraine, the Iranian drone build-up will have implications that go beyond this specific conflict. Iranian drones are increasing not only in number, but also sophistication and lethality, a development that concerns the United States and Europe. In response, we can expect Western actors to prioritise the production and export of low-cost defence systems able to counter the mass-produced drones directed by Iran, Iranian proxies, and other adversaries. [ 175 ] 
+
+ Through a billion-dollar weapons deal with Iran, Russia is aiming to domestically produce 6,000 drones. These are customized variants of the Shahed 136 drone. The supply of Iranian drones in addition to the targeted domestic weapons productins with Iran's assistance indicates, according to scholars, that this strategic relationship will have implications beyond this specific Ukraine conflict. [ 176 ] 
+
+ In the aftermath of the 2026 U.S. and Israeli conflict with Iran, reports indicated that a joint venture between Utah-based Vector Defense and Saudi startup SR2 Defense Systems (SR2Vector) was reportedly developing a drone manufacturing facility near Riyadh to produce one-way attack drones modeled after Iran’s Shahed drone system. The planned SKYWASP drone, developed by Vector Defense, was reported to have a range of up to 1,500 km and was intended for both domestic use and export to allied countries. The project was described in reports as part of broader efforts by Gulf states to expand domestic defense production and reduce reliance on foreign weapons imports. [ 177 ] [ 178 ] [ 179 ] [ 180 ] 
+
+ See also
+
+ Iran portal 
+ Aviation portal 
+
+ \n* [[Defense industry of Iran]]"},"related":{"wt":"<!-- designs which were developed into or from this aircraft: -->\n* [[HESA Ababil]]\n* [[Italmas]]\n* [[Shahed drones]]\n* [[Shahed 121]]\n* [[Shahed 129]]\n* [[Shahed 131]], or Geran-1\n* [[Shahed 149 Gaza]]\n* [[Shahed 171 Simorgh]]\n* [[Shahed 238]]"},"similar aircraft":{"wt":"<!-- drones designed for one-way attack missions with a range of at least 800 km while carrying a warhead of at least 15 kg: -->\n* Artemis ALM-20 - (Ukraine/United States)\n* DeepStrikeTech Batyar - (Ukraine)\n* {{lwc|Fire Point FP-1}}\n* {{lwc|Garpiya}}\n* {{lwc|Low-cost Uncrewed Combat Attack System}} - (United States)\n* {{lwc|NCSIST Chien Hsiang}}\n* {{lwc|PLargonia}}\n* {{lwc|Samad (UAV)|Samad}}\n* {{lwc|KAL (drone)}} - (India)"},"lists":{"wt":"<!-- relevant lists that this aircraft appears in: -->\n* [[List of military equipment manufactured in Iran]]\n* [[List of unmanned aerial vehicles]]\n<!-- See [[WP:Air/PC]] for more explanation of these fields. -->"}},"i":0}}]}'> Defense industry of Iran 
+
+ Related development 
+ HESA Ababil 
+
+ Italmas 
+
+ Shahed drones 
+
+ Shahed 121 
+
+ Shahed 129 
+
+ Shahed 131 , or Geran-1
+
+ Shahed 149 Gaza 
+
+ Shahed 171 Simorgh 
+
+ Shahed 238 
+
+ Aircraft of comparable role, configuration, and era 
+ Artemis ALM-20 - (Ukraine/United States)
+
+ DeepStrikeTech Batyar - (Ukraine)
+
+ Fire Point FP-1 – ( Wikidata: country of origin</span>"}]]}'>Ukraine ) 
+
+ Garpiya – ( Wikidata: country of origin</span>"}]]}'>Russia ) 
+
+ Low-cost Uncrewed Combat Attack System - (United States)
+
+ NCSIST Chien Hsiang – ( Wikidata: country of origin</span>"}]]}'>Taiwan ) 
+
+ PLargonia – ( Wikidata: country of origin</span>"}]]}'>Poland ) 
+
+ Samad – ( Wikidata: country of origin</span>"}]]}'>Yemen ) 
+
+ KAL (drone) - (India)
+
+ Related lists 
+ List of military equipment manufactured in Iran 
+
+ List of unmanned aerial vehicles 
+
+ References
+
+ 1 2 "Treasury Targets Actors Involved in Production and Transfer of Iranian Unmanned Aerial Vehicles to Russia for Use in Ukraine" . U.S. Department of the Treasury (Press release). 15 November 2022 . Retrieved 13 September 2023 . Shahed Aviation Industries Research Center (SAIRC), subordinate to the IRGC ASF, has designed and manufactured several Shahed-series UAV variants, including the Shahed-136 one-way attack UAV ... 
+
+ 1 2 Jensen, Benjamin; Atalan, Yasir (19 May 2025). "Drone Saturation: Russia's Shahed Campaign" . CSIS . 
+
+ 1 2 Buncombe, Andrew (7 February 2024). "Russia paid Iran 'in gold bullion' for drones used in attacks on Ukraine" . The Telegraph . ISSN   0307-1235 . Retrieved 8 February 2024 . 
+
+ ↑ Segura, Cristian (12 October 2022). "Iranian 'suicide' drones: Russia's new favorite weapon in Ukraine war" . El Pail . Archived from the original on 17 October 2022 . Retrieved 13 October 2022 . 
+
+ 1 2 Newdick, Thomas. "Russia Bombards Ukraine With Iranian 'Kamikaze Drones' " . The Drive . Archived from the original on 17 October 2022 . Retrieved 13 May 2024 . 
+
+ 1 2 3 Boffey, Daniel (19 October 2022). "Financial toll on Ukraine of downing drones 'vastly exceeds Russian costs' " . The Guardian . Retrieved 19 October 2022 . 
+
+ 1 2 Gordon, Chris (20 January 2023). "Cheap UAVs Exact High Costs" . Air & Space Forces Magazine . Retrieved 13 September 2023 . 
+
+ 1 2 "IRGC confirms specs for Shahed-136 attack UAV" . Janes Information Services . 17 May 2023. Archived from the original on 28 May 2023. 
+
+ ↑ "IRGC confirms specs for Shahed-136 attack UAV" . 18 February 2025. 
+
+ 1 2 Dangwal, Ashish (19 October 2022). "Russia Has 'Upgraded' Iranian Shahed-136 Kamikaze Drones to Boost Its Lethality & Accuracy -- Military Experts" . eurasiantimes.com . Retrieved 13 September 2023 . 
+
+ ↑ "What's the russia's New AI-Powered Shahed-136 and What It's Capable of" . Defense Express . 
+
+ ↑ 
+ Andreika, Vytis (January 2026). "Russia's Changes in the Conduct of War Based on Lessons from Ukraine: Adapting Technology, Force Structures, and the Defence Industry" . Mūsų žinynas . 41 (1): 274– 303 . Retrieved 19 February 2025 . 
+
+ ↑ "Calculating the Cost-Effectiveness of Russia's Drone Strikes" . Center for Strategic and International Studies (CSIS). 19 February 2025 . Retrieved 18 February 2026 . 
+
+ ↑ "SensusQ Analysis on the Shahed 131, 136, 238 One-Way Attack UAVs" . SensusQ . 14 September 2025. Archived from the original on 14 September 2025. 
+
+ 1 2 "UK sanctions Iran over kamikaze Russian drones" . gov.uk . 18 October 2022. 
+
+ 1 2 3 4 5 "Iranian Shahed-136 Kamikaze Drones Already Used By Russia" . Defense Express . Kyiv. 13 September 2022. Archived from the original on 17 October 2022 . Retrieved 29 September 2022 . 
+
+ 1 2 Iran Unveils Jet-Powered Version Of Shahed Kamikaze Drone . Forbes . 27 September 2023. 
+
+ 1 2 3 4 5 6 Barrie, Douglas (17 October 2022). "Explainer: Russia Deploys Iranian Drones" . United States Institute of Peace . Archived from the original on 23 October 2022 . Retrieved 23 October 2022 . 
+
+ ↑ "},"title":{"wt":"Ukrainian experts identify Iranian producer of Shahed drones"},"url":{"wt":"https://www.ukrinform.net/amp/rubric-ato/3798050-ukrainian-experts-identify-iranian-producer-of-shahed-drones.html"},"location":{"wt":"Kyiv"},"publisher":{"wt":"[[Ukrinform]]"},"agency":{"wt":""},"date":{"wt":"10 December 2023"},"access-date":{"wt":"2024-01-11"},"quote":{"wt":"The Shahed-131\\136 type one-way attack drones, which Russia has been using to attack Ukraine since September 2022, are produced by the Iranian state-run Iran Aircraft Manufacturing Industrial Company"}},"i":0}}]}'/> "Ukrainian experts identify Iranian producer of Shahed drones" (Press release). Kyiv: Ukrinform . 10 December 2023 . Retrieved 11 January 2024 . The Shahed-131\136 type one-way attack drones, which Russia has been using to attack Ukraine since September 2022, are produced by the Iranian state-run Iran Aircraft Manufacturing Industrial Company 
+
+ ↑ Syngaivska, Sofiia (17 October 2025). "Auterion Shows Test Footage of the Artemis ALM-20 – the AI-Guided Drone Used in Attacks on russia | Defense Express" . en.defence-ua.com . Retrieved 27 March 2026 . 
+
+ ↑ Suchomimus (27 March 2026). Ust-Luga Fuel Terminal Attacked Again! By Ukrainian Shahed Variants . Retrieved 27 March 2026 – via YouTube. 
+
+ ↑ Britzky, Haley (3 December 2025). "US sets up one-way attack drone squadron in the Middle East after reverse-engineering Iranian drone" . CNN . Retrieved 23 May 2026 . 
+
+ ↑ "U.S. Presents Low-Cost LUCAS Strike Drone Inspired by Shahed" . Militarnyi . Retrieved 10 December 2025 . 
+
+ ↑ Fletcher, Zita (4 December 2025). "CENTCOM launches new 'suicide drone' attack force in Middle East" . Defense News . Retrieved 10 December 2025 . 
+
+ ↑ "How are 'kamikaze' drones being used by Russia and Ukraine?" . BBC News . 18 October 2022 . Retrieved 22 October 2022 . 
+
+ ↑ "Shahed-136: іранські дрони-камікадзе, які видають звук "мопеда" та вибухають у вказаній точці" [ Shahed-136: Iranian kamikaze drones that make a "moped" sound and explode at a specified point ] . ТСН.ua (in Ukrainian). 5 October 2022. Archived from the original on 12 October 2022 . Retrieved 16 October 2022 . 
+
+ ↑ "Engines 15 kW – 40 kW" . limflug.de . Limbach Flugmotoren . Retrieved 11 March 2026 . 
+
+ ↑ "First Shahed-136 prototype was created in Germany in the 1980s, and it was called DAR" . Defense Express . 14 November 2023 . Retrieved 18 July 2025 . 
+
+ 1 2 3 "Russia's Iranian-Made UAVs: A Technical Profile" . Royal United Services Institute . 13 January 2023. 
+
+ ↑ "Shahed-136 Iranian Loitering Munition Unmanned Aerial Vehicle (UAV)" . OE Data Integration Network (ODIN) . U.S. Army . Retrieved 25 October 2022 . Camera Equipment: design supports photographic equipment providing still and / or real-time image / video results 
+
+ 1 2 3 Harris, Shane; Lamothe, Dan; Horton, Alex; DeYoung, Karen (20 October 2022). "U.S. has viewed wreckage of kamikaze drones Russia used in Ukraine" . Washington Post . Retrieved 25 October 2022 . The Houthis claimed to have used Samad-3 drones to attack a refinery in Riyadh, Saudi Arabia, last spring, and launched Samad-1 drones at Saudi Aramco facilities in other parts of the country. Those drones are distinct from the weapons used by Russia in Ukraine. 
+
+ 1 2 Latynina, Yulia (24 October 2022). "A portrait of a Shahed in the sky of Ukraine" . Novaya Gazeta Europe . Retrieved 30 October 2022 . 
+
+ 1 2 "UK presentation of evidence of UNSCR 2231 violations" (PDF) . United Nations Security Council. 18 May 2023. S/2023/362 . Retrieved 7 December 2023 . 
+
+ ↑ "Russia's Iranian-Made UAVs: A Technical Profile" . 
+
+ ↑ "Shahed-136 with Cellular Modem Found in Ukraine: What It Means" . 30 November 2023. 
+
+ ↑ "An Advanced Radio Communication Device on American Processors Found in the Shahed-136" . Defense Express . Kyiv. 6 October 2022 . Retrieved 19 October 2022 . 
+
+ ↑ Milmo, Cahal; Kirby, Dean (10 May 2022). "Iranian drones 'manufactured with British and US components' used to bombard Ukraine" . Head Topics . 
+
+ ↑ Nissenbaum, Dion (12 June 2023). "Chinese Parts Help Iran Supply Drones to Russia Quickly, Investigators Say" . The Wall Street Journal . 
+
+ ↑ "China providing parts to Iran drones for Russia invasion, report reveals" . Middle East Monitor . 13 June 2023 . Retrieved 19 June 2023 . 
+
+ ↑ Rose, David; Pope, Felix (8 June 2023). "Iran's 'suicide drones' being developed at UK universities" . The Jewish Chronicle . Retrieved 8 June 2023 . 
+
+ 1 2 3 Albright, David; Burkhard, Sarah; Faragasso, Spencer (9 May 2024). "Alabuga's Shahed 136 (Geran 2) Warheads: A Dangerous Escalation" (PDF) . Institute for Science and International Security. pp.   6– 13 . Retrieved 6 August 2024 . 
+
+ 1 2 3 Bronk, Justin; Watling, Jack (11 April 2024). "Mass Precision Strike: Designing UAV Complexes for Land Forces" (PDF) . Royal United Services Institute. p.   31,37. ISSN   2397-0286 . Retrieved 7 May 2024 . 
+
+ 1 2 3 4 Wolf, Fabrice (15 July 2024). "GERAN-2, From low-cost missile to lurking ammunition" . Meta-defense Publication . France . Retrieved 6 August 2024 . 
+
+ ↑ "Russia Uses Upgraded Shahed “Ъ” Kamikaze Drone with Built-In Camera" militarnyi.com, 3 September 2025, retrieved 5 March 2026 
+
+ ↑ Notte, Hanna (25 June 2025). "Russia no longer needs Iran's help to sustain the war in Ukraine" . Financial Times . Retrieved 28 June 2025 . 
+
+ ↑ Portnoy, Alexander (30 October 2022). "Do Iranian drones attack Ukraine? Myths and truth" . The Times of Israel blog . Retrieved 30 October 2022 . 
+
+ ↑ Bryen, Stephen (26 October 2022). "Israel's strategic interest in Ukraine is changing because of Iran" . Center for Security Studies . Retrieved 30 October 2022 . 
+
+ 1 2 Warrick, Joby; Mekhennet, Souad; Nakashima, Ellen (19 November 2022). "Iran will help Russia build drones for Ukraine war, Western officials say" . Washington Post . Retrieved 23 November 2022 . 
+
+ ↑ Abrahams, Jessica; Kilner, James (20 November 2022). "Moscow strikes deal with Iran to build own kamikaze drones in Russia" . The Daily Telegraph . Retrieved 21 November 2022 . 
+
+ ↑ Bennett, Dalton; Ilyushina, Mary (17 August 2023). "Inside the Russian effort to build 6,000 attack drones with Iran's help" . Washington Post . Retrieved 5 September 2023 . 
+
+ ↑ Cook, Chris; Seddon, Max; Stognei, Anastasia; Schwartz, Felicia (6 July 2023). "Russia deploys 'Albatross' made in Iran-backed drone factory" . Financial Times . Retrieved 5 September 2023 . 
+
+ ↑ Ismay, John (10 August 2023). "Russia Is Replicating Iranian Drones and Using Them to Attack Ukraine" . New York Times . Retrieved 14 October 2023 . 
+
+ ↑ "Documenting the domestic Russian variant of the Shahed UAV" . Conflict Armament Research . August 2023 . Retrieved 14 October 2023 . 
+
+ ↑ Fornusek, Martin (19 December 2023). "Most of 2,500 foreign components Ukraine found in Russian weapons come from US" . The Kyiv Independent . Retrieved 21 December 2023 . 
+
+ ↑ Albright, David; Burkhard, Sarah (14 November 2023). "Electronics in the Shahed-136 Kamikaze Drone" (PDF) . Institute for Science and International Security . Retrieved 11 December 2023 . 
+
+ ↑ HOWARD ALTMAN (28 September 2023). "Russia's Shahed-136 Drones Now Feature Tungsten Shrapnel" . The War Zone . Retrieved 14 December 2022 . 
+
+ ↑ Kushnikov, Vadim (9 May 2024). "Upgraded Shahed-136 LM with Improved Warhead Revealed in Photos" . Institute for Science and International Security . Retrieved 6 August 2024 . 
+
+ ↑ Kelly, Kieran (27 May 2025). "Russia's Shahed drone arsenal has just become more deadly" . The Telegraph . London . Retrieved 28 May 2025 . 
+
+ ↑ Thomson, Iain (27 September 2024). "Starlink-branded hardware reportedly found amid wreckage of downed Russian drone" . The Register . Retrieved 30 January 2025 . 
+
+ ↑ "Russia Equipped Shahed-136 with Starlink: Now Real-Time Data Can Be Accessed at Distances Up to 2000 km" . Defense Express . Kyiv. 26 September 2024 . Retrieved 1 February 2025 . 
+
+ ↑ Post, Kollen (17 May 2025). "How Russia's Shahed drones are getting more deadly — and what Ukraine is doing about it" . The Kyiv Independent . Retrieved 5 June 2025 . 
+
+ ↑ Vladyslav, Khrystoforov (27 June 2025). "Ukraine's Defence Intelligence reveals contents of new Shahed drone with AI and US computer – photos" . Ukrainska Pravda . Kyiv . Retrieved 8 July 2025 . 
+
+ ↑ Malyasov, Dylan (20 July 2025). "Russia ramps up Shahed drone production" . defence-blog.com . Retrieved 22 July 2025 . 
+
+ ↑ Nikolov, Boyko (27 June 2025). "Russia's Shahed-136 2.0 unveiled: Kremlin redefines warfare" . Retrieved 22 July 2025 . 
+
+ ↑ "Large Scale Russian Drone and Missile Attack Destroys Three Patriot Missile Launchers and Radar: Air Defence Shortage Worsens" . Military Watch Magazine . 21 July 2025 . Retrieved 22 July 2025 . 
+
+ ↑ Syngaivska, Sofiia (2 August 2025). "Ukrainian Intelligence Reveals: Russia to build 40,000 Shahed Drones and 24,000 Decoys in 2025" . Defense Express . Retrieved 7 August 2025 . 
+
+ ↑ Milmo, Cahal (10 October 2025). "How a UK computer for kids 'has been found in Russian drones attacking Ukraine' " . The i Paper h . London. Archived from the original on 12 October 2025. 
+
+ ↑ Litnarovych, Vlad (12 February 2026). "British Raspberry Pi Found Powering Russia's Geran Strike Drone Despite Santions" . UNITED24 Media . Kyiv: Ministry of Digital Transformation of Ukraine . Retrieved 14 February 2026 . 
+
+ ↑ Hubina, Yevheniia (12 January 2026). "Ukraine's Defence Intelligence reveals details of Russian drone carrying Verba anti-aircraft missiles" . pravda.co.ua . Retrieved 12 January 2026 . 
+
+ ↑ Levytska, Iryna (14 January 2026). "Ukrainian air defence downs new jet-powered UAV armed with missile" . pravda.co.ua . Retrieved 14 January 2026 . 
+
+ 1 2 Lange, Lars (10 January 2026). "Fliegende Falle im Ukraine-Krieg: Shahed-Drohnen greifen jetzt Flugzeuge an" . Telepolis . Retrieved 14 January 2026 . 
+
+ ↑ Holland, Martin (29 January 2026). "Russische Drohnen mit Starlink-Antennen: Ukraine nennt SpaceX Lösungsvorschläge" . heise.de . Retrieved 29 January 2026 . 
+
+ ↑ Kesteloo, Haye (28 January 2026). "Russia's Starlink-Guided Shaheds Hit Moving Ukrainian Train, Kill 5: Musk Calls Polish FM 'Drooling Imbecile' For Demanding Action" . dronexl.co . Retrieved 29 January 2026 . 
+
+ ↑ Yan, Oleksandr (23 May 2025). "Batyar, Ukraine's Own Strike Drone — and It's No Shahed" . Militarnyi . Retrieved 27 March 2026 . 
+
+ ↑ Sapozhnikov, Viacheslav (20 October 2025). "Artemis ALM-20: The AI-Guided Drone Forged in US-Ukrainian Alliance and Tested in Russia · TechUkraine" . TechUkraine . Retrieved 27 March 2026 . 
+
+ 1 2 Trevithick, oseph; Altman, Howard (3 December 2025). "U.S. Deploys Shahed-136 Clones To Middle East As A Warning To Iran" . TWZ . Retrieved 5 December 2025 . 
+
+ ↑ "U.S. Launches One-Way-Attack Drone Force in the Middle East" . U.S. Central Command (Press release). Department of Defense. 3 December 2025. 20251203-01 . Retrieved 5 December 2025 . 
+
+ ↑ "U.S. Navy in Middle East Employs Attack Drone at Sea for First Time" . Department of Defense. 17 December 2025. 554740 . Retrieved 18 December 2025 . 
+
+ ↑ Britzky, Haley (3 December 2025). "US sets up one-way attack drone squadron in the Middle East after reverse-engineering Iranian drone" . CNN . Retrieved 5 December 2025 . 
+
+ ↑ "US develops LUCAS kamikaze drone to surpass Iranian Shahed-136 as loitering munitions become core to future warfare" . Army Recognition Group . Belgium. 18 July 2025 . Retrieved 6 December 2025 . 
+
+ ↑ "FLM 136" . SpektreWorks . Retrieved 6 December 2025 . 
+
+ ↑ https://www.axios.com/2026/05/27/taiwan-shahed-thunder-tiger-lucas 
+
+ ↑ Hambling, David (13 September 2022). "Russia Is Now Using Iranian 'Swarming' Attack Drones In Ukraine — Here's What We Know" . Forbes contributor . Retrieved 20 October 2022 . 
+
+ 1 2 Beaumont, Peter (29 September 2022). "Russia escalating use of Iranian 'kamikaze' drones in Ukraine" . The Guardian . Archived from the original on 29 September 2022 . Retrieved 29 September 2022 . 
+
+ ↑ "Russia-Ukraine war News: Ukraine to reduce Iran embassy presence over Russia drone attacks" . Al Jazeera. 24 September 2022. Archived from the original on 17 October 2022 . Retrieved 26 September 2022 . 
+
+ ↑ Hird, Karolina; Bailey, Riley; Mappes, Grace; Barros, George; Kagan, Frederick W. (12 October 2022). "Russian Offensive Campaign Assessment, October 12" . Institute for the Study of War . Washington, DC. Archived from the original on 14 October 2022 . Retrieved 14 October 2022 . 
+
+ 1 2 Motamedi, Maziar (19 October 2022). "Iran says ready to talk to Ukraine on claims of arming Russia" . aljazeera.com . Retrieved 19 October 2022 . 
+
+ 1 2 Kanaani, Nasser (18 October 2022). "Iranian foreign ministry spokesman reacts to some claims about shipment of arms including military drones by Iran to Ukraine" . Iranian Ministry of Foreign Affairs . Retrieved 22 October 2022 . 
+
+ 1 2 Kennedy, Niamh; Mahmoodi, Negar; Kottasová, Ivana; Raine, Andrew (16 October 2022). "Iran denies supplying Russia with weapons for use in Ukraine" . CNN . Retrieved 18 October 2022 . 
+
+ ↑ "IRGC Chief: Iran Selling Arms to World Powers" . No.   106464. kayhan.ir. 2 September 2022. Archived from the original on 2 September 2022. Iran has sold homegrown military equipment to foreign customers, including some major world powers, and is training them to employ the gear, Commander of the Islamic Revolution Guards Corps (IRGC) Major General Hussein Salami said. During a visit to an exhibition of the air defense and electronic products of the Iranian Defense Ministry on Thursday, the IRGC commander said efforts by local elites and experts in the military and defense industries have resulted in the development of indigenous technologies. 
+
+ ↑ "Kremlin has no information about purchase of Iranian drones for Russia — spokesman" . TASS . Moscow. 18 October 2022 . Retrieved 22 October 2022 . 
+
+ ↑ Heappey, James (21 November 2022). "Russia: Iran" . UK Parliament . Retrieved 21 December 2022 . 
+
+ ↑ Madhani, Aamer; Long, Colleen; Miller, Zeke (15 May 2023). "Russia aims to obtain more attack drones from Iran after depleting stockpile, White House says" . Associated Press . Retrieved 25 July 2023 . 
+
+ ↑ Renic, Neil; Christensen, Johan (2024). DRONES, THE RUSSO‒UKRAINIAN WAR, AND THE FUTURE OF ARMED CONFLICT (PDF) . Denmark: Djøf Publishing. p.   39. ISBN   9788757461978 . Retrieved 11 May 2026 . 
+
+ ↑ Dangwal, Ashish (13 September 2022). "1st Evidence Of Russia-Operated Iranian Suicide Drone Emerges in Ukraine; Kiev Claims Downing Shahed-136 UAV" . Latest Asian, Middle-East, EurAsian, Indian News . Archived from the original on 19 September 2022 . Retrieved 17 September 2022 . 
+
+ ↑ "Russia's Use of Iranian Kamikaze Drones Creates New Dangers for Ukrainian Troops" . The Wall Street Journal . 17 September 2022. Archived from the original on 17 October 2022 . Retrieved 18 September 2022 . 
+
+ ↑ Malsin, Jared; Coles, Isabel (5 October 2022). "Russia Uses Iranian-Made Drones to Strike Military Base Deep Inside Ukraine" . Wall Street Journal . 
+
+ ↑ "Ukrainian soldiers tell how they deal with Iranian kamikaze drones used by Russia" . The New Voice of Ukraine . 7 October 2022. Archived from the original on 7 October 2022 . Retrieved 8 October 2022 – via Yahoo! Finance News. 
+
+ ↑ "For the First Time Ukrainian Air Force Uses MiG-29 Fighters to Eliminate Drones Against Shahed-136" . Defense Express . Kyiv. Archived from the original on 17 October 2022 . Retrieved 15 October 2022 . 
+
+ ↑ "ДБР з'ясовує причини падіння військового літака на Вінниччині під час знищення ворожих безпілотників (ВІДЕО) - Державне бюро розслідувань" [ The SBI investigates the reasons for the downing of a military plane in Vinnytsia during the destruction of enemy drones (VIDEO) - State Bureau of Investigation ] . dbr.gov.ua . Retrieved 19 October 2022 . 
+
+ ↑ Newdick, Thomas (13 October 2022). "Ukraine Claims MiG-29 Pilot Downed Five Drones Before Ejecting" . The Drive . Retrieved 17 October 2022 . 
+
+ ↑ "Zelensky: Russia used Iran-made drones, missiles in deadly strikes on several cities" . Times of Israel . 10 October 2022. Archived from the original on 10 October 2022 . Retrieved 10 October 2022 . 
+
+ ↑ " 'Suicide drones' attack Kyiv, other Ukrainian cities" . CBS News . 17 October 2022. Archived from the original on 17 October 2022 . Retrieved 17 October 2022 . 
+
+ ↑ Khurshudyan, Isabelle; Timsit, Annabelle; Khudov, Kostiantyn (17 October 2022). "Drones hit Kyiv as Russia aims to destroy Ukraine power grid before winter" . The Washington Post . Retrieved 18 October 2022 . 
+
+ ↑ "Energy facilities in Ukraine's north, center damaged by Russian strikes – Ukrenergo" . Ukrinform . 17 October 2022 . Retrieved 18 October 2022 . 
+
+ ↑ Yaron, Oded (21 February 2024). "Gold for Drones: Massive Leak Reveals the Iranian Shahed Project in Russia" . Haaretz . 
+
+ ↑ Bronk, Justin; Watling, Jack (11 April 2024). "Mass Precision Strike: Designing UAV Complexes for Land Forces" (PDF) . Royal United Services Institute. p.   31. ISSN   2397-0286 . 
+
+ ↑ Wright, George (21 October 2022). "Ukraine war: Iranian drone experts 'on the ground' in Crimea - US" . BBC News . Retrieved 23 October 2022 . 
+
+ ↑ "Shot Down 223 Iranian-made Drones Since Mid-September, Says Ukraine" . NDTV World . Agence France-Presse. 19 October 2022. 
+
+ ↑ "Russian Offensive Campaign Assessment, December 7" . Institute for the Study of War . 7 December 2022 . Retrieved 8 December 2022 . 
+
+ ↑ "UK Defense Ministry: Russia likely started using new batch of Iranian drones in Ukraine" . The Kyiv Independent . 9 December 2023 . Retrieved 3 January 2023 . 
+
+ ↑ Balmforth, Tom; Polityuk, Pavel (14 December 2022). "Russia launches drone attack on Kyiv, Ukraine hails air defences" . Reuters . Retrieved 14 December 2022 . 
+
+ ↑ Newdick, Thomas (13 December 2022). "Inside Ukraine's Desperate Fight Against Drones With MiG-29 Pilot "Juice" " . The Drive . Retrieved 7 September 2024 . It's pretty effective because they are spread around the country, and they have good readiness as our command-and-control network is warning them, 
+
+ ↑ Audrey Decker (13 July 2024). "Ukraine's cheap sensors are helping troops fight off waves of Russian drones" . Defense One . Retrieved 7 September 2024 . 
+
+ ↑ JOSEPH TREVITHICK (12 February 2024). "Ukraine Using Thousands Of Networked Microphones To Track Russian Drones" . TWZ . Retrieved 7 September 2024 . 
+
+ ↑ THOMAS NEWDICK (13 December 2022). "Inside Ukraine's Desperate Fight Against Drones With MiG-29 Pilot "Juice" " . TWZ . Retrieved 7 September 2024 . With a cruise missile, the higher speed and resulting Doppler effect mean the MiG's radar has an easier job of detecting the threat, but a slow-flying Shahed can easily get lost among the rooftops and other ground clutter. 
+
+ ↑ Newdick, Thomas (15 December 2022). "A MiG-29 Pilot's Inside Account Of The Changing Air War Over Ukraine" . thedrive.com . Archived from the original on 15 December 2022 . Retrieved 25 December 2022 . 
+
+ ↑ Balmforth, Tom (23 December 2022). "Ukraine's 'cat and mouse' battle to keep Russian missiles at bay" . Reuters . Retrieved 25 December 2022 . 
+
+ ↑ Cenciotti, David (8 December 2022). "Maj. Vadym Voroshylov snapped a selfie after a night ejection from his MiG-29 Fulcrum" . The Aviationist . Archived from the original on 25 December 2022 . Retrieved 25 December 2022 . 
+
+ ↑ Knights, Michael; Almeida, Alex (10 November 2022). "What Iran's Drones in Ukraine Mean for the Future of War" . The Washington Institute for Near East Policy . Retrieved 25 December 2022 . 
+
+ ↑ Sprenger, Sebastian (6 October 2022). "Ukraine to target Russia's bases of Iran-supplied explosive drones" . defensenews.com . Retrieved 1 November 2022 . 
+
+ ↑ Hambling, David (2 November 2022). " 'Shahed Catchers': Ukraine Will Deploy Interceptor Drones Against Russian Kamikazes" . Forbes . Retrieved 13 September 2023 . 
+
+ ↑ Hambling, David (2 November 2022). " 'Shahed Catchers': Ukraine Will Deploy Interceptor Drones Against Russian Kamikazes" . Forbes . Retrieved 13 September 2023 . 
+
+ ↑ Satam, Parth (5 January 2023). "Ukraine Uses Powerful Searchlights & Anti-Aircraft Guns To Neutralize Russian Geran-2 UAVs Used During Night Strikes" . eurasiantimes.com . Retrieved 6 January 2023 . 
+
+ ↑ Newdick, Thomas (13 December 2022). "Inside Ukraine's Desperate Fight Against Drones With MiG-29 Pilot "Juice" " . thedrive.com . Retrieved 6 January 2023 . 
+
+ ↑ Roblin, Sebastien (11 December 2022). "To Stop Killer Drones, Ukraine Upgrades Ancient Flak Guns With Consumer Cameras And Tablets" . forbes.com . Retrieved 6 January 2023 . 
+
+ ↑ MacDonald, Alistair; Brinson, Jemal R.; Brown, Emma; Sivorka, Ievgeniia (13 May 2024). "Russia's Bombardment of Ukraine Is More Lethal Than Ever" . Wall Street Journal . 
+
+ ↑ OLENA MUKHINA (23 August 2024). "Pentagon reveals details of new US military aid package to Ukraine" . euromaidanpress . Retrieved 23 August 2024 . 
+
+ ↑ "NATO members Romania, Latvia report Russian drones breach airspace" . Reuters . 9 September 2024 . Retrieved 10 September 2024 . 
+
+ ↑ OLHA HLUSHCHENKO (9 September 2024). "Ukraine successfully adapting and developing capabilities to counter Russian UAVs – ISW" . Reuters . Retrieved 10 September 2024 . 
+
+ ↑ Christina Harward; Riley Bailey; Nicole Wolkov; Davit Gasparyan; George Barros (8 September 2024). "RUSSIAN OFFENSIVE CAMPAIGN ASSESSMENT, SEPTEMBER 8, 2024" . ISW . Retrieved 10 September 2024 . 
+
+ ↑ Kapil Kajal (10 October 2024). "400 Shahed UAVs burned as Ukraine hits Russian drone base with new cruise missile" . Interesting Engineering . Retrieved 10 October 2024 . 
+
+ ↑ Sania Kozatskyi (23 July 2025). "9 out of 10 Shaheds Shot Down in Ukraine Attributed to Interceptors Backed by Former Google CEO – Report" . militarnyi . Retrieved 24 July 2025 . 
+
+ ↑ Ljunggren, David (23 September 2022). "Ukraine to slash ties with Iran over 'evil' drones supply to Russia" . Reuters. Archived from the original on 24 September 2022 . Retrieved 25 September 2022 . 
+
+ ↑ "European countries urge UN probe of Iran drones in Ukraine" . France 24 . 22 October 2022. Archived from the original on 22 October 2022. France, Britain and Germany called Friday in a letter to the United Nations for an "impartial" investigation into Iranian drones the West says Russia is using in the war in Ukraine. "We would welcome an investigation by the UN Secretariat team responsible for monitoring the implementation of UNSCR 2231," the UN ambassadors of the three countries wrote. 
+
+ ↑ Iravani, Amir Saeid (19 October 2022). "Letter dated 19 October 2022 from the Permanent Representative of the Islamic Republic of Iran to the United Nations addressed to the Secretary-General" (PDF) . United Nations Security Council. S/2022/776 . Retrieved 5 November 2022 . 
+
+ ↑ Iravani, Amir Saeid (24 October 2022). "Letter dated 24 October 2022 from the Permanent Representative of the Islamic Republic of Iran to the United Nations addressed to the Secretary-General and the President of the Security Council" (PDF) . United Nations Security Council. S/2022/794 . Retrieved 4 November 2022 . 
+
+ ↑ "Ukraine war: US says Iranian drones breach sanctions" . BBC News . 18 October 2022 . Retrieved 22 October 2022 . 
+
+ ↑ Lederer, Edith M. (19 October 2022). "Ukraine accuses Iran of violating UN ban on transferring drones" . PBS . Retrieved 4 November 2022 . 
+
+ ↑ "The rise of Iran's drone industry" . Middle East Eye . Retrieved 5 November 2022 . 
+
+ ↑ "22 countries seek to buy Iranian drones: general" . Tehran Times . 18 October 2022 . Retrieved 5 November 2022 . 
+
+ ↑ Gsteiger, Fredy (19 October 2022). "Russland setzt auf Kamikaze-Drohnen aus Iran" [ Russia bets on kamikaze-drones from Iran ] (in German). SRF . Retrieved 22 October 2022 . [ "These dones don't win a battle but it is possible to terrorize the population" (minute 4:30) ] ; "Kamikaze-Drohnen sind militärisch nutzlos – aber trotzdem wirksam" [ Kamikaze-Drones are militarily useless - but nevertheless effective ] (in German). SRF . 19 October 2022 . Retrieved 22 October 2022 . [ «The iranian Schahed-136-Drones fired by Russia are neither maneuverable nor precise.» ] 
+
+ ↑ "Russland-Experte vermutet Plan, der den Westen treffen soll: Bringen Kamikaze-Drohnen Putin die Kriegs-Wende?" [ Russia expert suspects plan that should hit the West: will kamikaze drones bring the war to Putin? ] . merkur.de . 24 October 2022. 
+
+ ↑ "EXPLAINER: Killer drones vie for supremacy over Ukraine" . Associated Press . 18 October 2022. Instead, the Shahed is simply launched in bunches in order to overwhelm defenses, particularly in civilian areas. 'They know that most will not make it through,' he said. 
+
+ ↑ "Wie einst Hitler mit der V1-Rakete: Russland sucht sein Heil in billigen Terrorwaffen" [ Like Hitler with the V1 rocket: Russia seeks salvation in cheap terror weapons ] . watson . 17 October 2022. 
+
+ ↑ Trofimov, Yaroslav; Nissenbaum, Dion (17 September 2022). "Russia's Use of Iranian Kamikaze Drones Creates New Dangers for Ukrainian Troops" . Wall Street Journal . Retrieved 5 November 2022 . 
+
+ ↑ "Iran says won't remain 'indifferent' if Russian use of its drones in Ukraine proven" . Al Arabiya English . AFP. 24 October 2022 . Retrieved 2 November 2022 . 
+
+ ↑ Iran Foreign Ministry [@irimfa_en] (25 October 2022). "We have not handed over any drones or weapons to #Russia to be used in the war against #Ukraine" ( Tweet ) . Retrieved 2 November 2022 – via Twitter . 
+
+ ↑ Iran Foreign Ministry [@irimfa_en] (25 October 2022). "We are confident that there is no change in the position of the Islamic Republic of #Iran regarding the war in #Ukraine and there will be no change in future either" ( Tweet ) . Retrieved 2 November 2022 – via Twitter . 
+
+ ↑ Peleschuk, Dan; Ljunggren, David (5 November 2022). "Iran acknowledges drone shipments to Russia before Ukraine war" . Reuters . Retrieved 5 November 2022 . 
+
+ ↑ "Iran opposes Ukraine war, supports peace and a ceasefire" . Mehr News Agency . 11 November 2022 . Retrieved 11 November 2022 . 
+
+ ↑ "VIDEO: Moment when Shahed-136 drone hits terrorists bases" . Mehr News Agency . 2 October 2022. Archived from the original on 17 October 2022 . Retrieved 5 October 2022 . 
+
+ ↑ "An Israeli-owned ship was targeted in suspected Iranian attack in Indian Ocean, US official tells AP" . AP News . 25 November 2023 . Retrieved 25 November 2023 . 
+
+ ↑ Rothwell, James (13 April 2024). "The Shahed drone: Iran's low-cost but deadly weapon of choice" . The Telegraph . ISSN   0307-1235 . Retrieved 14 April 2024 . 
+
+ ↑ "Iranian border to Nevatim Airbase" (Map). Google Maps . Retrieved 14 April 2024 . 
+
+ ↑ Liptak, Kevin (18 April 2024). "US slaps new sanctions on Iran's drone program as Israel considers response to weekend attack" . CNN . Retrieved 18 April 2024 . 
+
+ ↑ "What asymmetric warfare may tell us about Iran's fighting chances" . Al Jazeera . 9 March 2026 . Retrieved 9 March 2026 . 
+
+ ↑ Butts, Dylan (5 March 2026). "Iran's Shahed drone: How 'the poor man's cruise missile' is shaping Tehran's retaliation" . CNBC . 
+
+ ↑ Sof, Eric (20 October 2022). "HESA Shahed 136: A cheap and deadly Iranian kamikaze drone" . Spec Ops Magazine . Retrieved 1 December 2023 . 
+
+ ↑ "Loitering Munitions – The Threat to Merchant Ships" (PDF) . August 2023. 
+
+ ↑ Binnie, Jeremy (29 September 2022). "Ukraine conflict: Details of Iranian attack UAV released" . Janes . IHS . Retrieved 21 October 2022 . 
+
+ ↑ "Not Only Shahed-136: a Detailed Study of Another Iranian Shahed-131 Kamikaze Drone Used by Russia" . Defense Express . Kyiv. 24 September 2022 . Retrieved 21 October 2022 . 
+
+ ↑ "IRGC documentary shows jet-powered Shahed-136 UAV variant" . Janes Information Services . 3 October 2023. Archived from the original on 5 October 2023. 
+
+ ↑ Iran officially unveils new jet-powered Shahed-238 drone . Army Recognition . 22 November 2023. 
+
+ ↑ "Iranian President addresses relationship with Russia" . NBC News . 
+
+ ↑ "Tripling of Iraqi Militia Claimed Attacks on Israel in October" . The Washington Institute . Retrieved 24 October 2024 . 
+
+ ↑ Starr, Michael (10 May 2023). "Iran may produce Shahed drones for Russia in Belarus - report" . Jerusalem Post . Retrieved 13 September 2023 . 
+
+ ↑ Struck, Julia (28 May 2024). "Russian Plant in Tatarstan to Produce 6,000 Shahed Drones Annually" . Kyiv Post . Retrieved 29 May 2024 . 
+
+ ↑ Altman, Howard (8 February 2024). " "What Does a Shahed-136 Really Cost" " . The WarZone . Retrieved 20 February 2024 . 
+
+ ↑ "The cost of Shahed-136 for Russia has been reported" . Ukrainian Military Center . 6 February 2024 . Retrieved 14 April 2024 . 
+
+ ↑ Farzin, Nadimi (1 August 2022). Iranian Drones to Russia: Capabilities and Limitations . Policy Analysis (Report). The Washington Institute. 3634 . Retrieved 11 May 2026 . 
+
+ ↑ Eslami, Mohammad (November 2022). "Iran's Drone Supply to Russia and Changing Dynamics of the Ukraine War" . Journal for Peace and Nuclear Disarmament . 5 (2): 1– 12. doi : 10.1080/25751654.2022.2149077 . Retrieved 11 May 2026 . 
+
+ ↑ Knights, Michael; Almeida, Alex (10 November 2022). "What Iran's Drones in Ukraine Mean for the Future of War" . The Washington Institution . Washington D.C . Retrieved 11 May 2026 . 
+
+ ↑ de Henning Michaëlis, Satcha (January 2023). Turkey’s And Iran’s Drone Supply In The War In Ukraine (PDF) . Policy Report (Report). Network for Strategic Analysis. 21 . Retrieved 11 May 2026 . 
+
+ ↑ Renic, Neil; Christensen, Johan (2024). DRONES, THE RUSSO‒UKRAINIAN WAR, AND THE FUTURE OF ARMED CONFLICT (PDF) . Denmark: Djøf Publishing. p.   39. ISBN   9788757461978 . Retrieved 11 May 2026 . 
+
+ ↑ Renic, Neil; Christensen, Johan (2024). DRONES, THE RUSSO‒UKRAINIAN WAR, AND THE FUTURE OF ARMED CONFLICT (PDF) . Denmark: Djøf Publishing. p.   39. ISBN   9788757461978 . Retrieved 11 May 2026 . 
+
+ ↑ "Exclusive / US-Saudi venture to build Shahed drone clones in Riyadh" . 
+
+ ↑ "US-Saudi venture to build Shahed clone drones with 1,500km range" . Türkiye Today . Retrieved 27 May 2026 . 
+
+ ↑ "Media: US-Saudi joint venture to build drone factory near Riyadh | Caliber.Az" . caliber.az . 27 May 2026 . Retrieved 27 May 2026 . 
+
+ ↑ Dewey, Barratt (26 May 2026). "Vector-SR2 Team Unveils a Saudi-built Shahed Drone Clone" . Tectonic Defense . Retrieved 27 May 2026 . 
+
+ External links
+
+ Media related to Shahed 136 at Wikimedia Commons 
+
+ v 
+ t 
+ e 
+
+ Shahed aircraft
+
+ Helicopters 
+ 274 
+
+ 278 
+
+ 285 
+
+ Drones 
+ 121 
+
+ 129 
+
+ 131 
+
+ 136 
+
+ 149 Gaza 
+
+ 171 Simorgh 
+
+ Saegheh 
+
+ 191 
+
+ 238 
+
+ Category 
+
+ WikiCommons 
+
+ v 
+ t 
+ e 
+
+ Military of Iran 
+
+ Supreme National Security Council 
+
+ General Staff of the Armed Forces 
+
+ Ministry of Defence and Armed Forces Logistics 
+
+ Armed Forces 
+ Ground Forces 
+
+ Navy 
+
+ Air Force 
+
+ Air Defense Force 
+
+ Islamic Revolutionary Guard Corps 
+ Ground Forces 
+
+ Navy 
+
+ Aerospace Force 
+
+ Quds Force 
+
+ Basij 
+
+ Police Command 
+ Prevention Police 
+
+ Security Police 
+
+ Traffic Police 
+
+ Cyber Police 
+
+ Guidance Patrol 
+
+ Anti-Narcotics Police 
+
+ Immigration & Passport Police 
+
+ Diplomatic Police 
+
+ Criminal Investigation Police 
+
+ Border Guard 
+
+ Related topics 
+ Ballistic missile program 
+
+ Underground missile bases 
+
+ Unmanned aerial vehicles 
+
+ Cyberwarfare 
+
+ Flags 
+
+ Military history 
+
+ Wars 
+
+ Axis of Resistance 
+
+ Previous organizations 
+ Imperial Guard 
+
+ Irregular Warfare Headquarters 
+
+ Jihad of Construction 
+
+ Shahrbani 
+
+ Iranian Gendarmerie 
+
+ Islamic Revolutionary Committees 
+
+ Category 
+
+ v 
+ t 
+ e 
+
+ Iranian-built aircraft 
+
+ Trainer aircraft 
+ Dorna 
+
+ F.3 
+
+ Parastu-14 
+
+ Shafaq 
+
+ Simorgh 
+
+ Tazarv 
+
+ Yasin 
+
+ Fighter aircraft 
+ Azarakhsh 
+
+ Kowsar 
+
+ Saegheh 
+
+ Shafaq 
+
+ Qaher-313 
+
+ Transport aircraft 
+ IrAn-140 
+
+ Simourgh 
+
+ Helicopters 
+ Attack 
+ Panha 2091 
+
+ Shahed 285 
+
+ Toufan 
+
+ Zafar 300 
+
+ Utility 
+ Shahed 274 
+
+ Shahed 278 
+
+ Shabaviz 275 
+
+ Sorena 
+
+ Shabaviz 2061 
+
+ Seaplane 
+ Bavar 2 
+
+ UAVs 
+ Ababil 
+
+ Hodhod 
+
+ Kaman-12 
+
+ Karrar 
+
+ Mohajer 
+ Mohajer-6 
+
+ Nazir 
+
+ Raad 85 
+
+ Ra'd 
+
+ Sabokbal 
+
+ Saeghe 
+
+ Siraf 
+
+ Talash 
+
+ Yasir 
+
+ Zohal 
+
+ UCAVs 
+ A1 
+
+ Fotros 
+
+ Gaza 
+
+ H-110 Sarir 
+
+ Hamaseh 
+
+ Kaman 22 
+
+ Saegheh 
+
+ Shahed 129 
+
+ Shaparak 
+
+ Simorgh 
+
+ Sofreh Mahi 
+
+ v 
+ t 
+ e 
+
+ Weapons and military equipment designed or manufactured in Iran 
+
+ Firearms 
+ Service rifles 
+ Karabiner 98k 
+
+ Persian Brno 
+
+ G3A6 
+
+ KL-7.62 
+
+ S-5.56 
+
+ KH-2002 
+
+ Pistols 
+ PC-9 ZOAF 
+
+ Submachine guns 
+ PPSh-41 
+
+ MPT-9 
+
+ Machine guns 
+ MGA3 
+
+ PKM-T80 
+
+ MGD-12.7 
+
+ Tabas 
+
+ Gatling guns 
+ Akhgar
+
+ Muharram 
+
+ Sniper rifles 
+ Nakhjir 
+
+ Sayyad 
+
+ Shaher 
+
+ Taktab (Under development) 
+
+ Arash 
+
+ Armoured
+fighting vehicles 
+and other
+land-based vehicles 
+ Tanks 
+ Type-72Z Safir-74 
+
+ Mobarez 
+
+ T-72S 
+
+ Zulfiqar 
+
+ Tosan 
+
+ Sabalan 
+
+ Tiam 
+
+ Karrar 
+
+ Tankettes 
+ Sayyad 
+
+ APCs 
+ Boragh 
+
+ Rakhsh 
+
+ Cobra BMT-2 APC 
+
+ Sarir 
+
+ Hoveizeh 
+
+ Makran 
+
+ Self-propelled artillery 
+ Raad-1 
+
+ Raad-2 
+
+ Bahman (SPAAG) 
+
+ Other vehicles 
+ Safir 
+
+ Samandar 
+
+ Kaviran 
+
+ Neynava 
+
+ Sepehr
+
+ Ranger 
+
+ Zoljanah 
+
+ Artillery 
+ HM 40 
+
+ HM 41 
+
+ MLRS 
+ HM 20 
+
+ Arash 
+
+ Oghab 
+
+ Falaq-1 
+
+ Falaq-2 
+
+ Fajr-1 
+
+ Fajr-3 
+
+ Fajr-5 
+
+ Recoilless rifles 
+ M40 
+
+ SPG-9 
+
+ Tank guns 
+ M68 
+
+ L11A5 
+
+ 2A46 
+
+ Mortars 
+ 37mm Marsh Mortar 
+
+ HM 12 
+
+ HM 13 
+
+ HM 14 
+
+ HM 15 
+
+ HM 16 
+
+ Razm Mortar 
+
+ Vafa Mortar 
+
+ Anti-aircraft guns 
+ ZU-23-2 
+
+ Samavat 35mm anti-aircraft gun 
+
+ Sa'ir 100mm anti-aircraft gun 
+
+ Mesbah 1 
+
+ Asefeh 
+
+ Naval guns 
+ Fajr-27 
+
+ Rocket-propelled
+grenades 
+ RPG-7 
+
+ Saegheh (rocket) 
+
+ Type 69 RPG 
+
+ Artillery rockets 
+ Samid 
+
+ Tondar-69 
+
+ Shahin-II 
+
+ Naze'at 
+
+ Zelzal-1 
+
+ Zelzal-2 
+
+ Zelzal-3 
+
+ Artillery shells 
+ Basir 
+
+ Guided missiles 
+ Short-range ballistic missiles 
+ R-17E 
+
+ Shahab-1 
+
+ Shahab-2 
+
+ Qiam 1 
+
+ Fateh-110 
+
+ Fateh-313 
+
+ Ra'ad-500 
+
+ Zolfaghar 
+
+ Persian Gulf 
+
+ Hormuz-1 
+
+ Hormuz-2 
+
+ Fateh Mobin 
+
+ Medium-range ballistic missiles 
+ Shahab-3 
+
+ Ghadr-110 
+
+ Emad 
+
+ Khorramshahr 
+
+ Fajr-3 
+
+ Ashoura 
+
+ Sejjil 
+
+ Dezful 
+
+ Shahid Haj Qasem 
+
+ Kheibar Shekan 
+
+ Fattah 
+
+ Intermediate-range ballistic missiles 
+ Shahab-4/IRIS (shelved) (alleged) 
+
+ Shahab-5 (alleged) 
+
+ Shahab-6 (alleged) 
+
+ Project Koussar (alleged) 
+
+ Surface-to-air missiles 
+ Misagh-1 
+
+ Misagh-2 
+
+ Sayyad-1 
+
+ Sayyad-2 
+
+ Shahab Thaqeb 
+
+ Mersad 
+
+ Bavar 373 
+
+ Khordad 15 
+
+ Talaash 
+
+ Raad 
+
+ Ya Zahra 
+
+ Anti-helicopter missiles 
+ Qa'em 
+
+ Raad 
+
+ Anti-tank guided missiles 
+ Saegheh 
+
+ RAAD 
+
+ Toophan 
+
+ Toophan 2 
+
+ Toophan 5 
+
+ Towsan 
+
+ Dehlaviyeh 
+
+ Tondar 
+
+ Anti-ship missiles 
+ Zafar 
+
+ Qader 
+
+ Noor 
+
+ Kowsar 
+
+ Nasr-1 
+
+ Raad 
+
+ Sadid-1 
+
+ Abu Mahdi 
+
+ Cruise missiles 
+ Meshkat (Under development) 
+
+ Sagheb 
+
+ Soumar 
+
+ Hoveizeh 
+
+ Ya-Ali 
+
+ Abu Mahdi 
+
+ Torpedoes 
+ Hoot 
+
+ Valfajr 
+
+ Air-to-surface missiles 
+ Zoobin 
+
+ Shafaq 
+
+ Shahin 3 
+
+ Sattar 
+
+ Asre-67 
+
+ Bina 
+
+ Fajr-4 
+
+ Air-to-air missiles 
+ Fatter 
+
+ Sedjil 
+
+ Fakour-90 
+
+ Anti-ship ballistic missiles 
+ Khalij Fars/Persian Gulf 
+
+ Hormoz-1 
+
+ Hormoz-2 
+
+ Zulfiqar Basir 
+
+ Electro-optically guided bombs 
+ Qadr 
+
+ Qassed 1 
+
+ Submarines 
+ Besat 
+
+ Fateh 
+
+ Nahang 
+
+ Ghadir 
+
+ Ships and boats 
+ Sina 
+
+ Moudge 
+
+ Zolfaqhar 
+
+ Seraj 
+
+ Yunes 6 
+
+ Tondar 
+
+ Aircraft and UAVs 
+ Trainers 
+ Tiger Moth 
+
+ Parastoo 
+
+ IRGC Fajr 
+
+ AVA-202 
+
+ Dorna 
+
+ Tazarve 
+
+ Simorgh 
+
+ Fajr F.3 
+
+ Fighters 
+ Kowsar 
+
+ Persian Audax 
+
+ Persian Fury 
+
+ Persian Hind 
+
+ Azarakhsh 
+
+ Saegheh 
+
+ Shafaq 
+
+ Qaher-313 
+
+ Transport aircraft 
+ HESA IrAn-140 
+
+ HESA Simourgh 
+
+ Helicopters 
+ Attack 
+ HESA Shahed 285 
+
+ Panha Shabaviz 206-1 
+
+ Panha 2091 
+
+ Toufan I, II 
+
+ Zafar 300 
+
+ Utility 
+ HESA Shahed 278 
+
+ Panha Shabaviz 2-75 
+
+ Seaplane 
+ Bavar 2 
+
+ UAVs 
+ Ababil 
+
+ Qods Mohajer 
+
+ Nazir 
+
+ Ra'd (UAV) 
+
+ Hod Hod 
+
+ Sabokbal 
+
+ Saeghe 
+
+ Talash 
+
+ Zohal 
+
+ Sayeh 
+
+ Yasir 
+
+ Raad 85 
+
+ UCAVs 
+ Karrar 
+
+ Sofreh Mahi (Under development) 
+
+ Shahed 129 
+
+ Shahed 149 
+
+ H-110 Sarir 
+
+ Hamaseh 
+
+ Fotros 
+
+ Simulators 
+ F-4 
+
+ Shahed 278 and Bell-206 
+
+ Bell 214 
+
+ F-5 Tiger 
+
+ Submarine Simulator - Iran's "Tareq-class" submarine
+
+ Misagh Rocket Launcher
+
+ Mig-29 Fulcrum 
+
+ F-14 
+
+ Mirage F-1 
+
+ Hawk 
+
+ Radars 
+ Ghamar 
+
+ BSR-1 
+
+ Matla-ul-fajr 
+
+ Kashef 
+
+ Alvand 
+
+ Asr 
+
+ RASIT 
+
+ Alim 
+
+ Sepehr (Under development) 
+
+ Thamen 
+
+ Najm-802 (Under development) 
+
+ Ghadir 
+
+ Arash 
+
+ Retrieved from " https://en.wikipedia.org/w/index.php?title=HESA_Shahed_136&oldid=1377785162 "
+
+ Categories : HESA aircraft 
+ Shahed aircraft 
+ Post–Cold War weapons of Iran 
+ Unmanned military aircraft of Iran 
+ Single-engined pusher aircraft 
+ Tailless delta-wing aircraft 
+ Military equipment of the Russian invasion of Ukraine 
+ One-way attack drones 
+
+ Hidden categories: Articles with short description 
+ Short description is different from Wikidata 
+ Wikipedia extended-confirmed-protected pages 
+ Use American English from September 2022 
+ All Wikipedia articles written in American English 
+ Use dmy dates from September 2022 
+ Articles containing Persian-language text 
+ Articles containing Russian-language text 
+ CS1 Ukrainian-language sources (uk) 
+ Citation overkill 
+ Articles tagged with the inline citation overkill template from May 2024 
+ Wikipedia articles in need of updating from June 2025 
+ All Wikipedia articles in need of updating 
+ All articles lacking reliable references 
+ Articles lacking reliable references from October 2022 
+ All articles with unsourced statements 
+ Articles with unsourced statements from August 2024 
+ Wikipedia articles in need of updating from September 2025 
+ CS1 German-language sources (de) 
+ Commons category link from Wikidata 
+
+ This page was last edited on 1 October 2026, at 03:03  (UTC) .
+
+ Page was rendered with Parsoid .
+
+ Text is available under the Creative Commons Attribution-ShareAlike 4.0 License ;
+additional terms may apply. By using this site, you agree to the Terms of Use and Privacy Policy . Wikipedia® is a registered trademark of the Wikimedia Foundation, Inc. , a non-profit organization.
+
+ Privacy policy 
+
+ About Wikipedia 
+
+ Disclaimers 
+
+ Contact Wikipedia 
+
+ Legal & safety contacts 
+
+ Code of Conduct 
+
+ Developers 
+
+ Statistics 
+
+ Cookie statement 
+
+ Mobile view 
+
+ Search 
+
+ Search 
+
+ Toggle the table of contents 
+
+ HESA Shahed 136 
+
+ 37 languages 
+
+ Add topic

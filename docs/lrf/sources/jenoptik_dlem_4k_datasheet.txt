@@ -1,0 +1,105 @@
+Source: http://www.idssi.com/wp-content/uploads/2016/12/DLEM_4k_en_110817_FINAL_USL_JDIIDSSI-1.pdf
+Fetched: 2026-10-03
+
+--- page 1 ---
+LASERS & MATERIAL PROCESSING  I  OPTICAL SYSTEMS  I  INDUSTRIAL METROLOGY  I  TRAFFIC SOLUTIONS  I  DEFENSE & CIVIL SYSTEMS
+1.55 µm Diode-Laser Rangefinder DLEM 4k
+Compact rangefinder module for system integration
+Sensor Systems
+Leading Technology by Tradition
+Jenoptik’s expertise in development and production of laser 
+rangefinders for various applications builds on more than  
+30 years of experience - for the benefit of our Customers.
+Powerful, accurate and reliable
+The DLEM 4k measures distances typically up to more than  
+3200 meters fast and with an absolute accuracy of better 
+than one meter within the full specified temperature range. 
+It delivers reliable and accurate measurement results also 
+under difficult atmospheric conditions. 
+Operating at a wavelength of 1.55 µm, the rangefinder 
+works eyesafe and is not to detect with night vision  
+devices based on image intensifier tubes. 
+Compact, energy saving and easy to integrate
+T
+he lightweight, compact optical and mechanical design 
+allows for easy integration into various handheld, mobile  
+or stationary measuring or fire control systems. 
+Especially, its low power consumption recommends the 
+rangefinder as light infantry equipment.
+The rangefinder is configured as a rangefinder module and 
+can be controlled via a RS232 interface. It is suited for usage 
+under harsh environmental conditions. 
+Benefits
+• Compact, lightweight design
+• 1.55 µm operating wavelength
+• Low energy consumption
+• Eyesafe operation
+
+--- page 2 ---
+014033IDSSI-06-99-14-0913-en
+It is our policy to constantly improve the design and specifications. Accordingly, the details represented herein cannot be regarded as final and binding.
+1.55 µm Diode-Laser Rangefinder DLEM 4k
+Compact rangefinder module for system integration
+Specifications
+Thread Insert M3x4 (3x)
+Receiver 
+Optics
+Transmitter
+Optics
+Mounting Surface
+70
+110 max
+20.5 55
+3226
+23
+46
+12.3
+47
+5.4
+Dimensions DLEM 4k
+Measurement parameters
+Typical measuring range > 3.2 km 1, 2 
+Total measuring range 10 m ... 5000 m
+Measuring accuracy (1σ) < 1 m 
+Typical measuring rate 1 Hz 1, 2
+Target discrimination 25 m ... 50 m
+(depending on measurement conditions)
+Multiple target detection Yes
+Transmitter
+Laser type Diode laser
+Wavelength 1.55 µm
+Measure divergence 0.6 mrad × 0.7 mrad
+Laser classification Eyesafe class 1 (EN 60825-1:2007)
+1) Measuring range 3200 m, measured at standard target 2.3 m x 2.3 m,  
+   10 % albedo, Visibility Vn = 10 km, 0.5 s measuring time   
+2) Measuring range 4500 m, measured at standard target 2.3 m x 2.3 m,  
+   30 % albedo, Visibility Vn = 10 km, 1 s measuring time
+Communication interfaces
+Data interface RS232, CMOS level 3.3 V
+Electrical parameters
+Power supply (external) 4 ... 10 VDC nominal voltage 
+Power consumption operation
+stand-by
+shut-down
+< 3 W
+< 30 mW
+< 50 µW
+Peak current < 1 A for max. 1 ms duration
+Mechanical Dimensions
+Weight: 170 g
+Dimensions (L × W × H) 110 mm × 46 mm × 70 mm
+Ambient conditions
+Operation temperature - 40 °C ... + 80 °C
+Storage temperature - 46 °C ... + 85 °C
+Shock resistance 1000 g, 1 ms
+JENOPTIK  I  Defense & Civil Systems
+JENOPTIK Defense, Inc.
+16490 Innovation Drive
+Jupiter, FL 33478  I  USA
+www.jenoptik.com/us-defense
+Distributor
+International Defense & Security Solutions, Inc.
+525K East Market St. I  #156 
+Leesburg, VA 20176  I  USA
+Phone 1.800.644.5098 x101  I  Fax 702.232.1439
+info@idssi.com  I  www.idssi.com

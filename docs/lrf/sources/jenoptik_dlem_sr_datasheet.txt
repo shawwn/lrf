@@ -1,0 +1,117 @@
+Source: http://www.idssi.com/wp-content/uploads/2016/12/DLEM_SR_en_110825_FINAL_USL_JDIIDSSI-1.pdf
+Fetched: 2026-10-03
+
+--- page 1 ---
+LASERS & MATERIAL PROCESSING  I  OPTICAL SYSTEMS  I  INDUSTRIAL METROLOGY  I  TRAFFIC SOLUTIONS  I  DEFENSE & CIVIL SYSTEMS
+1.55 µm Diode-Laser Rangefinder DLEM SR
+Ultra-compact rangefinder module for system integration
+Sensor Systems
+Leading Technology by Tradition
+Jenoptik’s expertise in development and production of laser 
+rangefinders for various applications builds on more than  
+30 years of experience. Thus our customers can benefit from 
+innovative & powerful solutions, such as the new DLEM SR. 
+Powerful, accurate and reliable
+The compact DLEM SR measures distances from 10 meters  
+to more than 1500 meters fast and with an absolute  
+accuracy of better than one meter within the full specified 
+temperature range. It delivers reliable measurement results 
+even under low visibility conditions (fog, rain, snowfall). 
+Operating at a wavelength of 1.55 µm, the rangefinder 
+works eyesafe and is not to detectable with night vision  
+devices based on image intensifier tubes. 
+Compact and easy to integrate
+T
+he lightweight, compact optical and mechanical design 
+allows for easy integration into various handheld, mobile  
+or stationary measuring or fire control systems. 
+Especially, its low power consumption recommends the 
+DLEM SR as light infantry equipment. It is shock resistant 
+and suited for use under harsh environmental conditions. 
+It can be controlled via a standard serial interface. 
+Benefits
+• Extremely compact and lightweight design
+• 1.55 µm operating wavelength
+• Reliable and accurate results over wide temperature range
+• Eyesafe operation
+10 mm
+
+
+--- page 2 ---
+012629SRIDSSI-001-99-14-0913-en
+1.55 µm Diode-Laser Rangefinder DLEM SR
+Ultra-compact rangefinder module for system integration
+Specifications
+Measurement parameters
+Typical measuring range 1, 2   > 1500 m
+Total measuring range 3 10 m ... 5000 m
+Measuring accuracy (1σ) 4  
+standard:
+optional:
+valid for full operating temperature range
+< 1 m
+< 0.5 m
+Measuring time 5 0.1 s ... 1 s  (programmable)
+Typical measuring rate 1 Hz
+Maximum measuring rate 25 Hz
+Target discrimination 2  25 m ... 50 m
+Multiple target detection 5 targets
+Transmitter
+Type Diode laser
+Wavelength 1.55 µm
+Laser classification Eyesafe class 1 (EN 60825-1:2007)
+1) NATO standard target, 30% reflectivity, 10 km visibility, 0.5 s measuring time 
+2) Depending on target and measuring conditions, e.g. environmental conditions 
+3) Lower range limit available (built-in, some limitations may apply)
+4) Increased accuracy available on request (some limitations may apply)
+5) Product version with other measuring time range available on request.
+Communication interfaces
+Data interface RS232 
+CMOS level 3.3 V, 19200 baud
+Electrical parameters
+Power supply 3 VDC  
+(Standard lithium battery, e.g. CR123)
+Power consumption operation
+stand-by
+shut-down
+< 2 W (peak)
+< 50 mW
+< 3 µW
+Mechanical Dimensions
+Weight < 40 g
+Dimensions (L × W × H) 54 mm × 22 mm × 34 mm
+Ambient conditions
+Operation temperature - 40 °C ... + 75 °C
+Storage temperature - 46 °C ... + 85 °C
+Shock resistance 1500 g, 1 ms
+It is our policy to constantly improve the design and specifications. Accordingly, the details represented herein cannot be regarded as final and binding.
+29.5
+8
+54 22
+11
+M3 × 2.5  (6x)
+Receiver 
+Optics
+14
+4
+11
+33.5
+15.7
+6.3
+Transmitter 
+Optics
+Dimensions DLEM SR
+The DLEM product family:  4k, 2k, SR and 1k
+“Within the evolution of high performance laser rangefinders, the DLEM SR is one more consequent step forward towards 
+creating most compact, yet powerful solutions optimized for integration into portable optronic equipment.”
+JENOPTIK  I  Defense & Civil Systems
+JENOPTIK Defense, Inc.
+16490 Innovation Drive
+Jupiter, FL 33478  I  USA
+www.jenoptik.com/us-defense
+Distributor
+International Defense & Security Solutions, Inc.
+525K East Market St. I  #156 
+Leesburg, VA 20176  I  USA
+Phone 1.800.644.5098 x101  I  Fax 702.232.1439
+info@idssi.com  I  www.idssi.com

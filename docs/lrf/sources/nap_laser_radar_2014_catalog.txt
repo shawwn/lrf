@@ -1,0 +1,865 @@
+Source: https://nap.nationalacademies.org/catalog/18733/laser-radar-progress-and-opportunities-in-active-electro-optical-sensing
+Fetched: 2026-10-03
+
+Laser Radar 
+
+ Skip to main content 
+
+ Discover 
+
+ Events 
+
+ Engage 
+
+ About 
+
+ Donate 
+
+ Dropdown items
+
+ My Academies
+
+ Login 
+
+ Personal Library 
+
+ Account settings 
+
+ Logout 
+
+ Our Work 
+
+ svg]:inline [&>svg]:size-16 px-0 items-center justify-center btn-iconOnly cursor-pointer [&.btn-tag]:px-8 [&.btn-tag]:h-32 gap-8 [&.btn-tag]:gap-4 [&.btn-md:not(.btn-iconOnly)]:pr-20 inline-block w-16"
+ href="https://www.nationalacademies.org" >
+
+ Our Work 
+
+ Consensus/Advisory Activity 
+
+ Review of Advancements in Active Electro-Optical Systems to Avoid Technological Surprise Adverse to U.S. National Security
+
+ Consensus/Advisory Activity
+
+ Consensus/Advisory Activity
+
+ An activity carried out by an appropriately knowledgeable and balanced ad hoc committee, the purpose of which is to provide formal advice on the matters posed in the statement of task for the activity. These activities follow institutional policies and procedures to adhere to Section 15 of the Federal Advisory Committee Act (FACA).
+
+ See all consensus/advisory activities 
+
+ Review of Advancements in Active Electro-Optical Systems to Avoid Technological Surprise Adverse to U.S. National Security
+
+ Dropdown items
+
+ Copy link 
+
+ Facebook 
+
+ X 
+
+ Linked In 
+
+ Email 
+
+ Completed
+
+ Topics
+
+ Space, Security, and Conflicts
+
+ Research and Standards
+
+ About 
+
+ Publications/Resources 
+
+ Events 
+
+ On this page
+
+ Featured publication 
+
+ Statement of Task 
+
+ Contributors 
+
+ Contact 
+
+ Featured publication
+
+ Laser Radar: Progress and Opportunities in Active Electro-Optical Sensing
+
+ Consensus Study Report
+
+ · 
+
+ 2014
+
+ In today's world, the range of technologies with the potential to threaten the security of U.S. military forces is extremely broad. These include developments in explosive materials, sensors, control systems, robotics, satellite systems, and computing power, to name just a few. Such technologies hav...
+
+ View details
+
+ Statement of Task
+
+ The field of active electro-optical sensing is relatively new and rapidly developing. Fundamental changes in underlying technology are ongoing, along with rapidly evolving implementation concepts. Thus, the potential for military surprise in this field may be significant over the next 5 to 10 year time frame. 
+
+ The NRC ad hoc committee will: 
+ - Evaluate the fundamental, physical limits to active electro-optical (EO) sensor technologies with potential military utility; Elucidate tradeoffs among technologies including: direct and heterodyne systems, scanning and flash ladar, Gieger mode, linear mode, and polarization based ladar, synthetic aperture vs real beam ladar; and parameters including sensitivity, dynamic range, polarization sensitivity, etc. Compare these limits to the near term state-of-the-art, identifying the scaling laws and technical and other impediments currently restricting progress. 
+ - Identify key technologies that may help overcome the impediments within a 5-10 year timeframe, the implications for future military applications, and any significant indicators of programs to develop such applications. Speculate on technologies and applications of relevance that are high impact wildcards with feasible deployment within 10 years. Discuss available laser illumination technologies, including wall plug efficiency. Femto-second pulse width laser sources should be considered. Discuss available detector/receiver approaches and technologies. Discuss laser beam steering approaches. Discuss processing approaches to convert ladar data into useable information. 
+ - Consider the pros and cons of implementing each existing or emerging technology, such as noise, dynamic range, processing or bandwidth bottlenecks, hardening, power consumption, weight, etc. Identify which state and non-state actors currently lead worldwide funding, research, and development for the key technologies. Highlight the scale, scope, and particular strengths of these research and development efforts, as well as predicted trends, timescales, and commercial drivers. 
+ - Evaluate the potential uses of active EO sensing technologies, to include 3D mapping and multi-discriminate laser radar technologies. Laser vibration detection, atmospheric compensation, multiple illumination wavelengths, polarization, and speckle considerations should be included as methods of determining object identity and status. 
+ A report will be authored by the committee addressing the foregoing tasks. 
+
+ Contributors
+
+ Committee
+
+ Paul F. McManamon
+
+ Chair
+
+ Walter F. Buell
+
+ Vice Chair
+
+ Melissa G. Choi
+
+ Member
+
+ John W. Devitt
+
+ Member
+
+ Elsa M. Garmire
+
+ Member
+
+ Gary W. Kamerman
+
+ Member
+
+ Kenneth A. Kress
+
+ Member
+
+ Jeanette Lurier
+
+ Member
+
+ Pradip Mitra
+
+ Member
+
+ Peter F. Moulton
+
+ Member
+
+ Jonathan M. Smith
+
+ Member
+
+ Abbie Watnik
+
+ Member
+
+ Eli Yablonovitch
+
+ Member
+
+ Download all bios 
+
+ Committee Membership Roster Comments
+
+ This updated posting on 3/4/2013 is to add two members, Dr. Pradip Mitra and Dr. Eli Yablonovitch, and to make Dr. Walter Buell the Vice Chair.
+
+ Sponsors
+
+ Department of Defense
+
+ Staff
+
+ Greg Eyring
+
+ Lead
+
+ Major units and sub-units
+
+ Division on Engineering and Physical Sciences
+
+ Lead
+
+ Contact
+
+ Provide feedback
+
+ Request materials
+
+ More like this
+
+ Similar activities 
+
+ From the same topics 
+
+ Examining Literacy Across the Life Course
+
+ Consensus/Advisory Activity
+
+ In Formation 
+
+ Prevention of Dementia and Cognitive Impairment
+
+ Consensus/Advisory Activity
+
+ In Formation 
+
+ Accelerating the Path to U.S. Fusion Power: An Evaluation of the DOE’s Milestone-Based Fusion Development Program
+
+ Consensus/Advisory Activity
+
+ In Formation 
+
+ Decadal Survey for Earth Science and Applications from Space 2028-2037 (ESAS 2028): Panel on the State of the Profession
+
+ Supporting Activity
+
+ In Formation 
+
+ National Conversation on Reimagining the U.S. Research Enterprise: Cross-Sector Perspectives and Emerging Opportunities (Conversation 3)
+
+ Workshop
+
+ In Formation 
+
+ Accelerating the Path to U.S. Fusion Power: An Evaluation of the DOE’s Milestone-Based Fusion Development Program
+
+ Consensus/Advisory Activity
+
+ In Formation 
+
+ Subscribe to Emails from the National Academies
+
+ Stay up to date on activities, publications, and events by subscribing to email updates.
+
+ Subscribe 
+
+ Driving progress for the benefit of society by providing independent, objective advice to advance science, engineering, and medicine.
+
+ The National Academies
+
+ National Academy of Sciences 
+
+ National Academy of Engineering 
+
+ National Academy of Medicine 
+
+ Careers 
+
+ National Academies Press (NAP) 
+
+ Transportation Research Board Reports 
+
+ MyAcademies Accounts 
+
+ Contact Us 
+
+ Journals and Periodicals
+
+ PNAS 
+
+ PNAS Nexus 
+
+ ILAR Journal 
+
+ Issues in Science and Technology 
+
+ Transportation Research Record: Journal of the Transportation Research Board 
+
+ TR News 
+
+ Visit
+
+ Visit Us Information 
+
+ Current Operating Status 
+
+ Beckman Center 
+
+ Archives 
+
+ Legal
+
+ Policies and Procedures 
+
+ Legal Information 
+
+ Privacy Statement 
+
+ Terms of Use 
+
+ Accessibility 
+
+ © 2026 National Academy of Sciences. All Rights
+ Reserved.
+
+ Discover
+
+ Trending Topics
+
+ Transportation 
+
+ Artificial Intelligence 
+
+ Space, Security, and Conflicts 
+
+ See All Topics 
+
+ Our Work
+
+ Consensus Studies 
+
+ Outreach Activities 
+
+ Standing Committees 
+
+ See All Work 
+
+ Our Publications
+
+ Our peer-reviewed reports present the evidence-based consensus of committees of experts.
+
+ Explore the Latest News and Stories
+
+ The latest news and stories, with context you can trust.
+
+ Events
+
+ Convening Activities
+
+ Roundtables and Forums 
+
+ Workshops 
+
+ Seminar/Webinar/Lecture Series 
+
+ Events
+
+ Upcoming events 
+
+ Replay 
+
+ See all events 
+
+ Right Now & Next Up
+
+ Stay in the loop with can’t-miss sessions, live events, and activities happening over the next two days.
+
+ TRB Webinars
+
+ Webinars are based on work from TRB Standing Technical Committees & the Cooperative Research Programs
+
+ Engage
+
+ Work with us
+
+ Sponsoring a Project 
+
+ Contribute Expertise 
+
+ Careers 
+
+ Opportunities
+
+ Engagement Programs 
+
+ Grants, Fellowships and Awards 
+
+ Science Communication Awards 
+
+ Congressional and Government Affairs
+
+ Connecting policymakers with the National Academies
+
+ Based On Science
+
+ Answers to everyday science and health questions
+
+ About
+
+ National Academies
+
+ Purpose 
+
+ Process 
+
+ Get in touch
+
+ Press and Media 
+
+ Contact Us 
+
+ Our People
+
+ Leadership 
+
+ Program Centers 
+
+ Careers 
+
+ Members
+
+ Learn about membership to the three Academies
+
+ Current Operating Status
+
+ Information on building access, visitor requirements, and facility operations.
+
+ Search
+
+ Search 
+
+ Mobile Navigation
+
+ Primary Mobile Navigation
+
+ Discover
+
+ Trending Topics
+
+ Transportation 
+
+ Artificial Intelligence 
+
+ Space, Security, and Conflicts 
+
+ See All Topics 
+
+ Our Work
+
+ Consensus Studies 
+
+ Outreach Activities 
+
+ Standing Committees 
+
+ See All Work 
+
+ Our Publications
+
+ Our peer-reviewed reports present the evidence-based consensus of committees of experts.
+
+ Explore the Latest News and Stories
+
+ The latest news and stories, with context you can trust.
+
+ Events
+
+ Convening Activities
+
+ Roundtables and Forums 
+
+ Workshops 
+
+ Seminar/Webinar/Lecture Series 
+
+ Events
+
+ Upcoming events 
+
+ Replay 
+
+ See all events 
+
+ Right Now & Next Up
+
+ Stay in the loop with can’t-miss sessions, live events, and activities happening over the next two days.
+
+ TRB Webinars
+
+ Webinars are based on work from TRB Standing Technical Committees & the Cooperative Research Programs
+
+ Engage
+
+ Work with us
+
+ Sponsoring a Project 
+
+ Contribute Expertise 
+
+ Careers 
+
+ Opportunities
+
+ Engagement Programs 
+
+ Grants, Fellowships and Awards 
+
+ Science Communication Awards 
+
+ Congressional and Government Affairs
+
+ Connecting policymakers with the National Academies
+
+ Based On Science
+
+ Answers to everyday science and health questions
+
+ About
+
+ National Academies
+
+ Purpose 
+
+ Process 
+
+ Our People
+
+ Leadership 
+
+ Program Centers 
+
+ Careers 
+
+ Get in touch
+
+ Press and Media 
+
+ Contact Us 
+
+ Members
+
+ Learn about membership to the three Academies
+
+ Current Operating Status
+
+ Information on building access, visitor requirements, and facility operations.
+
+ My Academies
+
+ Login 
+
+ Personal Library 
+
+ Account settings 
+
+ Logout 
+
+ Donate 
+
+ Loading... 
+
+ Paul F. McManamon
+
+ Paul F. McManamon
+
+ Paul McManamon is Technical Director of the Ladar and Optical Communication Institute, LOCI, at the University of Dayton. He is owner of Exciting Technology LLC. Until May of 2008 he was chief scientist for the Sensors Directorate, Air Force Research Laboratory (AFRL), Air Force Materiel Command, Wright-Patterson Air Force Base, Ohio. The Sensors Directorate consists of about 1,250 people responsible for developing new sensor technology for the Air Force. Dr McManamon was responsible for the technical portfolio of the Sensors Directorate, including radio-frequency (RF) sensors and countermeasures, electro-optical (EO) sensors and countermeasures, and automatic object recognition. He has developed multidiscriminate electro-optical sensors, including multifunction laser radar, novel EO countermeasure systems, and optical phased-array beam steering. Dr. McManamon has participated in three Air Force Scientific Advisory Board (AFSAB) summer studies: New World Vistas (1995); A Roadmap for a 21st Century Aerospace Force (1998); and Sensors for Difficult Targets (2001). Dr. McManamon was instrumental in the development of laser flash imaging, initiating the ERASER program as a method to enhance EO target recognition range by a factor of 4 or 5. Dr. McManamon is widely recognized in the electro-optical community. Dr. McManamon was the 2006 president of SPIE and is involved in numerous other scientific organizations.
+
+ Walter F. Buell
+
+ Walter F. Buell
+
+ Walter F. Buell is the Principal Director of the Electronics and Photonics Laboratory at the Aerospace Corporation. Dr. Buell has been a part of the technical staff at the Aerospace Corporation for many years. Previously, he has served as Systems Director for NGA InnoVision Programs, Systems Director for Advanced Studies, manager of the Lidar and Atomic Clocks Section of the Photonics Technology Department, as well as the principal investigator for Synthetic Aperture Ladar programs at Aerospace. Dr. Buell’s research interests also include laser cooling and trapping of atoms, atomic clocks, laser remote sensing, and quantum information physics. He has published more than 25 papers in atomic, molecular, and optical physics and holds three patents. He is nominated for his expertise in: active EO sensors, ladar, laser systems, intelligence, surveillance, and reconnaissance, government, and industrial research and development, military operations, physics, optics/photonics, EO technologies generally including fundamental physical limits, current implementations of EO, lasers, including femtosecond pulses, detector systems, including synthetic apertures, optics and beam steering, processing, communications, exploitation, distribution--turning data into usable information, potential new applications of EO, how target characteristics affect system performance, foreign activities, assessment of technological maturity, atmospheric effects, army perspective, cross-cueing of sensors, performance in different environments, military CONOPs in permissive and nonpermissive situations, capabilities of various potential platforms, from soldier to national asset, vulnerabilities and covertness of EO systems, and health and safety risks, potential unintended consequences of use. Dr. Buell has a Ph.D. in physics from the University of Texas at Austin and is a member of the American Physical Society, IEEE, and SPIE.
+
+ Melissa G. Choi
+
+ Melissa G. Choi
+
+ Melissa Goodhart Choi is the group leader of the Active Optical Systems Group at MIT Lincoln Laboratory. The group, focuses on development of advanced laser radar concepts, and is currently involved in the development and operation of experimental and deployed airborne and ground-based 3D laser radars; data exploitation; and simulation and modeling efforts for various applications, with significant efforts in area of coherent laser radar. She earned her Ph.D. in applied mathematics from North Carolina State University in 1999. Dr. Choi is nominated for her expertise in: active EO sensors, ladar, intelligence, surveillance, and reconnaissance, government, and industrial research and development, EO technologies generally including fundamental physical limits, current implementations of EO, potential new applications of EO, cross-cueing of sensors, performance in different environments--foliage, urban, etc., military CONOPs in permissive and nonpermissive situations, and capabilities of various potential platforms, from soldier to national asset. 
+
+ John W. Devitt
+
+ John W. Devitt
+
+ John Devitt is the Director of Engineering at Raytheon Vision Systems. He was the former division chief of GTRI- Electro Optics Sciences Lab's remote sensing group at Georgia Tech. Previously he was the former manager of the Systems Analysis and Test group in the Infrared Products Engineering organization at L-3 Cincinnati Electronics (CE). He has more than 20 years’ experience in advanced technology projects in EO-IR, optics, sensors, and related areas, including direct experience in leading both large-format FPA development and novel detector programs. He has led major research and development, manufacturing technology, and other advanced technology developmental projects with broad technical and economic scope at both L-3 CE and, previously, GE Global Research Center. This has involved coordinating multiple cross-technical and organizational groups within businesses, managing university and national laboratory subcontracts, and being a key interface with the major government agencies. In 1993, Mr. Devitt was awarded the GE Sanford Moss Award for Most Outstanding Test and Measurement Program. He has 12 U.S. patents and numerous publications. Mr. Devitt is a certified Six Sigma Green Belt and has an M.S. in physics from Ohio State University.
+
+ Elsa M. Garmire
+
+ Elsa M. Garmire
+
+ Elsa Garmire (NAE) is Sydney E Junkins Professor of Engineering Sciences at Dartmouth College, Hanover New Hampshire, where she served as Dean of the Thayer School of Engineering from 1995 - 1997. Prior to that she was William Hogue Professor of Electrical Engineering, Professor of Physics, and Director of the Center for Laser Studies, at the University of Southern California, where she had been since 1975. Garmire received her A.B. in Physics at Harvard and her PhD in Physics at M.I.T. under the direction of Nobel Prizewinner Charles H. Townes. She served on the research staff at Caltech for nine years under the direction of Amnon Yariv. Garmire’s research has focused on lasers and optics, including opto-electronics, nonlinear optics, optical devices, fiber optics, quantum electronics, device fabrication and semiconductors. She and her students have authored over 200 journal papers, received 10 patents. She has supervised 30 PhD and 15 MS theses. The major focus of this research has been to contribute both experimentally and theoretically to the understanding of nonlinear optics, integrated optics, and semiconductor lasers. Garmire has served the research community by serving on the boards of five professional societies and as President of the Optical Society of America. She has organized seven conferences related to her research interests and has been associate editor for four technical journals. In honor of her contributions to quantum electronics and nonlinear optics, Garmire has been elected member of the National Academy of Engineering and the American Academy of Arts and Sciences. She was promoted to Fellow of the Institute of Electrical and Electronic Engineers, the Optical Society of America, the American Physical Society, and the Society of Women Engineers. She received the Society of Women Engineers Achievement Award (their highest award), has been a Fulbright Scholar, and was elected an honorary member of Phi Beta Kappa. Garmire has advised government policy-makers by serving on numerous technical advisory boards, panels and committees for the Army, DOE, the Air Force, the National Science Foundation, the National Research Council and the National Academy of Engineering. She has also been involved in Public Policy activities through the public affairs committees of the American Physical Society and the American Institute of Physics, as well as on the Committee on Science, Engineering and Public Policy of the National Academies. In 2007-2008 Professor Garmire spent a year in the U. S. State Department, advising in the area of telecommunications, by means of a Jefferson Science Fellowship.
+
+ Gary W. Kamerman
+
+ Gary W. Kamerman
+
+ Gary W. Kamerman is the president and chief scientist for FastMetrix, Inc., where he has lead the science team that oversaw the design, development and deployment of several, advanced remote sensing laser systems for the U.S. government. He supervised the design and demonstration of deployable high performance computer systems, and designed non-intrusive optical instruments for high-speed velocimetry, interior ballistics analysis, remote chemical detection, and combustion diagnostics. Mr. Kamerman invented and patented the optical computing system to process laser radar signals before photodetection. He is a Ph.D. candidate at Kiev Polytechnic Institute, focusing his studies on applied physics. Mr. Kamerman is nominated for his expertise in: active EO sensors, ladar, laser systems, computer and information systems, intelligence, surveillance, and reconnaissance, government, and industrial research and development, military operations, materials science, physics, optics/photonics, EO technologies generally including fundamental physical limits, current implementations of EO, lasers, including femtosecond pulses, detector systems, including synthetic apertures, optics and beam steering, processing, communications, exploitation, distribution--turning data into usable information, cost of EO systems and components, potential new applications of EO, how target characteristics affect system performance, foreign activities, assessment of technological maturity, atmospheric effects, cross-cueing of sensors, performance in different environments, military CONOPs in permissive and nonpermissive situations, capabilities of various potential platforms, from soldier to national asset, vulnerabilities and covertness of EO systems, and health and safety risks.
+
+ Kenneth A. Kress
+
+ Kenneth A. Kress
+
+ Kenneth A. Kress is a senior scientist for KBK Consulting, Inc., an affilate of Montana State University’s Department of Physics, and a consultant for Booz Allen Hamilton, where he specializes in quantum information science and other technical evaluations and strategic planning for intelligence and defense applications. Some of his past clients include DARPA’s Microsytems Technology Office, Noblis, Georgia Tech Research Institute, Mitretek Systems Inc., and Lockheed Martin’s Special Programs Division. From 1971 to 1999 he worked in a series of positions at the Central Intelligence Agency’s Directorate of Operations, Office of Development and Engineering, and finally, Office of Research and Development (ORD); first as a research and development manager, later as a program manager, and finally as an ORD Office senior scientist responsible for management support, the development of technical and strategic plans, and DOD inter-agency coordination for advanced technology. He is the inventor of the solid-state neutron detector, for which he won an award in 1981. He holds a Ph.D. in physics from Montana State University.
+
+ Jeanette Lurier
+
+ Jeanette Lurier
+
+ Jeanette Lurier is an engineering fellow at Raytheon Company. Ms. Lurier has over 30 years experience in Aerospace Engineering and System Architecture and has been with the Raytheon since 1985. She has spent the vast majority of her career working on active and passive EO/IR systems for Space applications and developing new technologies in lasers and IR sensors. Ms. Lurier is a Raytheon Certified Architect and is currently leading the LADAR Product Line Manager Raytheon Space Systems. In this role she focuses primarily on developing strong Customer relationships, and leveraging her work as Mission Systems Engineer to guide architecture studies, mission analysis, technology roadmap development, and technology development, paving the way for new business opportunities in cutting edge capabilities. Ms. Lurier originally joined the company as an Optical Engineer and has worked all aspects of program execution including concept generation, hardware design, development, fabrication and test, system design integration and architecture, and technology development. Ms. Lurier holds a B.A. in Physics from Cornell University and a M.S. in Optical Engineering from the University of Rochester. She is nominated for her expertise in: active EO sensors, ladar, laser systems, intelligence, surveillance, and reconnaissance, government, and industrial research and development, physics, optics/photonics, current implementations of EO, lasers, including femtosecond pulses, optics and beam steering, processing, communications, exploitation, distribution--turning data into usable information, cost of EO systems and components, potential new applications of EO, and performance in different environments--foliage, urban, etc.
+
+ Pradip Mitra
+
+ Pradip Mitra
+
+ Pradip Mitra is Senior Director of Advanced Development Programs at DRS Technologies in Dallas, TX where he has worked for the past 10 years. He oversees multiple IR technology development programs including active imaging detectors and sensors and dual-band focal plane array (FPA) programs. At DRS his group, involved in HgCdTe avalanche photodiode (APD) based detectors, has developed the highest performing active-passive dual-mode infrared sensors, 3-D imaging FPAs and receivers, single photon counting detectors etc. Before joining DRS he worked at Lockheed Martin for 13 years where he was involved in IR materials and detector research. His contributions there were in the areas of MOCVD HgCdTe materials, 2-color detectors and FPAs, and Quantum Well IR Photodetectors (QWIPs). He developed the material structures for the first simultaneous dual-band detectors and FPAs and led the effort that produced the highest quantum efficiency QWIPs with a novel diffractive resonant optical coupling scheme. He is the recipient of Individual Excellence Award from Lockheed Martin Missiles & Fire control, and a Best Paper award from the MSS Detector Specialty Group Meeting in 2005 for his paper on “Monolithic Tunable Fabry Perot Filter Integrated with SWIR HgCdTe Detector for Hyperspectral Detection”. He has 18 issued patents in the IR technology area and has co-authored over 70 papers. He received his Ph.D. in Physical Chemistry from Boston University and M.Sc. from Indian Institute of Technology in Kanpur, India.
+
+ Peter F. Moulton
+
+ Peter F. Moulton
+
+ Peter F. Moulton (NAE) is a Principal Research Scientist for Q-Peak, Inc. He received an A.B. in Physics from Harvard College in 1968 and M.S. and Ph.D. degrees in Electrical Engineering from M.I.T. in 1972 and 1975 respectively. After finishing graduate school he was employed in the Quantum Electronics Group at M.I.T. Lincoln Laboratory, Lexington, MA. In 1985 he joined a start-up company, Schwartz Electro-Optics, as Vice-President and managed the founding of the company's Research Division in Concord, Massachusetts. He became Senior Vice-President of SEO in 1997 and was involved in spinning out the Research Division as a separate company, Q-Peak, in 1998, and in the sale of Q-Peak to its current parent company, Physical Sciences Inc. (Andover, MA) in 2001. He served as the Vice-President and Chief Technology Officer of Q-Peak until 2012, when he moved to a part-time position as a Principal Research Scientist. Moulton's technical work began in the field of bulk solid state lasers, and in recent years has extended to include nonlinear optics and fiber lasers. Dr. Moulton is a Fellow of the Optical Society of America (OSA) and of the IEEE. In 1997 he was awarded the R.W. Wood Prize from the OSA and the William Streifer Scientific Achievement Award from IEEE/LEOS, and in 2013 won the IEEE Photonics Award. He was elected to the NAE in 2000. Moulton is nominated for his expertise in: active EO sensors, ladar, laser systems, computer and information systems, intelligence, surveillance, and reconnaissance, government, and industrial research and development, materials science, energy and power sources and technology, physics, optics/photonics, EO technologies generally including fundamental physical limits, current implementations of EO, lasers, including femtosecond pulses, detector systems, including synthetic apertures, electronics and computing--size, weight, power, efficiency, miniaturization, etc., optics and beam steering, cost of EO systems and components, potential new applications of EO, atmospheric effects, performance in different environments--foliage, urban, etc., vulnerabilities and covertness of EO systems, and health and safety risks, potential unintended consequences of use.
+
+ Jonathan M. Smith
+
+ Jonathan M. Smith
+
+ Jonathan M. Smith is the Olga and Alberico Pompa Professor of Engineering and Applied Science at the University of Pennsylvania. He has served as a Program Manager at the Defense Advanced Research Projects Agency (DARPA. He was previously at Bell Telephone Laboratories and Bell Communications Research, which he joined at the AT&T divestiture. His current research interests include programmable network infrastructures, network defense and cognitive radios. Dr. Smith served on the President’s Council of Advisors on Science and Technology Network and Information Technology Technical Advisory Group, is an IEEE Fellow and is a member of the NRC Board on Army Science and Technology (BAST). He is nominated for his expertise in: computer and information systems, government, and industrial research and development, military operations, electronics and computing--size, weight, power, efficiency, miniaturization, etc., processing, communications, exploitation, distribution--turning data into usable information, how target characteristics affect system performance, foreign activities, assessment of technological maturity, cross-cueing of sensors, performance in different environments--foliage, urban, etc. He received his A.B. in Mathematics, Magna Cum Laude from Boston College and M.S. and Ph.D. in Computer Science from Columbia University.
+
+ Abbie Watnik
+
+ Abbie Watnik
+
+ Abbie (Tippie) Watnik is a Karle Fellow and Research Physicist in the Applied Optics Branch within the Optical Sciences Division at the Naval Research Laboratory in Washington, DC. Dr. Watnik’s current work focuses on applying holographic and computational imaging techniques and principles to intelligence, surveillance and reconnaissance (ISR) systems and countermeasures (CM) to support projects of interest to our national defense. Dr. Watnik’s research interests include active imaging, diffractive imaging, aberration correction, phase reconstruction, mathematical algorithm development and non-conventional approaches to image correction. Dr. Watnik earned her Ph.D. and M.S. from the University of Rochester. As National Science Foundation Graduate Research Fellow and Harvey Fellow, Dr. Watnik studied aberration correction for multi-plane aberrations using a nonlinear optimization approach using sharpness metrics as well as constructed and processed gigapixel synthetic-aperture high-resolution imagery. She is recipient of the Rochester Precision Optics Award and winner of the Mark Ain Technical Business Model Competition, and holds a Ph.D. in Optics from the University of Rochester. She is nominated for her expertise in: optics/photonics, EO technologies generally including fundamental physical limits, detector systems, including synthetic apertures, and processing, communications, exploitation, distribution--turning data into usable information.
+
+ Eli Yablonovitch
+
+ Eli Yablonovitch
+
+ Eli Yablonovitch (NAS/NAE) is an Adjunct Professor of Electrical Engineering at UCLA after having served as a regular faculty until 2007. He is currently a Professor of Electrical and Computer Engineering at UC Berkeley. He graduated with the Ph.D. degree in Applied Physics from Harvard University in 1972. He worked for two years at Bell Telephone Laboratories, and then became a professor of Applied Physics at Harvard. In 1979 he joined Exxon to do research on photovoltaic solar energy. Then in 1984, he joined Bell Communications Research, where he was a Distinguished Member of Staff, and also Director of Solid-State Physics Research. In 1992 he joined the University of California, Los Angeles, where he is now The Northrop Grumman Opto-Electronics Chair, Professor of Electrical Engineering. Prof. Yablonovitch's work has covered a broad variety of topics: nonlinear optics, laser-plasma interaction, infrared laser chemistry, photovoltaic energy conversion, strained-quantum-well lasers, and chemical modification of semiconductor surfaces. Currently his main interests are in optoelectronics, high speed optical communications, high efficiency light-emitting diodes and nano-cavity lasers, photonic crystals at optical and microwave frequencies, quantum computing and quantum communication. Professor Yablonovitch's research focuses on optoelectronics, high speed optical communications, nanocavity lasers, photonic crystals at optical and microwave frequencies, quantum computing and communication.
+
+ Laser Radar: Progress and Opportunities in Active Electro-Optical Sensing
+
+ 2014
+
+ Consensus Study Report
+
+ Read Online 
+
+ Download PDF 
+
+ Download PDF 
+
+ Download PDF 
+
+ You must be logged in to download this publication.
+
+ Login 
+
+ or
+
+ Download as guest 
+
+ You must be logged in to save this publication.
+
+ Login 
+
+ Select Book Type 
+
+ Paperback - $67.50
+
+ Ebook - $53.99
+
+ Buy the book 
+
+ See project
+
+ Request an exam or desk copy
+
+ In today's world, the range of technologies with the potential to threaten the security of U.S. military forces is extremely broad. These include developments in explosive materials, sensors, control systems, robotics, satellite systems, and computing power, to name just a few. Such technologies have not only enhanced the capabilities of U.S. military forces, but also offer enhanced offensive capabilities to potential adversaries - either directly through the development of more sophisticated weapons, or more indirectly through opportunities for interrupting the function of defensive U.S. military systems. Passive and active electro-optical (EO) sensing technologies are prime examples.
+
+ Laser Radar considers the potential of active EO technologies to create surprise; i.e., systems that use a source of visible or infrared light to interrogate a target in combination with sensitive detectors and processors to analyze the returned light. The addition of an interrogating light source to the system adds rich new phenomenologies that enable new capabilities to be explored. This report evaluates the fundamental, physical limits to active EO sensor technologies with potential military utility; identifies key technologies that may help overcome the impediments within a 5-10 year timeframe; considers the pros and cons of implementing each existing or emerging technology; and evaluates the potential uses of active EO sensing technologies, including 3D mapping and multi-discriminate laser radar technologies.
+
+ Read More 
+
+ Publication information
+
+ 310 pages
+ · 
+ 8.5 x 11
+ · 
+ paperback
+
+ ISBN Paperback: 0-309-30216-1
+
+ ISBN Ebook: 0-309-30217-X
+
+ DOI:
+
+ https://doi.org/10.17226/18733
+
+ Suggested citation
+
+ National Research Council. 2014. Laser Radar: Progress and Opportunities in Active Electro-Optical Sensing . Washington, DC: The National Academies Press.
+
+ Import this citation to:
+
+ Bibtext
+
+ EndNote
+
+ Reference manager
+
+ Log In
+
+ Log In
+
+ Sign in to access your saved publications, downloads, and email preferences.
+ Former MyNAP users: You'll need to reset your password on your first login to MyAcademies. Click "Forgot password" below to receive a reset link via email. Having trouble? Visit our FAQ page to contact support.
+
+ Email
+
+ (required)
+
+ Password
+
+ (required)
+
+ Forgot password 
+
+ Log In 
+
+ Don't have an account?
+
+ Sign up 
+
+ Register
+
+ Register
+
+ Email
+
+ (required)
+
+ New password
+
+ (required)
+
+ Retype password
+
+ (required)
+
+ Password must be at least 8 characters 
+
+ I agree to receive emails from the National Academies
+
+ I accept the terms of use
+
+ I accept the 
+
+ terms of use 
+
+ Sign Up 
+
+ Download as a Guest
+
+ Download as a Guest
+
+ While logged on as a guest, you can download any of our free PDFs on
+ nationalacademies.org 
+ . You will remain logged in until you close your browser.
+
+ Email
+
+ (required)
+
+ Yes, send me emails when similar titles are published
+
+ Yes, I accept the terms of use
+
+ Yes, I accept the 
+
+ terms of use 
+
+ Continue 
+
+ Sign up for MyAcademies 
+
+ Thank You
+
+ Thank You
+
+ Thank you for creating a MyAcademies account!
+
+ Enjoy free access to thousands of National Academies' publications, a
+ 10% discount off every purchase, and build your personal library.
+
+ Forgot Password
+
+ Forgot Password
+
+ Enter the email address for your MyAcademies (formerly MyNAP) account to
+ receive password reset instructions.
+
+ Email
+
+ (required)
+
+ Continue 
+
+ Reset Requested
+
+ Reset Requested
+
+ We sent password reset instructions to
+ your email 
+ . Follow the link in that email to create a new password. Didn't receive
+ it? Check your spam folder or
+
+ contact us 
+
+ for assistance.
+
+ Log In 
+
+ Reset Password
+
+ Reset Password
+
+ New password
+
+ (required)
+
+ Retype password
+
+ (required)
+
+ Password must be at least 8 characters 
+
+ Reset Password 
+
+ Reset Password
+
+ Reset Password
+
+ Your password has been reset.
+
+ Log In 
+
+ Verify email
+
+ Verify email
+
+ Verify Your Email Address
+
+ We sent a verification link to your email. Please check your inbox (and
+ spam folder) and follow the link to verify your email address. If you
+ did not receive the email, you can request a new verification link below
+
+ Resend Verification Email 
+
+ Subscribe
+
+ Subscribe
+
+ First Name
+
+ Last Name
+
+ Email
+
+ (required)
+
+ I agree to receive emails from the National Academies
+
+ (required)
+
+ Subscribe 
+
+ We respect your privacy and will never share your information.

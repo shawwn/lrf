@@ -1,0 +1,473 @@
+Source: https://www.jenoptik.com/products/lasers/laser-distance-sensors/dlem
+Fetched: 2026-10-03
+
+Compact Diode Laser Rangefinders | Jenoptik 
+
+ ColorRay 
+
+ Logo: Jenoptik - More Light 
+
+ Blog 
+
+ Contact Form 
+
+ Purchasing 
+
+ Language 
+
+ Choose language 
+
+ Deutsch 
+
+ English (USA) 
+
+ Choose country or region 
+
+ Australia 
+
+ Canada 
+
+ España 
+
+ Deutschland, Deutsch 
+
+ India 
+
+ Switzerland 
+
+ United States, English 
+
+ 中国, 中文 
+
+ 日本, 日本語 
+
+ 대한민국, 한국어 
+
+ Products 
+
+ back 
+
+ Products 
+
+ Imaging Solutions and Cameras 
+
+ Laser and Laser Technology 
+
+ LiDAR Technologies 
+
+ Optics and Microoptics 
+
+ Measurement and Inspection Solutions 
+
+ Optoelectronics and Optoelectronic Systems 
+
+ Road safety 
+
+ Civil security 
+
+ Markets 
+
+ back 
+
+ Markets 
+
+ Automotive 
+
+ Data Communication 
+
+ Defense and Security 
+
+ Electronics and Information Technology 
+
+ Industry and Mechanical Engineering 
+
+ Life Science and Medical Technology 
+
+ Semiconductor Equipment 
+
+ Public Safety 
+
+ About us 
+
+ back 
+
+ About us 
+
+ Company profile 
+
+ Values, Vision and Mission 
+
+ Management 
+
+ Innovation 
+
+ Purchasing 
+
+ Quality 
+
+ Chronicle 
+
+ Compliance & Risk Management 
+
+ News 
+
+ back 
+
+ News 
+
+ Press Releases 
+
+ Social Media 
+
+ Media Library 
+
+ Events and Trade fairs 
+
+ Sustainability 
+
+ back 
+
+ Sustainability 
+
+ Jenoptik as enabler 
+
+ Sustainability targets 
+
+ Environment 
+
+ Social 
+
+ Governance 
+
+ ESG ratings 
+
+ Innovation 
+
+ Investors 
+
+ back 
+
+ Investors 
+
+ Annual Report 2025 
+
+ Jenoptik at a glance 
+
+ Share 
+
+ Reports and presentations 
+
+ Adhoc releases and IR news 
+
+ Annual General Meeting 
+
+ Corporate Governance 
+
+ Events 
+
+ Contact Investor Relations 
+
+ Career 
+
+ back 
+
+ Career 
+
+ Starting work at Jenoptik 
+
+ Jenoptik as an employer 
+
+ Partners 
+
+ Job offers 
+
+ Events 
+
+ Search 
+
+ search 
+
+ Close 
+
+ Home 
+
+ Products 
+
+ Laser and Laser Technology 
+
+ Laser Rangefinder 
+
+ Diode Laser Rangefinder 
+
+ Recommend Mail Facebook LinkedIn 
+
+ Diode laser rangefinder: Extremely compact modules for integration into portable systems 
+
+ The diode laser rangefinder modules (DLEM) from Jenoptik measure distances to targets precisely and with a range of up to 20 kilometres. With their extremely compact design and low weight of 25 to 160 grams, the devices in the DLEM family are the smallest and lightest measuring devices in their range class. They are very efficient and consume little energy in stand-by and operating mode. This makes them perfect for integration into mobile and hand-held systems, for example portable observation devices. 
+
+ The modules work with 1.5 micrometre diode lasers and are eye-safe. The wavelength used is neither visible to the human eye nor to residual light amplifiers. The devices are therefore predestined for tactical use. The laser rangefinders measure a wide variety of targets extremely precisely and very quickly - even in poor visibility and under extreme temperatures.
+
+ The devices of the DLEM series from Jenoptik have the same communication interface. This allows you to use the control software for your devices across all models.
+
+ Benefits
+
+ Robust: High shock resistance and wide operating temperature range
+ Compact: Extremely light and small design of customer solutions possible
+ Durable: Low failure rates and high MTBF reduce overall costs for the integrator
+ Energy-saving: Low power consumption conserves battery and thus extends operating times
+ Continuous measurement: Tracking of targets thanks to continuous distance measurement at up to 25 Hz
+ Symmetrical beam divergence: Eliminates the need for a preferred mounting position and increases integration flexibility
+ Technologically mature: More than 40 years of experience in the development of laser rangefinders from Jenoptik
+
+ Applications
+
+ Observation systems
+ Sensor boxes for vehicles, ships and aircrafts
+ Target optics
+ Fire control systems
+ Satellites and space applications
+
+ Laser rangefinders from Jenoptik
+
+Use the arrows to compare the individual products. 
+
+ DLEM 17 
+ Select a product 
+ DLEM 20 
+ DLEM 20LE 
+ DLEM 30 
+ DLEM 45 
+
+ DLEM 17 
+ Select a product 
+ DLEM 20 
+ DLEM 20LE 
+ DLEM 30 
+ DLEM 45 
+
+ DLEM 17 
+ Select a product 
+ DLEM 20 
+ DLEM 20LE 
+ DLEM 30 
+ DLEM 45 
+
+ Specifications
+
+ Measurement Range 
+
+ 8 kilometer
+
+ Measurement Range
+
+ -
+
+ Measurement Range 
+
+ 5 kilometer
+
+ Measurement Range 
+
+ 8 kilometer
+
+ Measurement Range 
+
+ 14 kilometer
+
+ Measurement Range
+
+ 20 kilometer
+
+ Measurement Accuracy
+
+ ≤ 1 meter
+
+ Accuracy
+
+ -
+
+ Accuracy
+
+ ≤ 0,5 meter
+
+ Accuracy
+
+ ≤ 1 meter
+
+ Accuracy
+
+ ≤ 1 meter
+
+ Accuracy
+
+ ≤ 1 meter
+
+ Weight
+
+ ≤ 25 gram
+
+ Weight
+
+ -
+
+ Weight
+
+ ≤ 30 gram
+
+ Weight
+
+ ≤ 30 gram
+
+ Weight
+
+ ≤ 95 gram
+
+ Weight
+
+ ≤ 160 gram
+
+ Applications:
+
+ Handheld observation systems
+ Weapon mounted fire control systems
+ Gimbal mounts for UAV/UAGV
+ Sensors for collision avoidance and landing and docking of payloads in space applications
+
+ Applications
+
+ -
+
+ Applications
+
+ Handheld observation systems
+ Weapon mounted fire control systems
+ Gimbal mounts for UAV/UAGV
+ Sensors for collision avoidance and landing and docking of payloads in space applications
+
+ Applications
+
+ Handheld observation systems
+ Weapon mounted fire control systems
+ Gimbal mounts for UAV/UAGV
+ Sensors for collision avoidance and landing and docking of payloads in space applications
+
+ Applications
+
+ Multi-Sensor Boxes
+ Mobile fire control systems
+ Gimbals for UAV/UAGV
+
+ Application
+
+ Multi-Sensor Boxes
+ Mobile fire control systems
+ Gimbals for UAV/UA
+
+ Special features 
+
+ The DLEM 17 is the smallest and lightest laser rangefinder in its range class.
+
+ The shock and impact resistant module is ideally suited for handheld opto-electronic systems and UAV applications thanks to its small size, rugged design and low power consumption.
+
+ Special features 
+
+ -
+
+ Special features 
+
+ The DLEM 20 is the most accurate laser rangefinder in its range class.
+
+ The shock and impact resistant module is ideal for handheld optoelectronic systems and UAV applications thanks to its small size, rugged design and low power consumption.
+
+ Special features 
+
+ Compared to the DLEM 20, the DLEM 20 LE has a 25% longer range on small targets. The DLEM 20LE's exceptionally compact size, low power consumption and rugged, shock-resistant construction make it ideal for handheld opto-electronic systems and UAV applications.
+
+ Special features 
+
+ The high operating temperature range enables use even under extreme climatic conditions in all climatic zones.
+
+ The low failure rates result in low total lifetime costs compared to competitors in the same range class.
+
+ Special features 
+
+ The high operating temperature range enables use even under extreme climatic conditions in all climatic zones.
+
+ The low failure rates result in low total cost of ownership compared to competitors in the same range class.
+
+ Information and Datasheet 
+
+ DLEM family 
+ (PDF | 0,60 MB) 
+
+ REACH 
+ (PDF | 0,17 MB) 
+
+ RoHS Information DLEM 
+ (PDF | 0,16 MB) 
+
+ We look forward to your enquiry and will be pleased to contact you!
+
+ Laser Range Finders
+
+ Last name, First name 
+
+ Company/Organization 
+
+ Country 
+
+ E-Mail 
+
+ Phone 
+
+ Description of demand/ product of interest:
+
+ Total measuring range (specified target) in km 
+
+ Fields of application 
+
+ Message* 
+
+ * = mandatory field, please complete
+
+ Forbidden Field 
+
+ Sales Germany
+
+Mail: sensors-request@jenoptik.com 
+
+Telefon: +49 174 7782236 
+
+ Sales North America
+
+Mail: sales@jenoptik-inc.com 
+
+Phone: +1 561 881 7400 
+
+ Legal Notice 
+
+ GTC 
+
+ Data protection information 
+
+ Newsletter 
+
+ Tracking preferences 
+
+ click here for the youtube channel 
+
+ click here for the youtube channel 
+
+ click here for the LinkedIn channel 
+
+ Color Scheme Options 
+
+ Please choose your prefered color scheme option. 
+
+ Automatic color change 
+
+ Choose color theme 
+
+ Random per session 
+
+ Save and close

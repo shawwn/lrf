@@ -1,0 +1,111 @@
+Source: https://www.jenoptik.com/-/media/websitedocuments/optics/sensor/dlem-20-feature-story-military-technology-magazine-10-2016.pdf
+Fetched: 2026-10-03
+
+--- page 1 ---
+Weapon Systems Feature      Communication   MILITARY TECHNOLOGY 10/2016
+The release of the latest family member of Jenoptik’s diode laser 
+rangefinder modules (DLEM), designated DLEM 20, addresses the 
+trend for Size, Weight, Power (SWaP) and Cost optimised devices for 
+today’s dismounted soldier and lightweight UAV applications. 
+Less Weight to Carry and a Wider Reach 
+Effective firing ranges of 1.5km and beyond with today’s rifles require 
+the shooter to have very accurate information about the range to the target 
+to increase the first hit probability. In the past dedicated handheld laser 
+rangefinders (LRF) were often used. As LRF technology advanced over the 
+last couple of years, the LRFs have been shrunk to the size of a match -
+box and integrated weapon mounted solutions have been developed. 
+The main advantage of weapon mounted solutions is that the sniper does 
+not have to carry a rather heavy second piece of optics, but can use the 
+ already present riflescope instead as the LRF is co-aligned with the rifle -
+scope. Apart from devices that only provide the range, clip-on solutions 
+which integrate other lasers (visible and infrared) for pointing and illumi -
+nating as well as ballistic computing have been developed in line with the 
+trend towards multi-functionality devices.
+The new DLEM 20 is the ideal candidate for this kind of equipment as 
+it is the most powerful sensor in its class weighing less than 33 grams. 
+Its very small divergence also results in a very small laser spot on target 
+– even at long distances. This enables the shooter to get range to target 
+instead of to surrounding objects, which would lead to limited reliability of 
+the range reading. Capable of handling shocks in excess of 1,500g, it can 
+be mounted on any kind of rifle in service today and in the future. Derived 
+from the field proven DLEM SR, of which thousands of units have been 
+delivered worldwide, the new DLEM 20 pushes the performance limits fur-
+ther. Out of a miniaturised package it can range man-sized targets out to 
+2km and extended targets out to five kilometres.
+Reduced Ammunition Cost and Increased First Hit 
+Probability for Airburst Ammunition
+In today’s asymmetric warfare when enemy forces operate from behind 
+protective barriers the use of airburst ammunition against such targets in 
+the form of 25m and 40mm grenades is becom -
+ing more and more common. The “smart” airburst 
+ammunition is programmed to detonate at a de -
+fined time after leaving the barrel, which could for 
+instance put the high explosive round just behind 
+and above a brick wall where the target is hiding. 
+An accurate and reliable range output from the 
+LRF is essential for increasing first hit probabili -
+ty and reducing potential collateral damage and 
+for the fire control system to determine the right 
+aiming point for the soldier to compensate for the 
+trajectory of the grenade. That is the only way to 
+ensure the ammunition detonates at the desired 
+position and affects only the engaged target and 
+thus providing more security for the task forces.
+The DLEM 20 is a huge leap forward towards 
+meeting these requirements as its accuracy has 
+been increased to a fraction of a metre. Its high 
+degree of accuracy is independent of the range 
+and ensures reliable range output for distances of 
+up to five kilometres. The use of sophisticated software algorithms ensures 
+the accuracy is also maintained over the wide operational temperature 
+range of -40°C to + 80°C as well as on targets with low and high reflectivity.
+More Airtime and Increased Functionality for UAVs with Micro Gimbals
+UAVs are becoming more and more popular for reconnaissance tasks 
+when information is to be gathered from positions that a person cannot 
+reach or that would involve an unnecessary risk to that person. Small UAVs 
+weighing a few kilogrammes that can be transported easily and deployed 
+very quickly are increasingly being equipped with stabilized 4-7in micro 
+gimbals containing electro-optic (EO) payloads that provide more than just 
+a day- or infrared-video feed. Geolocation of observed targets becomes 
+possible when the position and the heading direction of the UAV in combi-
+nation with the range to the target are known. Due to the size and weight 
+limitations of these kinds of UAVs the battery capacity is the limiting fac -
+tor of the achievable air time, which is desired to be as long as possible 
+without increasing the size and weight. Therefore size, weight and power 
+efficiency of the EO payload play an important role in maximizing the air 
+time of any given UAV.
+With a volume of less than 37ml, a very light weight and very low  power 
+modes of operation the DLEM 20 addresses all the requirements for 
+ maximum air time for small UAV applications. Waking up from the off state 
+into measurement readiness takes less than 100ms, which even allows 
+the device to be maintained in the off state for most of the time when it 
+consumes no power. The continuous range output with up to 25 times 
+per second simplifies software design for the gimbal when implementing 
+target tracking or speed measuring functionality. The proven capability to 
+range extended targets up to 5km underlines the DLEM 20 being the ideal 
+rangefinder sensor for small, high-performance gimbals.
+The DLEM 20 is based on the field proven product DLEM SR, which 
+has been deployed on many high-powered weapon platforms, missile 
+ launchers, UAVs, base camp protection, dazzler safety, space applications, 
+etc. It is the worldwide smallest and lightest eye-safe class 1 LRF with a 
+range capability of 2km against a man-size target and 5km at extended tar-
+gets. It marks the first model of a new generation of DLEM laser rangefind-
+ers which are currently 
+undergoing a major re-
+design in order to meet 
+market needs. Hence, 
+the substantially small-
+er, lighter and more 
+power efficient LRF 
+modules with signifi -
+cantly increased rang -
+es are to be released in 
+the near future.
+Jenoptik’s Powerful DLEM 20 
+Laser Rangefinder Pushes the Limits
+(Photo: Wilcox Industries)
+(Photo: US Army)
+(Photo: DST Control)
+(Photo: Jenoptik)
+www.jenoptik.com
+©2016 Mönch Verlagsgesellschaft mbH
