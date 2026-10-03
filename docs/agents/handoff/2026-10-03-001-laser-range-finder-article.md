@@ -135,11 +135,11 @@ committed and pushed; the article is live.
   (`git@github.com:shawwn/lrf.git`), the only remote. Plain `git push`
   publishes and triggers the Pages deploy. The old `origin` (shawwn/ski) was
   removed.
-- Edit `js/lrf.js` directly. During this session it was built by
-  concatenating eight part files (core helpers, 3D renderer, framework, and
-  scene groups) kept in the session's temporary scratchpad, which no longer
-  exists. The section banners in `js/lrf.js` (`/* ---- name ---- */`) mark
-  each demo.
+- `js/lrf.js` was built by concatenating eight part files, now kept in
+  `docs/lrf/dev/parts/` (`cat docs/lrf/dev/parts/p*.js > js/lrf.js`). They
+  match `js/lrf.js` as of 2026-10-03; work either in the parts and rebuild,
+  or in `js/lrf.js` directly and leave the parts as history. The section
+  banners in `js/lrf.js` (`/* ---- name ---- */`) mark each demo.
 - Keep numbers in the prose consistent with `lrf_model.js`. Live numbers in
   the text are `<span class="lrfv" data-k="...">` filled from `text_values`
   in `js/lrf.js`; their static text is a fallback and was synced to the model.
@@ -149,13 +149,12 @@ committed and pushed; the article is live.
   becomes true when the reader uses any control. `lrf_set(id, vals, segs, st)`
   sets a demo without scrolling (handy for tests); `lrf_link(...)` is for links
   in the text.
-- Testing approach used: serve the repo with `python3 -m http.server 8765
-  --bind 127.0.0.1`, then puppeteer-core driving the system Chrome
-  (`/Applications/Google Chrome.app/...`) to load the page, scroll through
-  every demo, and fail on console errors; screenshots per demo; phone checks
-  at 320 to 414 px with `isMobile` and `hasTouch`, measuring
-  `document.documentElement.scrollWidth`. These scripts lived in the
-  scratchpad and would need recreating.
+- Testing: the puppeteer scripts are in `docs/lrf/dev/tests/` (see
+  `docs/lrf/dev/README.md`): serve the repo with `python3 -m http.server 8765
+  --bind 127.0.0.1`, `npm install` there, then `node smoke.js` (loads the
+  page, scrolls through every demo, fails on console errors), `node shoot.js`
+  for screenshots, and `node mobile.js <url>` for phone widths. Commit
+  helpers and the model's number printer are in `docs/lrf/dev/tools/`.
 - Commit conventions: one logical change per commit, with a message that
   explains what changed and why. Never add Co-authored-by lines (the user's
   CLAUDE.md). No em or en dashes in user-facing text.

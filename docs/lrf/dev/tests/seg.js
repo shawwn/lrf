@@ -1,0 +1,11 @@
+const puppeteer=require("puppeteer-core");
+(async()=>{const b=await puppeteer.launch({executablePath:"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",headless:"new"});
+const p=await b.newPage();await p.setViewport({width:400,height:900});
+await p.goto("http://127.0.0.1:8765/laser-range-finder/index.html?q="+Date.now(),{waitUntil:"networkidle2"});
+const r = await p.evaluate(()=>{const e=document.getElementById("calc_seg0")||document.querySelector(".segmented_container"); const c=e.querySelector(".segmented_control_container");
+  const f=x=>{const b=x.getBoundingClientRect(); const cs=getComputedStyle(x); return {id:x.id, cls:x.className, left:Math.round(b.left), right:Math.round(b.right), width:Math.round(b.width), margin:cs.margin, padding:cs.padding};};
+  const p2=e.parentElement; return [f(p2), f(e), f(c), [...c.children].map(x=>f(x)).slice(-1)[0]];});
+console.log(JSON.stringify(r,null,1));
+const s = await p.evaluate(()=>[...document.querySelectorAll(".slider_value")].filter(e=>e.getBoundingClientRect().right>document.documentElement.clientWidth).map(e=>e.textContent+" right="+Math.round(e.getBoundingClientRect().right)));
+console.log("overflowing slider labels:", JSON.stringify(s));
+await b.close();})();
