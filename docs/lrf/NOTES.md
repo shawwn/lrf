@@ -53,7 +53,7 @@ Notes:
 | Measurement time behind the ratings | 0.5 s | was 0.1 s. Verified: the DLEM SR datasheet (the DLEM 20's ancestor) rates its NATO range with "0.5 s measuring time"; the DLEM 4k datasheet does the same. Because range ~ t^(1/8) for small targets, a 10x error only moves predictions by 33% |
 | Detection probability at rated range | 90% | unknown |
 | Threshold | 5 sigma | ~1.4e-3 false alarms per measurement over 4,990 bins |
-| 10 inch quad | silhouettes from rectangles: 0.019 m^2 side, 0.029 m^2 below (props as 8 to 30% filled blur), 10% albedo | carbon fiber and black plastic; 430 mm motor to motor |
+| 10 inch FPV quad | silhouettes from rectangles: 0.019 m^2 side, 0.029 m^2 below (props as 8 to 30% filled blur), 10% albedo | carbon fiber and black plastic; 430 mm motor to motor |
 | Shahed-136 | 3.5 m long, 2.5 m span (published); fuselage 0.45 m wide, wing 0.08 m average thickness, fins 0.55 m (estimated from photos); 25% albedo (gray paint), 5% if painted black | 0.34 m^2 head on, 1.6 m^2 side, 4.4 m^2 below |
 | Camera | 1920 x 1080, 10 deg HFOV | illustrative; f = 10,973 px, IFOV 0.091 mrad |
 | Mount | LRF 4 cm right of the camera | illustrative |

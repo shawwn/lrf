@@ -47,7 +47,7 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
 | Question | Answer |
 | --- | --- |
 | Byline / location | Shawn Presser byline, new folder `laser-range-finder/` + `js/lrf.js` + `css/lrf.css`. Not added to index/archives. Bartosz's name, analytics, and social links are not used on this page. |
-| Reference drones | 10 inch quad (~430 mm motor to motor) and Shahed-136 (3.5 m long, 2.5 m span). Originally a 5 inch FPV; corrected by the user. |
+| Reference drones | 10 inch FPV quad (~430 mm motor to motor) and Shahed-136 (3.5 m long, 2.5 m span). Originally a 5 inch FPV; corrected by the user. |
 | Beam | 0.8 mrad (DLEM), confirmed by the user |
 | Mount | Pan + tilt turret; camera and LRF share one plate |
 | Camera | Visible CMOS (cannot see 1.55 um). Illustrative 1920x1080, 10 deg HFOV, LRF 4 cm to the right of the camera |

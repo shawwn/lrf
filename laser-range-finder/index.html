@@ -48,7 +48,7 @@
 
 <p>A laser range finder answers a simple sounding question: how far away is that? It fires a brief flash of infrared light, waits for a faint echo to come back, and turns the wait into a distance. Modules that do this can weigh as little as a few coins, yet measure the distance to a building kilometers away to within a meter.</p>
 
-<p>Things get much more interesting when the thing we're measuring is small. In this article we'll follow a little robot turret that carries a camera and a laser range finder side by side on a pan and tilt mount. Its job is to measure the distance to drones: a <span class="c_quad"><strong>10 inch quadcopter</strong></span>, and a <span class="c_shahed"><strong>Shahed-136</strong></span>, a fixed wing drone with a 2.5 meter wingspan. In the demonstration below you can watch the turret at work. You can drag the scene around to see it from a different angle:</p>
+<p>Things get much more interesting when the thing we're measuring is small. In this article we'll follow a little robot turret that carries a camera and a laser range finder side by side on a pan and tilt mount. Its job is to measure the distance to drones: a <span class="c_quad"><strong>10 inch FPV quadcopter</strong></span>, the kind flown through a live first person video feed, and a <span class="c_shahed"><strong>Shahed-136</strong></span>, a fixed wing drone with a 2.5 meter wingspan. In the demonstration below you can watch the turret at work. You can drag the scene around to see it from a different angle:</p>
 
 <div class="padding_wrapper">
 <div class="drawer_container full_width ratio_70" id="hero"></div>
@@ -301,7 +301,7 @@
 
 <h1 id="moving-targets">Moving Targets<a href="index.html#moving-targets" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
 
-<p>Accumulation silently assumes that the echo lands in the same bin pulse after pulse. That holds for a building, but drones move. A 10 inch quad can fly at 25 meters per second or more, and a Shahed cruises at around 50 meters per second. During a measurement lasting a tenth of a second, a Shahed flying straight toward us gets 5 meters closer.</p>
+<p>Accumulation silently assumes that the echo lands in the same bin pulse after pulse. That holds for a building, but drones move. A 10 inch FPV quad can fly at 25 meters per second or more, and a Shahed cruises at around 50 meters per second. During a measurement lasting a tenth of a second, a Shahed flying straight toward us gets 5 meters closer.</p>
 
 <p>In the demonstration below the <span class="c_quad"><strong>quad</strong></span> approaches the range finder at the <span class="c_speed"><strong>speed</strong></span> set by the first slider, while the second slider controls the <span class="c_time"><strong>measurement time</strong></span>. The histogram accumulates the echoes as the quad moves:</p>
 
