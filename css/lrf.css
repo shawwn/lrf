@@ -135,8 +135,12 @@
 .sl_laser .slider_left_gutter, .sl_laser .slider_right_gutter, .sl_laser .slider_knob { background: #E5383B; }
 
 .segmented_container {
+    /* margins rather than padding: the segmented control sizes itself to
+       its container's full width, padding included */
+    width: calc(100% - 2.4em);
     max-width: 560px;
     margin: 1.5em auto 0 auto;
+    padding: 0;
 }
 
 .segmented_container .segmented_control_container {
