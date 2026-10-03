@@ -1615,9 +1615,9 @@ let lrf_demos = {};
     const HERO_SCALE = 55;
 
     function hero_drone_pos(t) {
-        let d = 9 + 4 * sin(0.21 * t);
-        let a = 0.45 * sin(0.13 * t + 0.6);
-        let z = 2.6 + 0.9 * sin(0.37 * t);
+        let d = 8.5 + 3.2 * sin(0.21 * t);
+        let a = 0.42 * sin(0.13 * t + 0.6);
+        let z = 2.4 + 0.8 * sin(0.37 * t);
         return [-sin(a) * d, cos(a) * d, z];
     }
 
@@ -1625,19 +1625,19 @@ let lrf_demos = {};
         animated: true,
         orbit: true,
         init(d) {
-            d.st.yaw = -0.95;
-            d.st.pitch = 0.22;
+            d.st.yaw = -1.12;
+            d.st.pitch = 0.2;
             d.st.pan = 0;
             d.st.tilt = 0.2;
             d.st.meas_t = 0;
             d.st.meas_k = 0;
-            d.st.last = null;
+            d.st.last = undefined;
             d.st.noise = null;
             d.st.trees = [];
             let rng = make_rng(3);
             for (let i = 0; i < 26; i++) {
-                let a = -1.4 + 2.8 * rng();
-                let r = 24 + 10 * rng();
+                let a = -1.5 + 3.0 * rng();
+                let r = 22 + 10 * rng();
                 d.st.trees.push([-sin(a) * r, cos(a) * r, 0, 2.5 + 2 * rng()]);
             }
         },
@@ -1645,44 +1645,48 @@ let lrf_demos = {};
             let st = d.st;
             let t = d.t + 4;
             let fs = base_font_size(w);
+            let h3 = round(h * 0.72);
 
             let drone = hero_drone_pos(t);
+            let S = 6;
 
             // turret tracking with a little lag
-            let base = [0, 0, 0];
-            let pivot = [0, 0, 0.19 * 5];
+            let pivot = [0, 0, 0.19 * S];
             let dv = v3_sub(drone, pivot);
             let want_pan = atan2(-dv[0], dv[1]);
             let want_tilt = atan2(dv[2], hypot(dv[0], dv[1]));
             let k = 1 - exp(-dt * 6);
+            if (dt === 0) k = 1;
             st.pan += (want_pan - st.pan) * k;
             st.tilt += (want_tilt - st.tilt) * k;
-            if (dt === 0) {
-                st.pan = want_pan;
-                st.tilt = want_tilt;
-            }
 
-            let camera = new Camera3D(w, h, st.yaw, st.pitch, 11, [0, 5, 1.6], 0.75);
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(0, 0, w, h3);
+            ctx.clip();
+            let camera = new Camera3D(w, h3, st.yaw, st.pitch, 8.8, [0.6, 3.2, 1.25], 0.8);
             let horizon = camera.project(v3_add(camera.eye, v3_scale([camera.fwd[0], camera.fwd[1], 0], 1e4)));
-            draw_sky(ctx, w, h, horizon ? horizon[1] : h);
-            draw_ground(ctx, camera, 36, 2);
+            draw_sky(ctx, w, h3, horizon ? horizon[1] : h3);
+            draw_ground(ctx, camera, 34, 2);
 
             let sc = new Scene3D();
             for (let tr of st.trees)
                 build_tree(sc, [tr[0], tr[1], 0], tr[3]);
-            let tur = build_turret(sc, st.pan, st.tilt, { base, scale: 5 });
-            build_quad3d(sc, drone, 0.7 * t, 4, t);
+            let tur = build_turret(sc, st.pan, st.tilt, { scale: S });
+            build_quad3d(sc, drone, 0.7 * t, 3.5, t);
 
             // beam: thin wedge facing the viewer, divergence exaggerated
             let o = tur.lrf_origin;
             let dist = v3_len(v3_sub(drone, o));
-            let end = v3_add(o, v3_scale(tur.fwd, dist * 1.04));
+            let end = v3_add(o, v3_scale(tur.fwd, dist * 1.05));
             let side = v3_norm(v3_cross(tur.fwd, v3_sub(camera.eye, o)));
-            let w0 = 0.02, w1 = 0.12 + dist * 0.012;
+            let w0 = 0.02, w1 = 0.1 + dist * 0.012;
             sc.face([v3_add(o, v3_scale(side, w0)), v3_add(end, v3_scale(side, w1)), v3_add(end, v3_scale(side, -w1)), v3_add(o, v3_scale(side, -w0))],
-                col.laser, 0.22, true, true);
+                col.laser, 0.2, true, true);
             sc.line(o, end, col.laser, 1.2, 0.8);
             sc.render(ctx, camera);
+            ctx.restore();
+            halo_text(ctx, "not to scale", 12, h3 - 12, col.light_text, fs - 3, "left", "middle", 400, "rgba(230,235,220,0.8)");
 
             // camera inset
             let iw = round(w * 0.34), ih = round(iw * 9 / 16);
@@ -1693,13 +1697,12 @@ let lrf_demos = {};
             ctx.rect(ix, iy, iw, ih);
             ctx.clip();
             let f_in = iw / 2 / tan(12 * pi / 180);
-            let cam_o = tur.cam_origin;
-            let rel = v3_sub(drone, cam_o);
+            let rel = v3_sub(drone, tur.cam_origin);
             let cz = v3_dot(rel, tur.fwd);
             let cx = ix + iw / 2 + f_in * v3_dot(rel, tur.right) / cz;
             let cy = iy + ih / 2 - f_in * v3_dot(rel, tur.up) / cz;
             let hz_y = iy + ih / 2 + f_in * tan(st.tilt);
-            let g = ctx.createLinearGradient(0, iy, 0, hz_y);
+            let g = ctx.createLinearGradient(0, iy, 0, max(iy + 1, hz_y));
             g.addColorStop(0, col.sky_top);
             g.addColorStop(1, col.sky_bottom);
             ctx.fillStyle = g;
@@ -1709,9 +1712,8 @@ let lrf_demos = {};
                 ctx.fillStyle = "#D9DFC9";
                 ctx.fillRect(ix, hz_y + 1, iw, iy + ih - hz_y);
             }
-            let size_px = f_in * 0.43 * 4 / cz;
+            let size_px = f_in * 0.43 * 3.5 / cz;
             draw_quad_sprite(ctx, cx, cy, size_px, "#2D3439", t, 0.08 * sin(t));
-            // tracking box
             let bs = max(10, size_px * 0.7);
             ctx.strokeStyle = col.cam;
             ctx.lineWidth = 1.5;
@@ -1722,7 +1724,6 @@ let lrf_demos = {};
                 ctx.lineTo(cx + sx * bs - sx * 6, cy + sy * bs * 0.7);
                 ctx.stroke();
             }
-            // beam reticle
             let bx = ix + iw / 2 + 3, by = iy + ih / 2 + 1;
             circle(ctx, bx, by, 5, null, col.laser, 1.5);
             line(ctx, bx - 11, by, bx - 7, by, col.laser, 1.5);
@@ -1730,60 +1731,63 @@ let lrf_demos = {};
             ctx.restore();
             halo_text(ctx, "camera", ix + 8, iy + ih - 10, col.cam, fs - 2, "left");
 
-            // echo histogram panel
+            // echo histogram of the current measurement (10 Hz, 5 m display bins)
             let real_R = dist * HERO_SCALE;
             let tm = 0.1;
+            let nb = 300, bin = 5;
             st.meas_t += dt;
             if (st.meas_t >= tm || !st.noise) {
                 if (st.noise) {
-                    let peak = 0, peak_b = -1;
-                    for (let b = 0; b < st.noise.length; b++) {
+                    let peak = -1e9, pb = 0;
+                    let vals = [];
+                    for (let b = 0; b < nb; b++) {
                         let v = st.noise[b] + st.sig[b];
-                        if (v > peak) { peak = v; peak_b = b; }
+                        vals.push(v);
+                        if (v > peak) { peak = v; pb = b; }
                     }
-                    st.last = peak > spec.threshold_sigma ? (peak_b + 0.5) * 5 : null;
+                    // the module refines the peak position far below the bin size
+                    st.last = peak > spec.threshold_sigma ? st.true_R + st.jitter : null;
                 }
                 st.meas_t = st.noise ? st.meas_t % tm : 0;
                 st.meas_k++;
                 let rng = make_rng(1000 + st.meas_k);
-                let n = 300;
-                st.noise = new Float32Array(n);
-                st.sig = new Float32Array(n);
-                for (let b = 0; b < n; b++)
+                st.noise = new Float32Array(nb);
+                st.sig = new Float32Array(nb);
+                for (let b = 0; b < nb; b++)
                     st.noise[b] = rng.normal();
                 let snr = snr_at(QUAD, real_R, tm);
-                let rb = real_R / 5;
-                for (let b = 0; b < n; b++) {
-                    let x = b + 0.5 - rb;
-                    st.sig[b] = snr * exp(-x * x / (2 * 0.35 * 0.35));
-                }
+                let rb = floor(real_R / bin);
+                if (rb >= 0 && rb < nb) st.sig[rb] = snr;
                 st.snr = snr;
+                st.true_R = real_R;
+                st.jitter = rng.normal() * M.echo_sigma(spec) / max(1, snr);
             }
             let p = clamp(st.meas_t / tm, 0.02, 1);
 
-            let px0 = 12, pw = w - 24, ph = round(h * 0.2), py0 = h - ph - 10;
-            round_rect(ctx, px0 - 2, py0 - 2, pw + 4, ph + 4, 6, "rgba(255,255,255,0.88)");
-            let plot = new Plot(ctx, px0 + fs * 2.2, py0 + 8, pw - fs * 2.2 - 8, ph - fs * 2.2, {
-                xmin: 0, xmax: 1500, ymin: -3, ymax: max(9, st.snr * 1.15), no_yticks: true, fs: fs - 2,
+            let px0 = 8, pw = w - 16, py0 = h3 + 6, ph = h - h3 - 12;
+            let left = 100;
+            let plot = new Plot(ctx, left, py0 + 8, pw - left, ph - fs * 1.9, {
+                xmin: 0, xmax: 1500, ymin: -3, ymax: max(10, st.snr * 1.15), no_yticks: true, fs: fs - 2,
                 xticks: [0, 250, 500, 750, 1000, 1250, 1500], xfmt: v => v === 0 ? "0" : v + " m",
             });
             plot.frame();
             plot.clip();
-            ctx.fillStyle = rgba(col.hist, 0.85);
-            let bw = plot.w / 300;
-            for (let b = 0; b < 300; b++) {
+            let bw = plot.w / nb;
+            for (let b = 0; b < nb; b++) {
                 let v = p * st.sig[b] + sqrt(p) * st.noise[b];
                 let y0 = plot.Y(0), y1 = plot.Y(v);
-                ctx.fillStyle = st.sig[b] > 0.5 ? rgba(col.echo, 0.95) : rgba(col.hist, 0.75);
-                ctx.fillRect(plot.x + b * bw, min(y0, y1), max(1, bw - 0.3), abs(y1 - y0));
+                ctx.fillStyle = st.sig[b] > 0 ? rgba(col.echo, 1) : rgba(col.hist, 0.75);
+                ctx.fillRect(plot.x + b * bw, min(y0, y1), max(1.5, bw - 0.3), abs(y1 - y0));
             }
             plot.hline(spec.threshold_sigma * sqrt(p), col.thr, 1.2, [4, 3]);
             plot.unclip();
-            ctx.save();
-            ctx.translate(px0 + fs * 0.9, plot.y + plot.h / 2);
-            ctx.rotate(-pi / 2);
-            text(ctx, "echoes", 0, 0, col.text, fs - 2);
-            ctx.restore();
+            if (w > 500) {
+                text(ctx, "echoes,", left - 10, plot.y + fs * 0.6, col.text, fs - 2, "right");
+                text(ctx, "this", left - 10, plot.y + fs * 1.7, col.text, fs - 2, "right");
+                text(ctx, "measurement", left - 10, plot.y + fs * 2.8, col.text, fs - 2, "right");
+            } else {
+                text(ctx, "echoes", left - 10, plot.y + fs * 0.6, col.text, fs - 2, "right");
+            }
 
             let msg = st.last === null ? "no echo above the threshold" : st.last === undefined ? "" : "measured: " + fmt_reported(st.last);
             halo_text(ctx, msg, plot.x + plot.w - 6, plot.y + fs * 0.7, st.last === null ? col.light_text : col.text, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.95)");
