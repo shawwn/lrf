@@ -3214,6 +3214,53 @@ let lrf_demos = {};
         return [A * sin(w * t), 1.0 * sin(1.5 * w * t + 1)];
     }
 
+    function track_auto_vel(t) {
+        let A = 3.2, w = TRACK_SPEED / A;
+        return [A * w * cos(w * t), 1.5 * w * cos(1.5 * w * t + 1)];
+    }
+
+    function track_auto_acc(t) {
+        let A = 3.2, w = TRACK_SPEED / A;
+        return [-A * w * w * sin(w * t), -2.25 * w * w * sin(1.5 * w * t + 1)];
+    }
+
+    /*
+     * After the reader throws the quad: it keeps its momentum, bounces off
+     * the edges of the view, and steers back onto the automatic path with
+     * a critically damped pull (plus the path's own acceleration, so it can
+     * follow the weave exactly) limited to 6 g, like a pilot turning back.
+     * Returns true once it has rejoined the path.
+     */
+    const TRACK_THROW_MAX = 45;     // m/s
+    const TRACK_THROW_ACC = 60;     // m/s^2
+
+    function track_fly(f, t0, dt, bounds) {
+        let n = max(1, ceil(dt / (1 / 480)));
+        let h = dt / n;
+        let wn = 5;
+        for (let i = 0; i < n; i++) {
+            let t = t0 + (i + 1) * h;
+            let target = track_auto(t), tv = track_auto_vel(t), ta = track_auto_acc(t);
+            let ax = ta[0] + wn * wn * (target[0] - f.p[0]) + 2 * wn * (tv[0] - f.v[0]);
+            let ay = ta[1] + wn * wn * (target[1] - f.p[1]) + 2 * wn * (tv[1] - f.v[1]);
+            let a = hypot(ax, ay);
+            if (a > TRACK_THROW_ACC) {
+                ax *= TRACK_THROW_ACC / a;
+                ay *= TRACK_THROW_ACC / a;
+            }
+            f.v[0] += ax * h;
+            f.v[1] += ay * h;
+            f.p[0] += f.v[0] * h;
+            f.p[1] += f.v[1] * h;
+            for (let k = 0; k < 2; k++) {
+                if (f.p[k] < bounds[k][0]) { f.p[k] = bounds[k][0]; f.v[k] = abs(f.v[k]) * 0.6; }
+                if (f.p[k] > bounds[k][1]) { f.p[k] = bounds[k][1]; f.v[k] = -abs(f.v[k]) * 0.6; }
+            }
+        }
+        let target = track_auto(t0 + dt), tv = track_auto_vel(t0 + dt);
+        return hypot(f.p[0] - target[0], f.p[1] - target[1]) < 0.05 && hypot(f.v[0] - tv[0], f.v[1] - tv[1]) < 0.5;
+    }
+
     function track_hist_at(hist, t) {
         if (!hist.length)
             return [0, 0];
@@ -3243,13 +3290,14 @@ let lrf_demos = {};
             d.st.hist = [];
             d.st.beam_trail = [];
             d.st.drag = null;
-            d.st.release = null;
+            d.st.fly = null;
         },
         drag: {
             begin(d, x, y) {
                 let L = d.st.layout;
                 if (!L) return false;
                 d.st.drag = L.to_m(x, y);
+                d.st.fly = null;
                 return true;
             },
             move(d, x, y) {
@@ -3257,8 +3305,15 @@ let lrf_demos = {};
                 d.st.drag = L.to_m(x, y);
             },
             end(d) {
-                d.st.release = { t: d.st.ts, p: d.st.drag };
-                d.st.drag = null;
+                // throw: keep the velocity the quad had while being dragged
+                let st = d.st;
+                let a = track_hist_at(st.hist, st.ts - 0.03);
+                let p = st.drag || a;
+                let v = [(p[0] - a[0]) / 0.03, (p[1] - a[1]) / 0.03];
+                let sp = hypot(v[0], v[1]);
+                if (sp > TRACK_THROW_MAX) v = [v[0] * TRACK_THROW_MAX / sp, v[1] * TRACK_THROW_MAX / sp];
+                st.fly = { p: [p[0], p[1]], v };
+                st.drag = null;
             },
             cursor() { return "move"; },
         },
@@ -3269,17 +3324,18 @@ let lrf_demos = {};
             let lead = d.seg[0] === 1;
 
             // simulated time and the quad's position
-            st.ts += dt * TRACK_SLOWMO;
+            let sdt = dt * TRACK_SLOWMO;
+            st.ts += sdt;
             let p;
             if (st.drag) {
                 p = st.drag;
+            } else if (st.fly) {
+                let hv = (h * 0.84) / ((w - 20) / 9) / 2 - 0.3;
+                if (track_fly(st.fly, st.ts - sdt, sdt, [[-4.3, 4.3], [-hv, hv]]))
+                    st.fly = null;
+                p = st.fly ? st.fly.p.slice() : track_auto(st.ts);
             } else {
                 p = track_auto(st.ts);
-                if (st.release) {
-                    let f = smooth_step(0, 0.6, st.ts - st.release.t);
-                    p = [lerp(st.release.p[0], p[0], f), lerp(st.release.p[1], p[1], f)];
-                    if (f >= 1) st.release = null;
-                }
             }
             st.hist.push([st.ts, p[0], p[1]]);
             while (st.hist.length > 2 && st.hist[0][0] < st.ts - 1.5)
@@ -3343,7 +3399,7 @@ let lrf_demos = {};
             halo_text(ctx, "now", X(p[0]), Y(p[1]) + size * 0.55 + 10, col.quad, fs - 2, "center", "middle", 500, "rgba(230,238,246,0.85)");
             let pv = track_hist_at(st.hist, st.ts - 0.05);
             let speed = hypot(p[0] - pv[0], p[1] - pv[1]) / 0.05;
-            halo_text(ctx, "slow motion, " + fmt_dist(R) + " away, quad at " + round(speed) + " m/s" + (st.drag ? "" : "; drag it"), 20, 20, col.text, fs - 2, "left", "middle", 400, "rgba(230,238,246,0.85)");
+            halo_text(ctx, "slow motion, " + fmt_dist(R) + " away, quad at " + round(speed) + " m/s" + (st.drag || st.fly ? "" : "; drag or throw it"), 20, 20, col.text, fs - 2, "left", "middle", 400, "rgba(230,238,246,0.85)");
             line(ctx, 22, view_h - 8, 22 + ppm, view_h - 8, "#555", 2);
             text(ctx, "1 m", 22 + ppm / 2, view_h - 18, "#555", fs - 3);
 
