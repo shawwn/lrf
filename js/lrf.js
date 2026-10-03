@@ -1250,9 +1250,12 @@ let lrf_demos = {};
     /*
      * A scene is an object with:
      *   draw(ctx, d, w, h, dt)   required
-     *   sliders: [{ map, def, fmt?, on? }]
+     *   sliders: [{ map, def, fmt?, anim?, on? }]
  *                                  map from lin_map/log_map, def in physical units,
- *                                  fmt(v) -> text shown next to the slider
+ *                                  fmt(v) -> text shown next to the slider,
+ *                                  anim: { mode: "pingpong" | "loop", period, lo, hi, hold }
+ *                                  moves the slider by itself (lo/hi in slider units,
+ *                                  0 to 1) until the reader grabs it
      *   segs: [[labels...]]            segmented controls (id_seg0, id_seg1, ...)
      *   animated: bool                 runs every frame while visible, with play/pause
      *   reset(d)                       adds a restart button
@@ -1268,6 +1271,28 @@ let lrf_demos = {};
      */
     const SCENES = {};
     let all_demos = [];
+
+    // Slider position (0 to 1) of an automatic slider animation at time t.
+    function anim_x(a, t) {
+        let lo = a.lo === undefined ? 0 : a.lo, hi = a.hi === undefined ? 1 : a.hi;
+        let P = a.period || 10;
+        if (a.mode === "loop") {
+            let hold = a.hold === undefined ? 1 : a.hold;
+            let u = (t % (P + hold)) / P;
+            return lo + (hi - lo) * min(1, u);
+        }
+        return lo + (hi - lo) * (0.5 - 0.5 * cos(2 * pi * t / P));
+    }
+
+    // Time at which the animation passes through slider position x (rising).
+    function anim_phase(a, x) {
+        let lo = a.lo === undefined ? 0 : a.lo, hi = a.hi === undefined ? 1 : a.hi;
+        let P = a.period || 10;
+        let u = clamp((x - lo) / (hi - lo), 0, 1);
+        if (a.mode === "loop")
+            return u * P;
+        return Math.acos(1 - 2 * u) / (2 * pi) * P;
+    }
 
     function Demo(id, scene) {
         let self = this;
@@ -1333,6 +1358,8 @@ let lrf_demos = {};
 
         // Each slider sits in a row: [play button slot] [track] [value].
         this.labels = [];
+        this.sanim = [];
+        this.anim_btns = [];
         (scene.sliders || []).forEach((sd, i) => {
             let div = document.getElementById(id + "_sl" + i);
             if (!div)
@@ -1348,13 +1375,29 @@ let lrf_demos = {};
             div.appendChild(track);
             div.appendChild(label);
             self.labels[i] = label;
+            let constructing = true;
             self.sliders[i] = new Slider(track, x => {
                 self.v[i] = sd.map.to(x);
+                // the reader took over: stop this slider's animation
+                if (!constructing)
+                    self.stop_slider_anim(i);
                 if (sd.on)
                     sd.on(self, self.v[i]);
                 self.update_label(i);
                 self.request();
             }, undefined, clamp(sd.map.from(sd.def), 0, 1));
+            constructing = false;
+            if (sd.anim) {
+                btn.classList.remove("slider_play_spacer");
+                btn.classList.add("playing");
+                btn.title = "Animate this slider";
+                btn.onclick = () => {
+                    if (self.sanim[i].on) self.stop_slider_anim(i);
+                    else self.start_slider_anim(i);
+                };
+                self.anim_btns[i] = btn;
+                self.sanim[i] = { on: true, t: anim_phase(sd.anim, clamp(sd.map.from(sd.def), 0, 1)) };
+            }
             self.update_label(i);
         });
 
@@ -1445,6 +1488,46 @@ let lrf_demos = {};
         lrf_demos[id] = this;
     }
 
+    Demo.prototype.running = function() {
+        return (this.scene.animated && !this.paused) || this.sanim.some(a => a && a.on);
+    };
+
+    Demo.prototype.stop_slider_anim = function(i) {
+        let a = this.sanim[i];
+        if (!a || !a.on)
+            return;
+        a.on = false;
+        this.anim_btns[i].classList.remove("playing");
+    };
+
+    Demo.prototype.start_slider_anim = function(i) {
+        let a = this.sanim[i];
+        if (!a)
+            return;
+        let sd = this.scene.sliders[i];
+        a.t = anim_phase(sd.anim, clamp(sd.map.from(this.v[i]), 0, 1));
+        a.on = true;
+        this.anim_btns[i].classList.add("playing");
+        this.kick();
+    };
+
+    Demo.prototype.advance_sliders = function(dt) {
+        let changed = false;
+        this.sanim.forEach((a, i) => {
+            if (!a || !a.on)
+                return;
+            let sd = this.scene.sliders[i];
+            a.t += dt;
+            let x = anim_x(sd.anim, a.t);
+            this.v[i] = sd.map.to(x);
+            if (this.sliders[i])
+                this.sliders[i].set_value(x);
+            this.update_label(i);
+            changed = true;
+        });
+        return changed;
+    };
+
     Demo.prototype.update_label = function(i) {
         let sd = this.scene.sliders[i];
         if (this.labels[i] && sd.fmt)
@@ -1497,7 +1580,7 @@ let lrf_demos = {};
     Demo.prototype.request = function() {
         if (this.requested)
             return;
-        if (this.ticking && !this.paused && this.visible)
+        if (this.ticking && this.visible && this.running())
             return;
         this.requested = true;
         requestAnimationFrame(() => this.paint(0));
@@ -1513,22 +1596,28 @@ let lrf_demos = {};
         this.request();
     };
 
+    // Runs the animation loop while the demo is visible and either the scene
+    // itself or one of its sliders is animating.
     Demo.prototype.kick = function() {
-        if (this.paused || !this.visible || this.ticking)
+        if (!this.visible || this.ticking || !this.running())
             return;
         this.ticking = true;
         let self = this;
         let prev;
         function tick(ts) {
-            if (self.paused || !self.visible) {
+            if (!self.visible || !self.running()) {
                 self.ticking = false;
+                self.request();
                 return;
             }
             let dt = prev === undefined ? 0 : min(0.05, (ts - prev) / 1000);
             prev = ts;
-            self.t += dt;
+            let scene_running = self.scene.animated && !self.paused;
+            if (scene_running)
+                self.t += dt;
+            self.advance_sliders(dt);
             requestAnimationFrame(tick);
-            self.paint(dt);
+            self.paint(scene_running ? dt : 0);
         }
         requestAnimationFrame(tick);
     };
@@ -1558,6 +1647,7 @@ let lrf_demos = {};
             if (typeof v === "string")
                 v = d.scene.special(d, i, v);
             let sd = d.scene.sliders[i];
+            d.stop_slider_anim(i);
             d.v[i] = v;
             if (d.sliders[i])
                 d.sliders[i].set_value(clamp(sd.map.from(v), 0, 1));
@@ -1849,7 +1939,7 @@ let lrf_demos = {};
 
     SCENES.tof_basic = {
         sliders: [
-            { fmt: v => "t = " + fmt_time(v), map: lin_map(0, 2.2e-6), def: 0.75e-6 },
+            { anim: { mode: "loop", period: 6, hold: 1.2 }, fmt: v => "t = " + fmt_time(v), map: lin_map(0, 2.2e-6), def: 0.75e-6 },
             { fmt: v => "R = " + round(v) + " m", map: lin_map(20, 300), def: 180 },
         ],
         draw(ctx, d, w, h) {
@@ -1950,7 +2040,7 @@ let lrf_demos = {};
     }
 
     SCENES.beam_cone = {
-        sliders: [{ fmt: v => "R = " + fmt_dist(v), map: log_map(10, 5000), def: 500 }],
+        sliders: [{ anim: { period: 15 }, fmt: v => "R = " + fmt_dist(v), map: log_map(10, 5000), def: 500 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0];
@@ -2021,7 +2111,7 @@ let lrf_demos = {};
     /* -------------------------- beam profile -------------------------- */
 
     SCENES.beam_profile = {
-        sliders: [{ fmt: v => "r = " + v.toFixed(2) + " w", map: lin_map(0, 2), def: 1 }],
+        sliders: [{ anim: { period: 12, lo: 0.1, hi: 0.9 }, fmt: v => "r = " + v.toFixed(2) + " w", map: lin_map(0, 2), def: 1 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let rr = d.v[0];
@@ -2071,7 +2161,7 @@ let lrf_demos = {};
     const FILL_TARGETS = [T.quad10_side, T.quad10_below, T.shahed_front, T.shahed_below];
 
     SCENES.beam_fill = {
-        sliders: [{ fmt: v => "R = " + fmt_dist(v), map: log_map(10, 10000), def: 300 }],
+        sliders: [{ anim: { period: 21 }, fmt: v => "R = " + fmt_dist(v), map: log_map(10, 10000), def: 300 }],
         segs: [["Quad, side", "Quad, below", "Shahed, head on", "Shahed, below"]],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
@@ -2140,7 +2230,7 @@ let lrf_demos = {};
 
     SCENES.scatter_back = {
         sliders: [
-            { fmt: v => "R = " + fmt_dist(v), map: log_map(10, 5000), def: 1000 },
+            { anim: { period: 18 }, fmt: v => "R = " + fmt_dist(v), map: log_map(10, 5000), def: 1000 },
             { fmt: v => "tilt " + round(v) + "°", map: lin_map(-60, 60), def: 20 },
         ],
         segs: [["Matte", "Mirror", "Retroreflector"]],
@@ -2243,7 +2333,7 @@ let lrf_demos = {};
     /* ------------------------ power vs range -------------------------- */
 
     SCENES.power_vs_range = {
-        sliders: [{ fmt: v => "R = " + fmt_dist(v), map: log_map(10, 10000), def: 1000 }],
+        sliders: [{ anim: { period: 18 }, fmt: v => "R = " + fmt_dist(v), map: log_map(10, 10000), def: 1000 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0];
@@ -2358,7 +2448,7 @@ let lrf_demos = {};
     /* --------------------------- atmosphere --------------------------- */
 
     SCENES.atmosphere = {
-        sliders: [{ fmt: v => "visibility " + (v < 10 ? v.toFixed(1) : round(v)) + " km", map: log_map(0.3, 60), def: 25 }],
+        sliders: [{ anim: { period: 15 }, fmt: v => "visibility " + (v < 10 ? v.toFixed(1) : round(v)) + " km", map: log_map(0.3, 60), def: 25 }],
         init(d) {
             let rng = make_rng(21);
             d.st.parts = [];
@@ -2481,7 +2571,7 @@ let lrf_demos = {};
 
     SCENES.single_shot = {
         sliders: [
-            { fmt: v => "R = " + round(v) + " m", map: log_map(80, 1000), def: 400 },
+            { anim: { period: 18 }, fmt: v => "R = " + round(v) + " m", map: log_map(80, 1000), def: 400 },
             { fmt: v => "threshold " + v.toFixed(1) + "σ", map: lin_map(1, 8), def: 3 },
         ],
         init(d) {
@@ -2540,7 +2630,7 @@ let lrf_demos = {};
 
     SCENES.threshold_stats = {
         sliders: [
-            { fmt: v => "threshold " + v.toFixed(1) + "σ", map: lin_map(0, 10), def: 3 },
+            { anim: { period: 15, lo: 0.15, hi: 0.75 }, fmt: v => "threshold " + v.toFixed(1) + "σ", map: lin_map(0, 10), def: 3 },
             { fmt: v => "SNR " + v.toFixed(1), map: lin_map(0, 10), def: 6 },
         ],
         draw(ctx, d, w, h) {
@@ -2675,7 +2765,7 @@ let lrf_demos = {};
     /* -------------------------- accum range --------------------------- */
 
     SCENES.accum_range = {
-        sliders: [{ fmt: v => "N = " + fmt_int(v), map: log_map(10, 1e6), def: 1000 }],
+        sliders: [{ anim: { period: 15 }, fmt: v => "N = " + fmt_int(v), map: log_map(10, 1e6), def: 1000 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let N = d.v[0];
@@ -2717,7 +2807,7 @@ let lrf_demos = {};
     SCENES.subbin = {
         animated: true,
         sliders: [
-            { fmt: v => "R = " + v.toFixed(2) + " m", map: lin_map(122.5, 124.5), def: 123.74 },
+            { anim: { period: 24 }, fmt: v => "R = " + v.toFixed(2) + " m", map: lin_map(122.5, 124.5), def: 123.74 },
             { fmt: v => "SNR " + v.toFixed(v < 10 ? 1 : 0), map: log_map(4, 100), def: 25 },
         ],
         init(d) {
@@ -2870,7 +2960,7 @@ let lrf_demos = {};
     /* ------------------------- prf ambiguity -------------------------- */
 
     SCENES.prf_ambiguity = {
-        sliders: [{ fmt: v => fmt_int(v) + " pulses/s", map: log_map(3000, 100000), def: 10000 }],
+        sliders: [{ anim: { period: 18 }, fmt: v => fmt_int(v) + " pulses/s", map: log_map(3000, 100000), def: 10000 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let prf = d.v[0];
@@ -3187,7 +3277,7 @@ let lrf_demos = {};
     }
 
     SCENES.rate_tradeoff = {
-        sliders: [{ fmt: v => round(v) + " Hz", map: lin_map(1, 25), def: 5 }],
+        sliders: [{ anim: { period: 21 }, fmt: v => round(v) + " Hz", map: lin_map(1, 25), def: 5 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let f = round(d.v[0]);
@@ -3229,7 +3319,7 @@ let lrf_demos = {};
 
     SCENES.two_echoes = {
         sliders: [
-            { fmt: v => "trees " + round(v) + " m behind", map: lin_map(0, 150), def: 60 },
+            { anim: { period: 18 }, fmt: v => "trees " + round(v) + " m behind", map: lin_map(0, 150), def: 60 },
             { fmt: v => "aim off " + v.toFixed(2) + " mrad", map: lin_map(0, 0.6), def: 0.15 },
         ],
         segs: [["Trees behind", "Sky behind"]],
@@ -3406,7 +3496,7 @@ let lrf_demos = {};
     /* -------------------------- camera sizes -------------------------- */
 
     SCENES.camera_sizes = {
-        sliders: [{ fmt: v => "R = " + fmt_dist(v), map: log_map(50, 4000), def: 400 }],
+        sliders: [{ anim: { period: 18 }, fmt: v => "R = " + fmt_dist(v), map: log_map(50, 4000), def: 400 }],
         segs: [["10\" quad", "Shahed-136"]],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
@@ -3471,7 +3561,7 @@ let lrf_demos = {};
     }
 
     SCENES.parallax_top = {
-        sliders: [{ fmt: v => "R = " + (v < 10 ? v.toFixed(1) + " m" : fmt_dist(v)), map: log_map(2, 1000), def: 10 }],
+        sliders: [{ anim: { period: 15 }, fmt: v => "R = " + (v < 10 ? v.toFixed(1) + " m" : fmt_dist(v)), map: log_map(2, 1000), def: 10 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0];
@@ -3523,7 +3613,7 @@ let lrf_demos = {};
 
     SCENES.parallax_misalign = {
         sliders: [
-            { fmt: v => "R = " + fmt_dist(v), map: log_map(5, 1000), def: 20 },
+            { anim: { period: 15 }, fmt: v => "R = " + fmt_dist(v), map: log_map(5, 1000), def: 20 },
             { fmt: v => (v >= 0 ? "+" : "−") + abs(v).toFixed(2) + " mrad", map: lin_map(-3, 3), def: 1 },
         ],
         draw(ctx, d, w, h) {
@@ -3573,7 +3663,7 @@ let lrf_demos = {};
     };
 
     SCENES.parallax_image = {
-        sliders: [{ fmt: v => "R = " + fmt_dist(v), map: log_map(5, 2000), def: 150 }],
+        sliders: [{ anim: { period: 18 }, fmt: v => "R = " + fmt_dist(v), map: log_map(5, 2000), def: 150 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0];
@@ -3632,8 +3722,8 @@ let lrf_demos = {};
     SCENES.mount_3d = {
         orbit: true,
         sliders: [
-            { fmt: v => "pan " + round(v) + "°", map: lin_map(-80, 80), def: 25 },
-            { fmt: v => "tilt " + round(v) + "°", map: lin_map(-20, 60), def: 15 },
+            { anim: { period: 18 }, fmt: v => "pan " + round(v) + "°", map: lin_map(-80, 80), def: 25 },
+            { anim: { period: 14, lo: 0.15, hi: 0.75 }, fmt: v => "tilt " + round(v) + "°", map: lin_map(-20, 60), def: 15 },
         ],
         init(d) {
             d.st.yaw = -0.6;
@@ -3696,7 +3786,7 @@ let lrf_demos = {};
     SCENES.apriltag_pose = {
         sliders: [
             { fmt: v => "R = " + v.toFixed(1) + " m", map: log_map(5, 80), def: 20 },
-            { fmt: v => "yaw " + round(v) + "°", map: lin_map(-60, 60), def: 25 },
+            { anim: { period: 15, lo: 0.15, hi: 0.85 }, fmt: v => "yaw " + round(v) + "°", map: lin_map(-60, 60), def: 25 },
         ],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
