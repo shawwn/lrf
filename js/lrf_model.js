@@ -70,11 +70,11 @@
             max_range_m: 5000,
             max_rate_hz: 25,
             gate_m: 1,                  // range gate resolution
-            pulse_m: 1.5,               // assumed echo width (FWHM) expressed in range
+            pulse_m: 4.5,               // assumed echo width (FWHM) in range: 30 ns pulses (see docs/lrf/NOTES.md)
             discrimination_m: 15,
             accuracy_m: 0.5,            // 1 sigma
             prf_hz: 10000,              // assumed internal pulse repetition rate
-            rated_time_s: 0.1,          // assumed measurement time behind the ratings
+            rated_time_s: 0.5,          // measurement time behind the ratings (the DLEM SR datasheet rates at 0.5 s)
             rated_pd: 0.9,              // assumed detection probability at rated range
             threshold_sigma: 5,
             gain: 1,

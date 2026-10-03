@@ -1498,7 +1498,14 @@ let lrf_demos = {};
         out.quad_r10 = fmt_range(det_range(QUAD, 0.1));
         out.quad_r25 = fmt_range(det_range(QUAD, 0.04));
         out.shahed_r10 = fmt_range(det_range(SHAHED, 0.1));
-        out.shahed_black_r10 = fmt_range(det_range(Object.assign({}, SHAHED, { albedo: 0.05 }), 0.1));
+        out.shahed_black_rr = fmt_range(det_range(Object.assign({}, SHAHED, { albedo: 0.05 }), rated_time()));
+        out.quad_rr = fmt_range(det_range(QUAD, rated_time()));
+        out.shahed_rr = fmt_range(det_range(SHAHED, rated_time()));
+        let o25 = M.optimal_measurement_time(s, 25), o50 = M.optimal_measurement_time(s, 50);
+        out.opt25 = fmt_time(o25);
+        out.opt25_hz = (1 / o25).toFixed(1);
+        out.opt50 = fmt_time(o50);
+        out.opt50_hz = (1 / o50).toFixed(1);
         let pr = M.predicted_ratings(s);
         out.rated_small = fmt_range(s.ratings.small);
         out.rated_nato = fmt_range(s.ratings.nato);
@@ -1569,8 +1576,8 @@ let lrf_demos = {};
 
     /* ---------------------------- hero -------------------------------- */
 
-    // Distances in the hero scene are compressed: one scene meter stands for 80 m.
-    const HERO_SCALE = 80;
+    // Distances in the hero scene are compressed: one scene meter stands for 55 m.
+    const HERO_SCALE = 55;
 
     function hero_drone_pos(t) {
         let d = 9 + 4 * sin(0.21 * t);
@@ -2457,7 +2464,7 @@ let lrf_demos = {};
 
     SCENES.accumulate = {
         animated: true,
-        sliders: [{ map: log_map(150, 1200), def: 700, on: (d) => { acc_reset(d); d.set_paused(false); } }],
+        sliders: [{ map: log_map(150, 1200), def: 520, on: (d) => { acc_reset(d); d.set_paused(false); } }],
         reset(d) { acc_reset(d); },
         init(d) { acc_reset(d); },
         draw(ctx, d, w, h, dt) {
@@ -2573,7 +2580,7 @@ let lrf_demos = {};
         init(d) {
             d.st.k = -1;
             d.st.marks = [];
-            d.st.R = 700;
+            d.st.R = 520;
         },
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
@@ -2807,8 +2814,8 @@ let lrf_demos = {};
     SCENES.smear_optimum = {
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
-            let R = 600;
-            let plot = new Plot(ctx, 56, 16, w - 76, h - 16 - fs * 3.2, {
+            let R = 450;
+            let plot = new Plot(ctx, 70, 16, w - 90, h - 16 - fs * 3.2, {
                 xmin: 0.003, xmax: 1, xlog: true, ymin: 0.5, ymax: 40, ylog: true, fs: fs - 1,
                 xticks: [0.003, 0.01, 0.03, 0.1, 0.3, 1], xfmt: v => fmt_time(v),
                 yticks: [0.5, 1, 2, 5, 10, 20, 40], yfmt: v => String(v),
@@ -3021,7 +3028,7 @@ let lrf_demos = {};
 
     /* --------------------------- two echoes --------------------------- */
 
-    const TWO_R = 600;
+    const TWO_R = 450;
 
     SCENES.two_echoes = {
         sliders: [
@@ -3898,9 +3905,10 @@ let lrf_demos = {};
         let btns = el("div", "calc_buttons");
         let reset = el("button", "", "Reset");
         reset.onclick = () => {
-            state.divergence = M.PRESETS[state.preset].divergence_mrad || M.PRESETS.dlem20.divergence_mrad;
+            let base = M.make_spec(state.preset);
+            state.divergence = base.divergence_mrad;
             state.gain = 1;
-            state.rated_ms = 100;
+            state.rated_ms = base.rated_time_s * 1000;
             for (let k of ["divergence", "gain", "rated_ms"]) controls[k].set(state[k]);
             changed("reset");
         };
@@ -3932,7 +3940,8 @@ let lrf_demos = {};
                 controls.albedo.set(state.albedo);
             }
             if (["preset", "divergence", "gain", "rated_ms", "reset"].includes(key)) {
-                let modified = state.gain !== 1 || state.rated_ms !== 100 || abs(state.divergence - M.make_spec(state.preset).divergence_mrad) > 1e-9;
+                let base = M.make_spec(state.preset);
+                let modified = state.gain !== 1 || abs(state.rated_ms - base.rated_time_s * 1000) > 1e-6 || abs(state.divergence - base.divergence_mrad) > 1e-9;
                 set_spec(make(), modified ? "custom" : state.preset, true);
             }
             render();
