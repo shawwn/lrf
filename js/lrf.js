@@ -163,6 +163,12 @@ let lrf_demos = {};
         return s.toFixed(2) + " s";
     }
 
+    // A measurement time with the rate it allows: "25 ms (40 Hz)".
+    function fmt_time_rate(s) {
+        let hz = 1 / s;
+        return fmt_time(s) + " (" + (hz >= 9.95 ? round(hz) : hz.toFixed(1)) + " Hz)";
+    }
+
     const sup_digits = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 
     function sup(n) {
@@ -3136,7 +3142,7 @@ let lrf_demos = {};
         animated: true,
         sliders: [
             { fmt: v => "speed " + round(v) + " m/s", map: lin_map(0, 50), def: 25 },
-            { fmt: v => "measuring " + fmt_time(v), map: log_map(0.01, 0.4), def: 0.1 },
+            { fmt: v => "measuring " + fmt_time_rate(v), map: log_map(0.01, 0.4), def: 0.1 },
             { fmt: v => "assuming " + round(v) + " m/s", map: lin_map(0, 50), def: 0 },
         ],
         special(d, i, name) {
@@ -3198,8 +3204,12 @@ let lrf_demos = {};
             plot.hline(spec.threshold_sigma * sqrt(p), col.thr, 1.5, [5, 4]);
             plot.unclip();
             let final_peak = snr * M.smear_factor(spec, Leff);
-            halo_text(ctx, "stationary SNR " + snr.toFixed(1) + ", smeared peak " + final_peak.toFixed(1), plot.x + plot.w - 4, plot.y + fs * 0.8, col.text, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.9)");
-            let lbl = "speed " + round(v) + " m/s,  measuring " + fmt_time(T) + (u > 0 ? ",  assuming " + round(u) + " m/s" : "");
+            let lbl = "speed " + round(v) + " m/s,  measuring " + fmt_time_rate(T) + (u > 0 ? ",  assuming " + round(u) + " m/s" : "");
+            let snr_lbl = "stationary SNR " + snr.toFixed(1) + ", smeared peak " + final_peak.toFixed(1);
+            // side by side when they fit, otherwise the SNR on a second line
+            font(ctx, fs - 1, 500);
+            let fits = ctx.measureText(lbl).width + ctx.measureText(snr_lbl).width + 24 < plot.w;
+            halo_text(ctx, snr_lbl, plot.x + plot.w - 4, plot.y + fs * (fits ? 0.8 : 2.1), col.text, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.9)");
             halo_text(ctx, lbl, plot.x + 4, plot.y + fs * 0.8, col.speed, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.9)");
         },
     };
@@ -3231,7 +3241,7 @@ let lrf_demos = {};
                     let to = M.optimal_measurement_time(spec, v);
                     plot.dot(to, f(to), shades[i], 5);
                     let below = v === 50, leftside = plot.X(to) > plot.x + plot.w * 0.7;
-                    halo_text(ctx, lab + ": best " + fmt_time(to), plot.X(to) + (below ? 0 : leftside ? -8 : 8), plot.Y(f(to)) + (below ? fs * 1.1 : -fs * 0.9), shades[i], fs - 1, below ? "center" : leftside ? "right" : "left", "middle", 500);
+                    halo_text(ctx, lab + ": best " + fmt_time_rate(to), plot.X(to) + (below ? 0 : leftside ? -8 : 8), plot.Y(f(to)) + (below ? fs * 1.1 : -fs * 0.9), shades[i], fs - 1, below ? "center" : leftside ? "right" : "left", "middle", 500);
                 } else {
                     halo_text(ctx, lab, plot.X(0.7), plot.Y(f(0.7)) - fs, shades[i], fs - 1, "center", "middle", 500);
                 }
@@ -3246,7 +3256,7 @@ let lrf_demos = {};
         sliders: [
             { fmt: v => "R = " + fmt_dist(v), map: log_map(100, 2000), def: 500 },
             { fmt: v => "sideways " + round(v) + " m/s", map: lin_map(0, 50), def: 20 },
-            { fmt: v => "measuring " + fmt_time(v), map: log_map(0.01, 0.4), def: 0.1 },
+            { fmt: v => "measuring " + fmt_time_rate(v), map: log_map(0.01, 0.4), def: 0.1 },
         ],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
@@ -3299,7 +3309,7 @@ let lrf_demos = {};
             text(ctx, "crosses at " + (omega * 1000).toFixed(1) + " mrad/s", bx, by + fs * 4, col.speed, fs - 1, "left");
             text(ctx, "= panning " + deg_s.toFixed(deg_s < 10 ? 2 : 1) + "°/s", bx, by + fs * 5.3, col.speed, fs - 1, "left");
             text(ctx, "in footprint: " + (v > 0 ? fmt_time(2 * wr / v) : "∞"), bx, by + fs * 7, col.text, fs - 1, "left");
-            text(ctx, "measurement: " + fmt_time(T), bx, by + fs * 8.3, col.time, fs - 1, "left");
+            text(ctx, "measurement: " + fmt_time_rate(T), bx, by + fs * 8.3, col.time, fs - 1, "left");
         },
     };
 
