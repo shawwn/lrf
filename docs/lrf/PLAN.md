@@ -51,6 +51,11 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
     accumulation demo's colliding label; start the accumulation demo at ~390 m.
 23. Bug: the measurement rate demo froze when its slider was dragged (negative arcTo radius
     for a sliver window); fixed at the root, and the framework now survives a bad frame.
+24. Later review rounds: rebuilt the tracking demo (fixed sky view, ghost of the last
+    sighting, drag and throw), legible rate tradeoff colors, multiple echoes aim
+    visualization (Gaussian shaded beam, looking-down-the-beam inset, visible wings),
+    sensor-like camera rendering, 4K camera with a blur slider.
+25. The camera is 72 mm horizontally offset from the LRF.
 
 ## Decisions (from Q&A)
 
@@ -60,7 +65,7 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
 | Reference drones | 10 inch FPV quad (~430 mm motor to motor) and Shahed-136 (3.5 m long, 2.5 m span). Originally a 5 inch FPV; corrected by the user. |
 | Beam | 0.8 mrad (DLEM), confirmed by the user |
 | Mount | Pan + tilt turret; camera and LRF share one plate |
-| Camera | Visible CMOS (cannot see 1.55 um). Illustrative 4K (3840x2160), 10 deg HFOV (was 1080p; changed in review), LRF 4 cm to the right of the camera |
+| Camera | Visible CMOS (cannot see 1.55 um). Illustrative 4K (3840x2160), 10 deg HFOV (was 1080p; changed in review). LRF 72 mm to the right of the camera (given by the user; was an assumed 4 cm) |
 | Calibration target | AprilTag, swept across by the turret |
 | Rating measurement time | 0.5 s (from the DLEM SR datasheet), replacing the 0.1 s guess |
 | Pulse length | 30 ns (4.5 m echo), replacing the 10 ns guess; from patent research, unverified |

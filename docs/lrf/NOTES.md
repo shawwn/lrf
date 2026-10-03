@@ -57,7 +57,7 @@ Notes:
 | Shahed-136 | 3.5 m long, 2.5 m span (published); fuselage 0.45 m wide, wing 0.08 m average thickness, fins 0.55 m (estimated from photos); 25% albedo (gray paint), 5% if painted black | 0.34 m^2 head on, 1.6 m^2 side, 4.4 m^2 below |
 | Camera | 3840 x 2160 (4K), 10 deg HFOV | illustrative; f = 21,946 px, IFOV 0.0456 mrad. Was 1920 x 1080; switched to 4K in review so distant drones keep a recognizable shape |
 | Lens blur | Gaussian, sigma 0.8 px (adjustable 0 to 3 px in the camera demo) | diffraction of a tele lens is roughly 0.6 to 1 px; turbulence and focus make it larger |
-| Mount | LRF 4 cm right of the camera | illustrative |
+| Mount | LRF 72 mm right of the camera, no vertical offset (given by the user); "unknown" misalignment 1.3 mrad yaw, -0.8 mrad pitch for the calibration demos | was 4 cm (illustrative) |
 
 ## Physics notes
 
@@ -148,11 +148,12 @@ from the small target is the most relevant choice for drones (point like regime)
 - Beam (0.8 mrad) = 17.6 px; 10 inch quad (0.43 m) at 700 m = 13.5 px; Shahed span at 1.6 km = 34 px.
 - The camera demo renders targets at true size with 16 x 16 samples per pixel, averages
   them (area coverage), and applies the Gaussian lens blur.
-- Parallax pixel offset = f b / R = 439 / R px for b = 4 cm: 44 px at 10 m, 8.8 px (one
-  beam width) at 50 m, 0.4 px at 1 km.
+- Parallax pixel offset = f b / R = 1,580 / R px for b = 72 mm (4K camera): 158 px at 10 m,
+  17.6 px (one beam width) at 90 m, 1.6 px at 1 km.
 - Pixel vs 1/R is a straight line: slope f b, intercept f alpha (misalignment).
 - Baseline vs drone: parallax error b/R and the drone's half size both scale as 1/R,
-  so a 4 cm offset never moves the beam off a drone whose solid core is wider than 8 cm.
+  so a 72 mm offset never moves the beam off a drone whose solid core is wider than 14.4 cm
+  (the 10 inch quad's battery is ~15.6 cm wide).
 
 ### AprilTag calibration (user's method: sweep across a tag)
 

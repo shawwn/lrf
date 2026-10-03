@@ -395,7 +395,7 @@
 
 <h1 id="two-points-of-view">Two Points of View<a href="index.html#two-points-of-view" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
 
-<p>To put the beam on a drone, the turret needs to know where in the camera's image the beam is pointing. That may sound trivial, but the range finder and the camera can't occupy the same spot. On our turret, the range finder sits 4 centimeters to the right of the camera, a distance known as the <span class="c_mount"><strong>baseline</strong></span>.</p>
+<p>To put the beam on a drone, the turret needs to know where in the camera's image the beam is pointing. That may sound trivial, but the range finder and the camera can't occupy the same spot. On our turret, the range finder sits 72 millimeters to the right of the camera, a distance known as the <span class="c_mount"><strong>baseline</strong></span>.</p>
 
 <p>In the demonstration below you can see the setup from above, with the baseline exaggerated a lot so it's visible. The <span class="c_laser"><strong>beam</strong></span> is exactly parallel to the <span class="c_cam"><strong>camera's axis</strong></span>. The slider controls the <span class="c_range"><strong>distance</strong></span> of the target that the beam hits, and the inset shows where the camera sees the beam's spot:</p>
 
@@ -404,7 +404,7 @@
 </div>
 <div class="sl_range" id="parallax_top_sl0"></div>
 
-<p>Even though the beam is parallel to the camera's axis, the camera sees its spot off center. The spot is always 4 centimeters to the right of the axis, and the angle at which the camera sees those 4 centimeters shrinks with distance. This is <em>parallax</em>, the same effect that makes nearby objects shift more than distant ones when you move your head. The spot appears <strong>f &times; b / R</strong> pixels from the center: about 88 pixels at 10 meters, 18 pixels, one beam width, at 50 meters, and less than a pixel at a kilometer.</p>
+<p>Even though the beam is parallel to the camera's axis, the camera sees its spot off center. The spot is always 72 millimeters to the right of the axis, and the angle at which the camera sees those 72 millimeters shrinks with distance. This is <em>parallax</em>, the same effect that makes nearby objects shift more than distant ones when you move your head. The spot appears <strong>f &times; b / R</strong> pixels from the center: about 160 pixels at 10 meters, 18 pixels, one beam width, at 90 meters, and under 2 pixels at a kilometer.</p>
 
 <p>In reality the beam will never be exactly parallel to the camera. Machining tolerances, the way the module is screwed down, and the module's own internal alignment all add up to a small angle between the two. In the demonstration below you can introduce a <span class="c_mis"><strong>misalignment</strong></span> with the second slider. The plot on the right shows where the beam lands in the image, as a function of the inverse of the distance:</p>
 
@@ -427,7 +427,7 @@
 </div>
 <div class="sl_range" id="parallax_image_sl0"></div>
 
-<p>There's a pleasant surprise hiding here. To hit the middle of the drone, the turret should place the drone at the point of the line that corresponds to the drone's distance, which it doesn't know before measuring. But both the parallax and the drone's apparent size shrink as 1/R, so if the drone's solid body is wider than the baseline, aiming at the boresight keeps the beam on the drone at every distance. Parallax only really matters up close, and it matters a lot during calibration.</p>
+<p>There's a pleasant surprise hiding here. To hit the middle of the drone, the turret should place the drone at the point of the line that corresponds to the drone's distance, which it doesn't know before measuring. But both the parallax and the drone's apparent size shrink as 1/R, so if the drone's solid body is more than twice as wide as the baseline, aiming at the boresight keeps the beam on the drone at every distance. For our 72 millimeter baseline that takes about 15 centimeters, which the quad's body and battery just about provide. Parallax only really matters up close, and it matters a lot during calibration.</p>
 
 <h1 id="calibration">Calibration<a href="index.html#calibration" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
 
@@ -472,7 +472,7 @@
 
 <p>Only for the correct guess do all the <span class="c_hit"><strong>hits</strong></span> land on the tag and all the <span class="c_miss"><strong>misses</strong></span> land outside of it. A calibration program can search for the guess that minimizes the number of misplaced measurements, or fit the edges of the hit region more precisely. Thanks to the tag's pose, this works even when the tag is tilted relative to the camera.</p>
 
-<p>A single tag distance gives us a single point on the line we're after. If we trust the mechanical drawings for the 4 centimeter baseline, that's enough: it tells us the misalignment, and the parallax follows from the drawings. To measure the baseline as well, we repeat the sweep with the tag at two or more distances and fit a line through the points, just like in the plot of position versus 1/R we saw earlier. In the demonstration below you can choose how many distances to use:</p>
+<p>A single tag distance gives us a single point on the line we're after. If we trust the mechanical drawings for the 72 millimeter baseline, that's enough: it tells us the misalignment, and the parallax follows from the drawings. To measure the baseline as well, we repeat the sweep with the tag at two or more distances and fit a line through the points, just like in the plot of position versus 1/R we saw earlier. In the demonstration below you can choose how many distances to use:</p>
 
 <div class="segmented_container" id="calib_two_ranges_seg0"></div>
 <div class="padding_wrapper">

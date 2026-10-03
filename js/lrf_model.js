@@ -606,12 +606,12 @@
     /*
      * Mount: where the LRF sits relative to the camera.
      *   offset_m:  [x, y, z] of the LRF's beam origin in camera coordinates
-     *              (x right, y down, z forward), e.g. [0.04, 0, 0]
+     *              (x right, y down, z forward), e.g. [0.072, 0, 0]
      *   yaw_mrad, pitch_mrad: small rotations of the beam relative to the
      *              camera's optical axis (positive yaw points right,
      *              positive pitch points down)
      */
-    const DEFAULT_MOUNT = { offset_m: [0.04, 0, 0], yaw_mrad: 0, pitch_mrad: 0 };
+    const DEFAULT_MOUNT = { offset_m: [0.072, 0, 0], yaw_mrad: 0, pitch_mrad: 0 };
 
     function beam_direction(mount) {
         let a = mount.yaw_mrad * 1e-3, b = mount.pitch_mrad * 1e-3;

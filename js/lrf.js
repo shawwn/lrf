@@ -59,9 +59,10 @@ let lrf_demos = {};
     const FPX = M.camera_focal_px(cam);
 
     // The mount used in the camera and calibration sections: the LRF sits
-    // 4 cm to the right of the camera and 8 mm below it, and is tilted by a
-    // small, "unknown" misalignment that calibration has to discover.
-    const TRUE_MOUNT = { offset_m: [0.04, 0.008, 0], yaw_mrad: 1.3, pitch_mrad: -0.8 };
+    // 72 mm to the right of the camera (the user's turret), and is tilted by
+    // a small, "unknown" misalignment that calibration has to discover.
+    const TRUE_MOUNT = { offset_m: [0.072, 0, 0], yaw_mrad: 1.3, pitch_mrad: -0.8 };
+    const BASELINE = TRUE_MOUNT.offset_m[0];
 
     function rated_time() {
         return spec.rated_time_s;
@@ -1159,19 +1160,19 @@ let lrf_demos = {};
         // plate
         sc.box(Tt, [-0.006, 0.005, -0.008], [0.154, 0.13, 0.012], opts.plate_color || "#A1887F");
         // camera body and lens
-        sc.box(Tt, [-0.03, 0.0, 0.026], [0.05, 0.085, 0.05], "#4E4359");
-        sc.cylinder(Tt, [-0.03, 0.0425, 0.026], 1, 0.021, 0.034, 18, "#2C2C2C", "#1E2A44");
-        sc.disk(Tt, [-0.03, 0.077, 0.026], 1, 0.015, 18, "#3D5A80");
-        // LRF module (50 x 22 x 34 mm)
-        sc.box(Tt, [0.016, 0.02, 0.019], [0.022, 0.05, 0.034], "#3A3F45");
-        sc.disk(Tt, [0.010, 0.0452, 0.012], 1, 0.0045, 12, "#B71C1C");
-        sc.disk(Tt, [0.019, 0.0452, 0.026], 1, 0.0065, 14, "#263238");
+        sc.box(Tt, [-0.045, 0.0, 0.026], [0.05, 0.085, 0.05], "#4E4359");
+        sc.cylinder(Tt, [-0.045, 0.0425, 0.026], 1, 0.021, 0.034, 18, "#2C2C2C", "#1E2A44");
+        sc.disk(Tt, [-0.045, 0.077, 0.026], 1, 0.015, 18, "#3D5A80");
+        // LRF module (50 x 22 x 34 mm), transmitter 72 mm right of the camera's axis
+        sc.box(Tt, [0.033, 0.02, 0.019], [0.022, 0.05, 0.034], "#3A3F45");
+        sc.disk(Tt, [0.027, 0.0452, 0.012], 1, 0.0045, 12, "#B71C1C");
+        sc.disk(Tt, [0.036, 0.0452, 0.026], 1, 0.0065, 14, "#263238");
 
         let R = Tt;
         return {
             T: Tt,
-            cam_origin: xf_point(Tt, [-0.03, 0.077, 0.026]),
-            lrf_origin: xf_point(Tt, [0.010, 0.046, 0.012]),
+            cam_origin: xf_point(Tt, [-0.045, 0.077, 0.026]),
+            lrf_origin: xf_point(Tt, [0.027, 0.046, 0.012]),
             fwd: v3_norm(xf_dir(R, [0, 1, 0])),
             right: v3_norm(xf_dir(R, [1, 0, 0])),
             up: v3_norm(xf_dir(R, [0, 0, 1])),
@@ -3892,7 +3893,7 @@ let lrf_demos = {};
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0];
-            let b = 0.04;
+            let b = BASELINE;
             let left = w * 0.56;
             let y0 = h - 30, y1 = 26;
             let cx = left / 2;
@@ -3913,13 +3914,13 @@ let lrf_demos = {};
             draw_camera_top(ctx, camx, y0 - 4, 12, "#5E5368");
             draw_lrf_top(ctx, lrfx, y0 - 4, 9);
             dimension(ctx, camx, y0 + 16, lrfx, y0 + 16, col.mount, "", fs - 2);
-            text(ctx, "4 cm", lrfx + 12, y0 + 16, col.mount, fs - 2, "left", "middle", 500);
+            text(ctx, (b * 100).toFixed(1) + " cm", lrfx + 12, y0 + 16, col.mount, fs - 2, "left", "middle", 500);
             text(ctx, "baseline exaggerated", left - 8, y1 - 10, col.light_text, fs - 3, "right");
 
             // camera image strip
             let ix = left + 10, iw = w - left - 20;
             let iy = h * 0.2, ih = h * 0.36;
-            let range_px = 120;
+            let range_px = 200;
             round_rect(ctx, ix, iy, iw, ih, 6, "#EEF3F8", "#D5DCE4");
             let X = u => ix + iw / 2 + u / range_px * (iw / 2 - 8);
             line(ctx, X(0), iy + 4, X(0), iy + ih - 4, rgba(col.cam, 0.6), 1, [4, 3]);
@@ -3928,13 +3929,13 @@ let lrf_demos = {};
             let r_draw = beam_px / 2 * (iw / 2 - 8) / range_px;
             let ux = X(min(u, range_px * 1.2));
             draw_beam_spot(ctx, ux, iy + ih / 2, max(2, r_draw), col.laser, 0.9);
-            for (let p of [-120, -60, 0, 60, 120]) {
+            for (let p of [-200, -100, 0, 100, 200]) {
                 line(ctx, X(p), iy + ih, X(p), iy + ih + 5, col.axis, 1);
                 text(ctx, (p > 0 ? "+" : p < 0 ? "−" : "") + abs(p), X(p), iy + ih + 5 + fs * 0.7, col.light_text, fs - 3);
             }
             text(ctx, "camera image, pixels from center", ix + iw / 2, iy - fs * 0.8, col.cam, fs - 1, "center", "middle", 500);
             text(ctx, "spot " + (u < 10 ? u.toFixed(1) : round(u)) + " px right of center", ix + iw / 2, iy + ih + fs * 2.6, col.laser, fs, "center", "middle", 500);
-            text(ctx, "f × b / R = " + fmt_int(FPX) + " × 0.04 / " + (R < 10 ? R.toFixed(1) : round(R)), ix + iw / 2, iy + ih + fs * 4, col.text, fs - 1);
+            text(ctx, "f × b / R = " + fmt_int(FPX) + " × " + b + " / " + (R < 10 ? R.toFixed(1) : round(R)), ix + iw / 2, iy + ih + fs * 4, col.text, fs - 1);
         },
     };
 
@@ -3946,7 +3947,7 @@ let lrf_demos = {};
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0], beta = d.v[1] * 1e-3;
-            let b = 0.04;
+            let b = BASELINE;
             let left = w * 0.42;
             let y0 = h - 30, y1 = 26;
             let cx = left / 2;
@@ -3968,9 +3969,9 @@ let lrf_demos = {};
 
             // plot of pixel offset vs 1/R
             let plot = new Plot(ctx, left + 52, 18, w - left - 70, h - 18 - fs * 3.4, {
-                xmin: 0, xmax: 0.2, ymin: -80, ymax: 240, fs: fs - 1,
+                xmin: 0, xmax: 0.2, ymin: -100, ymax: 400, fs: fs - 1,
                 xticks: [0, 0.02, 0.05, 0.1, 0.2], xfmt: v => v === 0 ? "∞" : round(1 / v) + " m",
-                yticks: [-80, 0, 80, 160, 240], yfmt: v => (v > 0 ? "+" : v < 0 ? "−" : "") + abs(v),
+                yticks: [-100, 0, 100, 200, 300, 400], yfmt: v => (v > 0 ? "+" : v < 0 ? "−" : "") + abs(v),
                 xlabel: "distance (spaced as 1/R)", ylabel: "pixels from center", ylabel_offset: fs * 3,
             });
             plot.frame();
@@ -3995,7 +3996,7 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let R = d.v[0];
             let mount = TRUE_MOUNT;
-            let u0 = -80, u1 = 280;
+            let u0 = -60, u1 = 400;
             let k = w / (u1 - u0);
             let vh = h / k;
             let v0 = -vh / 2 + 10;
@@ -4017,7 +4018,7 @@ let lrf_demos = {};
                 pts.push([X(p[0] - cam.width_px / 2), Y(p[1] - cam.height_px / 2)]);
             }
             poly(ctx, pts, rgba(col.laser, 0.6), 1.5, [5, 4]);
-            for (let r of [5, 10, 20, 50, 100]) {
+            for (let r of [5, 10, 20, 50]) {
                 let p = M.beam_pixel(cam, mount, r);
                 let x = X(p[0] - cam.width_px / 2), y = Y(p[1] - cam.height_px / 2);
                 circle(ctx, x, y, 2.5, col.laser);
@@ -4383,7 +4384,7 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let mode = d.seg[0];
             let plot = new Plot(ctx, 60, 16, w - 80, h - 16 - fs * 3.4, {
-                xmin: 0, xmax: 0.12, ymin: 0, ymax: 140, fs: fs - 1,
+                xmin: 0, xmax: 0.12, ymin: 0, ymax: 240, fs: fs - 1,
                 xticks: [0, 0.02, 0.05, 0.1], xfmt: v => v === 0 ? "∞" : round(1 / v) + " m",
                 xlabel: "tag distance (spaced as 1/R)", ylabel: "spot, pixels right of center", ylabel_offset: fs * 3.2,
             });
@@ -4410,7 +4411,7 @@ let lrf_demos = {};
                 plot.curve(ir => icpt + slope * ir, col.laser, 2.5);
                 plot.dot(0, icpt, col.mis, 6);
                 let b_est = slope / FPX, beta_est = icpt / FPX;
-                halo_text(ctx, "baseline " + (b_est * 100).toFixed(1) + " cm (true 4.0)", plot.x + plot.w - 8, plot.y + fs, col.mount, fs - 1, "right", "middle", 500);
+                halo_text(ctx, "baseline " + (b_est * 100).toFixed(1) + " cm (true " + (b * 100).toFixed(1) + ")", plot.x + plot.w - 8, plot.y + fs, col.mount, fs - 1, "right", "middle", 500);
                 halo_text(ctx, "misalignment " + (beta_est * 1e3).toFixed(2) + " mrad (true " + TRUE_MOUNT.yaw_mrad.toFixed(2) + ")", plot.x + plot.w - 8, plot.y + fs * 2.4, col.mis, fs - 1, "right", "middle", 500);
             }
             for (let p of pts) {
