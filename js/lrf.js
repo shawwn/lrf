@@ -1070,14 +1070,35 @@ let lrf_demos = {};
                     }
                 } });
             } else if (it.kind === 1) {
-                let a = camera.project(it.a), b = camera.project(it.b);
-                if (!a || !b)
+                // Clip the segment to the near plane, so a line pointing at
+                // the viewer is drawn up to the eye instead of vanishing, then
+                // cut it into pieces that are depth sorted on their own: a long
+                // line passes both in front of and behind other geometry.
+                let za = v3_dot(v3_sub(it.a, camera.eye), camera.fwd);
+                let zb = v3_dot(v3_sub(it.b, camera.eye), camera.fwd);
+                const NEAR = 0.02;
+                if (za < NEAR && zb < NEAR)
                     continue;
-                list.push({ depth: (a[2] + b[2]) / 2 - 1e-3, draw: () => {
-                    ctx.globalAlpha = it.alpha;
-                    line(ctx, a[0], a[1], b[0], b[1], it.color, it.width);
-                    ctx.globalAlpha = 1;
-                } });
+                let pa = it.a, pb = it.b;
+                if (za < NEAR)
+                    pa = v3_add(it.a, v3_scale(v3_sub(it.b, it.a), (NEAR - za) / (zb - za)));
+                if (zb < NEAR)
+                    pb = v3_add(it.b, v3_scale(v3_sub(it.a, it.b), (NEAR - zb) / (za - zb)));
+                const PIECES = 16;
+                let prev = camera.project(pa);
+                for (let i = 1; i <= PIECES; i++) {
+                    let q = camera.project(v3_add(pa, v3_scale(v3_sub(pb, pa), i / PIECES)));
+                    if (!prev || !q) { prev = q; continue; }
+                    let a = prev, last = i === PIECES, first = i === 1;
+                    list.push({ depth: (a[2] + q[2]) / 2 - 1e-3, draw: () => {
+                        ctx.globalAlpha = it.alpha;
+                        ctx.lineCap = first || last ? "round" : "butt";
+                        line(ctx, a[0], a[1], q[0], q[1], it.color, it.width);
+                        ctx.lineCap = "round";
+                        ctx.globalAlpha = 1;
+                    } });
+                    prev = q;
+                }
             } else {
                 let a = camera.project(it.p);
                 if (!a)
