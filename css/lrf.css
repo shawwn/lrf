@@ -34,6 +34,88 @@
 .c_hit { color: #3D9A40; }
 .c_miss { color: #999; }
 
+/* Slider rows: [play button slot] [track] [value] */
+
+.slider_row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 600px;
+}
+
+.slider_row .slider_track {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 400px;
+}
+
+.slider_row .slider_container {
+    width: calc(100% - 44px);
+    max-width: none;
+}
+
+/* The base slider draws its track along the top edge of its box, so the
+   label and the play button are centered on that edge. */
+.slider_value {
+    flex: 0 0 auto;
+    width: 9.5em;
+    padding-left: 0.6em;
+    margin-top: -0.6em;
+    line-height: 1.2em;
+    font-size: 0.95em;
+    font-weight: 500;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.slider_play {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    margin-right: 0.3em;
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, 0.05);
+    background-image: url('../images/play_pause.png');
+    background-repeat: no-repeat;
+    background-size: 90px 30px;
+    background-position: -30px 0;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.slider_play.playing {
+    background-position: 0 0;
+}
+
+.slider_play:hover {
+    opacity: 0.8;
+}
+
+.slider_play_spacer {
+    visibility: hidden;
+    cursor: default;
+}
+
+@media only screen and (max-width: 450px) {
+    .slider_value {
+        width: 8.6em;
+        font-size: 0.8em;
+    }
+}
+
+.sl_time .slider_value { color: #5C6BC0; }
+.sl_range .slider_value { color: #2F7DD3; }
+.sl_speed .slider_value { color: #3D9A40; }
+.sl_thr .slider_value { color: #C2185B; }
+.sl_echo .slider_value { color: #B07800; }
+.sl_atm .slider_value { color: #607D8B; }
+.sl_mis .slider_value { color: #E06A00; }
+.sl_mount .slider_value { color: #8D6E63; }
+.sl_count .slider_value { color: #44546A; }
+.sl_gray .slider_value { color: #777; }
+.sl_laser .slider_value { color: #E5383B; }
+
 /* Slider colors */
 
 .sl_time .slider_left_gutter, .sl_time .slider_right_gutter, .sl_time .slider_knob { background: #5C6BC0; }
