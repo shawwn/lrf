@@ -3525,30 +3525,102 @@ let lrf_demos = {};
             let off = d.v[0] * 1e-3, gap = d.v[1];
             let sky = d.seg[0] === 1;
             let Rq = TWO_R, Rb = TWO_R + gap;
-            let top = h * 0.36;
+            let top = h * 0.44;
+            let wq = M.beam_radius(spec, Rq);      // 1/e^2 beam radius at the quad
+            let offm = off * Rq;                   // how far the beam's axis passes from the quad
 
-            // side view, not to scale
-            round_rect(ctx, 10, 6, w - 20, top - 12, 8, "#EEF3F8");
-            let x0 = 40, x1 = w - 30;
-            let X = r => x0 + (x1 - x0) * (r - 0) / (TWO_R + 170);
-            let cy = top / 2;
-            let half = r => 4 + r / (TWO_R + 170) * top * 0.28;
-            let offpx = off * 1e3 * top * 0.25;
-            let endR = sky ? TWO_R + 170 : Rb;
-            fill_poly(ctx, [[x0, cy - 2 + offpx * 0], [X(endR), cy - half(endR) + offpx], [X(endR), cy + half(endR) + offpx], [x0, cy + 2]], rgba(col.laser, 0.25));
+            // side view: the beam is brightest along its axis and fades toward
+            // its edges; the quad sits offm off the axis, to scale with the
+            // beam's width (the distance along the beam is compressed)
+            let isz = min(top - 12, w * 0.36);
+            let sx1 = w - 20 - isz;
+            round_rect(ctx, 10, 6, sx1 - 20, top - 12, 8, "#EEF3F8");
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(10, 6, sx1 - 20, top - 12);
+            ctx.clip();
+            let x0 = 34, x1 = sx1 - 22;
+            let Rend = TWO_R + 170;
+            let X = r => x0 + (x1 - x0) * r / Rend;
+            let cy = 6 + (top - 12) / 2;
+            let Hend = (top - 12) / 2 / 2.3;
+            let half = r => Hend * r / Rend;       // drawn 1/e^2 half width
+            let endR = sky ? Rend : Rb;
+            let cone = [[x0, cy], [X(endR), cy - 2.2 * half(endR)], [X(endR), cy + 2.2 * half(endR)]];
+            if (ctx.createConicGradient) {
+                // brightness depends only on the angle around the apex
+                let g = ctx.createConicGradient(-pi, x0, cy);
+                let dx = X(endR) - x0;
+                for (let k = 0; k <= 44; k++) {
+                    let u = -2.2 + 4.4 * k / 44;
+                    let ang = atan2(u * half(endR), dx);
+                    g.addColorStop((ang + pi) / (2 * pi), rgba(col.laser, 0.6 * exp(-2 * u * u)));
+                }
+                fill_poly(ctx, cone, g);
+            } else {
+                let n = 40;
+                for (let k = 0; k < n; k++) {
+                    let u0 = -2.2 + 4.4 * k / n, u1 = u0 + 4.4 / n, um = (u0 + u1) / 2;
+                    fill_poly(ctx, [[x0, cy], [X(endR), cy + u0 * half(endR)], [X(endR), cy + u1 * half(endR) + 0.5]], rgba(col.laser, 0.6 * exp(-2 * um * um)));
+                }
+            }
+            ctx.setLineDash([4, 4]);
+            line(ctx, x0, cy, X(endR), cy - half(endR), rgba(col.laser, 0.55), 1);
+            line(ctx, x0, cy, X(endR), cy + half(endR), rgba(col.laser, 0.55), 1);
+            ctx.setLineDash([]);
             draw_lrf_side(ctx, x0, cy, 6);
             if (!sky)
-                draw_tree_line(ctx, X(Rb), x1 + 20, top - 6, top * 0.7, 5);
-            draw_quad_sprite(ctx, X(Rq), cy, 30, "#2D3439", 0, 0);
+                draw_tree_line(ctx, X(Rb), x1 + 30, top - 6, (top - 12) * 0.8, 5);
+            let pxm = half(Rq) / wq;               // pixels per meter across the beam at the quad
+            let qy = cy + offm * pxm;
+            draw_quad_sprite(ctx, X(Rq), qy, 0.43 * pxm, "#2D3439", 0, 0);
+            ctx.restore();
             if (!sky)
                 dimension(ctx, X(Rq), top - 14, X(Rb), top - 14, col.bg, gap.toFixed(0) + " m", fs - 2, -1);
-            text(ctx, "not to scale", w - 20, 16, col.light_text, fs - 3, "right");
+            let off_label = offm < 0.005 ? (w < 500 ? "on axis" : "beam aimed at the quad") :
+                round(offm * 100) + " cm off " + (w < 500 ? "axis" : "the beam's axis");
+            font(ctx, fs - 2, 500);
+            let tw = ctx.measureText(off_label).width;
+            halo_text(ctx, off_label, clamp(X(Rq), 14 + tw / 2, sx1 - 14 - tw / 2), max(18, qy - 0.25 * pxm - 12), col.text, fs - 2, "center", "middle", 500);
+            text(ctx, "distance compressed", sx1 - 16, 16, col.light_text, fs - 3, "right");
+
+            // looking down the beam at the quad's distance: the quad is lit by
+            // the light that actually falls on each part of it
+            let ix = sx1, iy = 6;
+            round_rect(ctx, ix, iy, isz, isz, 8, "#1E2228");
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(ix, iy, isz, isz);
+            ctx.clip();
+            let pc = isz / (4.4 * wq);
+            let ccx = ix + isz / 2, ccy = iy + isz / 2;
+            draw_beam_spot(ctx, ccx, ccy, wq * pc, "#FF5A4E", 0.55);
+            ctx.setLineDash([3, 3]);
+            circle(ctx, ccx, ccy, wq * pc, null, "rgba(255,255,255,0.35)", 1);
+            ctx.setLineDash([]);
+            let cell = 2.5 / pc;                   // ~2.5 px cells, in meters
+            for (let r of QUAD.shapes) {
+                let fill = r.fill === undefined ? 1 : r.fill;
+                for (let mx = r.x0; mx < r.x1; mx += cell) {
+                    for (let my = r.y0; my < r.y1; my += cell) {
+                        let cx2 = min(mx + cell, r.x1), cy2 = min(my + cell, r.y1);
+                        let ux = (mx + cx2) / 2, uy = (my + cy2) / 2 - offm;
+                        let I = exp(-2 * (ux * ux + uy * uy) / (wq * wq));
+                        ctx.globalAlpha = fill < 1 ? 0.35 : 1;
+                        ctx.fillStyle = mix("#3A3F45", "#FFE08A", sqrt(I));
+                        ctx.fillRect(ccx + mx * pc, ccy + (offm - cy2) * pc, (cx2 - mx) * pc + 0.4, (cy2 - my) * pc + 0.4);
+                    }
+                }
+            }
+            ctx.globalAlpha = 1;
+            ctx.restore();
+            text(ctx, "looking down the beam", ix + isz / 2, iy + 14, "rgba(255,255,255,0.75)", fs - 3);
 
             // echoes, using a receiver response sized to the module's discrimination distance
             let s_disp = spec.discrimination_m / 3.5;
             let shape = x => exp(-x * x / (2 * s_disp * s_disp));
-            let Fq = M.fraction_on_target(spec, QUAD, Rq, off * Rq, 0);
-            let snr_q = snr_at(QUAD, Rq, 0.1, VIS, off * Rq, 0);
+            let Fq = M.fraction_on_target(spec, QUAD, Rq, 0, offm);
+            let snr_q = snr_at(QUAD, Rq, 0.1, VIS, 0, offm);
             let snr_b = 0;
             if (!sky) {
                 let Tb = M.transmission(spec, Rb, VIS);
