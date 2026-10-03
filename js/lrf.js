@@ -548,6 +548,41 @@ let lrf_demos = {};
         return "10" + sup(e);
     }
 
+    /*
+     * Center of an echo from binned values around a peak index. Fits a
+     * Gaussian through the peak and the bins k to each side of it (exact for
+     * a Gaussian echo), falling back to a centroid when noise makes a value
+     * non-positive. x_of(i) is the range at the center of bin i. Range
+     * finders interpolate like this to report distances more finely than
+     * their bins.
+     */
+    function echo_center(vals, peak, x_of, k) {
+        k = k || 1;
+        if (peak - k >= 0 && peak + k < vals.length) {
+            let a = vals[peak - k], b = vals[peak], c = vals[peak + k];
+            if (a > 0 && b > 0 && c > 0) {
+                let la = log(a), lb = log(b), lc = log(c);
+                let den = la - 2 * lb + lc;
+                if (den < -1e-9) {
+                    let dlt = clamp(0.5 * (la - lc) / den, -1, 1) * k;
+                    return x_of(peak) + dlt * (x_of(peak + 1) - x_of(peak));
+                }
+            }
+        }
+        let sw = 0, sx = 0;
+        for (let i = max(0, peak - 2); i <= min(vals.length - 1, peak + 2); i++) {
+            let wv = max(0, vals[i]);
+            sw += wv;
+            sx += wv * x_of(i);
+        }
+        return sw > 0 ? sx / sw : x_of(peak);
+    }
+
+    // Distances as the module reports them: 0.1 m steps.
+    function fmt_reported(m) {
+        return (round(m * 10) / 10).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " m";
+    }
+
     /* ------------------------------------------------------------------ */
     /* Beam footprint heat map                                            */
     /* ------------------------------------------------------------------ */
@@ -1750,9 +1785,9 @@ let lrf_demos = {};
             text(ctx, "echoes", 0, 0, col.text, fs - 2);
             ctx.restore();
 
-            let msg = st.last === null ? "no echo above the threshold" : "range: " + fmt_int(round(st.last / 5) * 5) + " m";
-            halo_text(ctx, msg, plot.x + plot.w - 6, plot.y + fs * 0.6, st.last === null ? col.light_text : col.text, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.95)");
-            halo_text(ctx, "true distance: " + fmt_int(round(real_R / 5) * 5) + " m", plot.x + 6, plot.y + fs * 0.6, col.quad, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.95)");
+            let msg = st.last === null ? "no echo above the threshold" : st.last === undefined ? "" : "measured: " + fmt_reported(st.last);
+            halo_text(ctx, msg, plot.x + plot.w - 6, plot.y + fs * 0.7, st.last === null ? col.light_text : col.text, fs - 1, "right", "middle", 500, "rgba(255,255,255,0.95)");
+            halo_text(ctx, "drone at " + fmt_int(real_R) + " m", plot.x + 6, plot.y + fs * 0.7, col.quad, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.95)");
         },
     };
 
@@ -2520,7 +2555,9 @@ let lrf_demos = {};
             halo_text(ctx, "echo SNR = √N × " + snr1.toFixed(2) + " = " + (snr1 * sqrt(N)).toFixed(1), plot.x + plot.w, 14, "#B07800", fs, "right", "middle", 500);
             if (found) {
                 plot.dot(peak_b + 0.5, peak, col.quad, 5);
-                halo_text(ctx, "quad at " + round(peak_b + 0.5) + " m", plot.X(peak_b + 0.5) + 8, plot.Y(peak) - 2, col.quad, fs - 1, "left", "middle", 500);
+                let vals = Array.from(st.sum);
+                let c = echo_center(vals, peak_b, i => i + 0.5, 2);
+                halo_text(ctx, "measured: " + fmt_reported(c), plot.X(peak_b + 0.5) + (peak_b > 700 ? -8 : 8), plot.Y(peak) - 2, col.quad, fs - 1, peak_b > 700 ? "right" : "left", "middle", 500);
             }
 
             // latest single pulse
@@ -2568,7 +2605,71 @@ let lrf_demos = {};
             halo_text(ctx, "wall " + fmt_range(rw), plot.X(N) + 8, plot.Y(rw) - fs * 0.8, col.bg, fs - 1, "left", "middle", 500);
             halo_text(ctx, "quad " + fmt_range(rq), plot.X(N) + 8, plot.Y(rq) + fs * 0.9, col.quad, fs - 1, "left", "middle", 500);
             let tm = N / spec.prf_hz;
-            halo_text(ctx, fmt_int(N) + " pulses = " + fmt_time(tm) + " of measuring at " + fmt_int(spec.prf_hz) + " pulses/s", plot.x + 8, plot.y + fs, col.hist, fs - 1, "left", "middle", 500);
+            halo_text(ctx, fmt_int(N) + " pulses = " + fmt_time(tm) + " at " + fmt_int(spec.prf_hz) + " pulses/s", plot.x + plot.w - 8, plot.y + plot.h - fs, col.hist, fs - 1, "right", "middle", 500);
+        },
+    };
+
+    /* ----------------------------- sub-bin ----------------------------- */
+
+    // Fraction of a Gaussian echo (centered at c, sigma s) falling into the bin [a, a + 1].
+    function bin_share(a, c, s) {
+        let k = 1 / (s * Math.SQRT2);
+        return 0.5 * (M.erf((a + 1 - c) * k) - M.erf((a - c) * k));
+    }
+
+    SCENES.subbin = {
+        animated: true,
+        sliders: [
+            { map: lin_map(122.5, 124.5), def: 123.74 },
+            { map: log_map(4, 100), def: 25 },
+        ],
+        init(d) {
+            d.st.k = -1;
+            d.st.hist = [];
+            d.st.rng = make_rng(31337);
+        },
+        draw(ctx, d, w, h) {
+            let fs = base_font_size(w);
+            let st = d.st;
+            let R = d.v[0], snr = d.v[1];
+            let sp = spec.pulse_m / 2.3548;
+            let a0 = 117, nb = 13;
+            let peak_share = bin_share(floor(R), R, sp);
+            // a fresh measurement twice per second
+            let k = floor(d.t * 2);
+            if (k !== st.k || !st.vals) {
+                st.k = k;
+                st.vals = [];
+                for (let i = 0; i < nb; i++)
+                    st.vals.push(snr * bin_share(a0 + i, R, sp) / peak_share + st.rng.normal());
+                let pb = 0;
+                for (let i = 1; i < nb; i++) if (st.vals[i] > st.vals[pb]) pb = i;
+                st.est = echo_center(st.vals, pb, i => a0 + i + 0.5, 2);
+                st.hist.push(st.est - R);
+                if (st.hist.length > 40) st.hist.shift();
+            }
+            let plot = new Plot(ctx, 30, 22, w - 54, h - 22 - fs * 4.6, {
+                xmin: a0, xmax: a0 + nb, ymin: -3, ymax: snr * 1.15 + 1, fs: fs - 1, no_yticks: true,
+                xticks: [118, 120, 122, 124, 126, 128], xfmt: v => v + " m", xn: 13,
+            });
+            plot.frame();
+            plot.clip();
+            for (let i = 0; i < nb; i++) {
+                let x0 = plot.X(a0 + i) + 2, x1 = plot.X(a0 + i + 1) - 2;
+                let y0 = plot.Y(0), y1 = plot.Y(st.vals[i]);
+                ctx.fillStyle = rgba(col.echo, 0.85);
+                ctx.fillRect(x0, min(y0, y1), x1 - x0, abs(y1 - y0));
+            }
+            // the echo's true shape
+            plot.curve(x => snr * exp(-(x - R) * (x - R) / (2 * sp * sp)) * (1 / (sp * sqrt(2 * pi))) / peak_share, rgba(col.quad, 0.6), 1.5, [4, 3], 200);
+            plot.unclip();
+            plot.vline(R, col.quad, 2);
+            let ex = plot.X(st.est);
+            fill_poly(ctx, [[ex, plot.y + plot.h + 2], [ex - 7, plot.y + plot.h + 13], [ex + 7, plot.y + plot.h + 13]], col.text);
+            halo_text(ctx, "true " + R.toFixed(2) + " m", plot.X(R) + (R > 123.5 ? -8 : 8), plot.y + fs, col.quad, fs - 1, R > 123.5 ? "right" : "left", "middle", 500);
+            let spread = sqrt(st.hist.reduce((a, e) => a + e * e, 0) / max(1, st.hist.length));
+            text(ctx, "reported: " + fmt_reported(st.est), w / 2, plot.y + plot.h + fs * 2.6, col.text, fs + 1, "center", "middle", 500);
+            text(ctx, "typical error of recent measurements: ±" + spread.toFixed(2) + " m", w / 2, plot.y + plot.h + fs * 4, col.light_text, fs - 1);
         },
     };
 
@@ -3106,7 +3207,7 @@ let lrf_demos = {};
             let peaks = [];
             for (let b = 1; b < 239; b++) {
                 if (vals[b] > spec.threshold_sigma && vals[b] >= vals[b - 1] && vals[b] >= vals[b + 1])
-                    peaks.push([xmin + b + 0.5, vals[b]]);
+                    peaks.push([echo_center(vals, b, i => xmin + i + 0.5, max(1, round(s_disp))), vals[b]]);
             }
             let merged = [];
             for (let p of peaks) {
@@ -3118,7 +3219,7 @@ let lrf_demos = {};
             merged = merged.slice(0, 5);
             for (let p of merged)
                 arrow(ctx, plot.X(p[0]), plot.Y(min(p[1], plot.o.ymax)) - 18, plot.X(p[0]), plot.Y(min(p[1], plot.o.ymax)) - 4, col.text, 1.5, 6);
-            let rep = merged.length ? "reported: " + merged.map(p => round(p[0]) + " m").join(", ") : "reported: nothing";
+            let rep = merged.length ? "reported: " + merged.map(p => fmt_reported(p[0])).join(", ") : "reported: nothing";
             text(ctx, rep, w / 2, plot.y + plot.h + fs * 2.6, col.text, fs, "center", "middle", 500);
             text(ctx, "quad catches " + fmt_pct(Fq) + " of the beam", w / 2, plot.y + plot.h + fs * 3.9, col.quad, fs - 1);
         },

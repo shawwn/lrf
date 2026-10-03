@@ -269,6 +269,16 @@
 
 <p>For the wall the range grows as the fourth root of the pulse count, but for the quad only as its eighth root. Accumulating 16 times longer gives the wall twice the range, while the quad gets just 41% more. As a side benefit of that eighth root, my guess for the measurement time behind the brochure numbers doesn't matter too much: even if I'm off by a factor of 10, the predicted ranges change by about a third.</p>
 
+<p>Once the echo stands out from the noise, the range finder still has to decide exactly where it is. Its bins are 1 meter wide, yet the DLEM 20 reports distances in steps of a tenth of a meter, like 123.7 m. That's possible because the echo isn't confined to a single bin: a pulse lasting tens of nanoseconds spreads its echo over several neighboring bins, and the relative heights of those bins reveal where its middle is. In the demonstration below you can see a close up of an accumulated echo, refreshed with new noise twice per second. The first slider moves the <span class="c_quad"><strong>target</strong></span> by small amounts, and the second one controls the echo's <span class="c_echo"><strong>SNR</strong></span>. The black marker shows the center estimated from the bins:</p>
+
+<div class="padding_wrapper">
+<div class="drawer_container full_width ratio_50" id="subbin"></div>
+</div>
+<div class="sl_range" id="subbin_sl0"></div>
+<div class="sl_echo" id="subbin_sl1"></div>
+
+<p>The estimate follows the target to a small fraction of a bin, but it jitters with the noise, and the weaker the echo, the larger the jitter. Roughly, the uncertainty is the width of the echo divided by its SNR. That's why the brochure lists two different numbers: the <em>resolution</em> of 0.1 m is the smallest step in the reported distances, while the <em>accuracy</em> of 0.5 m describes how far a measurement typically lands from the truth. Besides the noise, accuracy also suffers from slower effects. In range finders in general, the electronics respond to strong and weak echoes with slightly different delays, and those delays drift with temperature, so manufacturers calibrate them out as best they can.</p>
+
 <h1 id="measurement-rate">Measurement Rate<a href="index.html#measurement-rate" class="hanchor" ariaLabel="Anchor"><img src="../images/anchor.png" width="16px" height="8px"/></a></h1>
 
 <p>The DLEM 20 can range continuously at any rate from 1 to 25 measurements per second. With a fixed internal pulse rate, a faster measurement rate leaves fewer pulses for each measurement. In the demonstration below a second of time is split into measurements, each one accumulating its own histogram. The slider controls the <span class="c_time"><strong>measurement rate</strong></span>:</p>
