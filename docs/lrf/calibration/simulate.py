@@ -13,10 +13,15 @@ it has faint wings (0.5% of the power in a Gaussian five times wider), the
 tag's pattern is darker than assumed, a tilted board dims (Lambertian),
 and there are encoder errors, corner detection noise, range noise and
 bias, 0.1 m reporting, false alarms, and sometimes a wall behind the board.
+A wall closer than the discrimination distance merges with the board's echo
+into one pulse, reported at their average weighted by echo strength, which
+puts the sweep in depth mode.
 
     python3 simulate.py                   # boards at 20 m and 80 m
     python3 simulate.py --single          # one board at 20 m, origin from the drawings
     python3 simulate.py --orientations 8  # random board orientations and offsets
+    python3 simulate.py --office          # boards indoors, a wall 2.5 m behind each
+    python3 simulate.py --office --single # one board at 12.5 m, a wall 2.5 m behind
 """
 
 from __future__ import annotations
@@ -59,6 +64,7 @@ class Placement:
     pitch_deg: float = 0.0          # leaning back
     roll_deg: float = 0.0           # turned in its own plane
     wall_behind_m: Optional[float] = None   # a wall this far behind the board (None: open sky)
+    wall_albedo: float = 0.3
 
     def tag_frame(self):
         """Rotation (tag axes in world) and the tag center's position."""
@@ -81,11 +87,13 @@ class SimRig:
     SNR_20M = 1.756e5       # full beam on white (albedo 0.8) at 20 m, 50 ms (the article's model)
 
     def __init__(self, intr: Intrinsics, spec: LRFSpec, truth: Truth, seed=0,
-                 nd_transmission=0.1, measure_s=0.05, wing_fraction=0.005, wing_scale=5.0):
+                 nd_transmission=0.1, measure_s=0.05, wing_fraction=0.005, wing_scale=5.0,
+                 range_noise=0.3):
         self.intr, self.spec, self.truth = intr, spec, truth
         self.rng = np.random.default_rng(seed)
         self.nd = nd_transmission       # one way transmission of a filter over the module's window
         self.measure_s = measure_s
+        self.range_noise = range_noise          # 1 sigma, meters
         # the real beam differs a little from the spec the calibration assumes
         self.beam = replace(spec, beam_roll_deg=1.5, edge_blur_mrad=spec.edge_blur_mrad * 1.2)
         self.wings = (wing_fraction, replace(spec, beam_shape="gaussian",
@@ -165,19 +173,27 @@ class SimRig:
                                      s, xy, R, d_c)[0]
             s = float(s[0])
             snr = snr_unit * (20 / s) ** 2 * F * abs(d_tag[0, 2])     # Lambertian: dimmer when tilted
-            if self.rng.random() < ndtr(snr - spec.threshold_sigma):
-                echoes.append((s + tr.range_offset_m + self.rng.normal(0, 0.15), snr))
-        if self.place_.wall_behind_m is not None:
-            y_wall = T[1] + self.place_.wall_behind_m
+            if snr > 0:
+                echoes.append((s, snr))
+        pl = self.place_
+        if pl.wall_behind_m is not None:
+            # a wall facing the turret, wall_behind_m behind the board's center
+            y_wall = T[1] + pl.wall_behind_m
             s_w = (y_wall - o[1]) / d[1]
-            snr = snr_unit * (20 / s_w) ** 2 * (0.3 / 0.8) * max(0.0, 1 - on_board)
-            if self.rng.random() < ndtr(snr - spec.threshold_sigma):
-                echoes.append((s_w + tr.range_offset_m + self.rng.normal(0, 0.15), snr))
-        if len(echoes) == 2 and abs(echoes[0][0] - echoes[1][0]) < spec.discrimination_m:
-            # too close to separate: one echo, at the stronger one's distance pulled toward the other
-            (r1, a1), (r2, a2) = echoes
-            echoes = [((r1 * a1 + r2 * a2) / (a1 + a2), a1 + a2)]
-        out = [r for r, _ in echoes]
+            snr = snr_unit * (20 / s_w) ** 2 * (pl.wall_albedo / 0.8) * abs(d[1]) * max(0.0, 1 - on_board)
+            if snr > 0:
+                echoes.append((s_w, snr))
+        # echoes closer together than the discrimination distance arrive as
+        # one pulse, reported at their strength weighted average
+        pulses = []
+        for r, a in sorted(echoes):
+            if pulses and r - pulses[-1][2] < spec.discrimination_m:
+                r0, a0, last = pulses[-1]
+                pulses[-1] = ((r0 * a0 + r * a) / (a0 + a), a0 + a, r)
+            else:
+                pulses.append((r, a, r))
+        out = [r + tr.range_offset_m + self.rng.normal(0, self.range_noise)
+               for r, a, _ in pulses if self.rng.random() < ndtr(a - spec.threshold_sigma)]
         if self.rng.random() < 0.002:                                # false alarm
             out.append(self.rng.uniform(spec.min_range_m, 3000))
         return sorted(round(r / spec.resolution_m) * spec.resolution_m for r in out)
@@ -230,12 +246,13 @@ def errors(cal, truth, intr):
     return out
 
 
-def random_placement(rng, distance):
+def random_placement(rng, distance, office=False):
     return Placement(distance, right_m=rng.uniform(-0.08, 0.08) * distance,
                      up_m=rng.uniform(-0.03, 0.06) * distance,
                      yaw_deg=rng.uniform(-50, 50), pitch_deg=rng.uniform(-35, 35),
                      roll_deg=rng.uniform(0, 360),
-                     wall_behind_m=rng.choice([None, 40.0, 150.0]))
+                     wall_behind_m=rng.uniform(1.5, 4.0) if office else rng.choice([None, 40.0, 150.0]),
+                     wall_albedo=rng.uniform(0.3, 0.8) if office else 0.3)
 
 
 def random_board(rng):
@@ -248,7 +265,8 @@ def random_board(rng):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--single", action="store_true", help="one board at 20 m")
+    ap.add_argument("--single", action="store_true", help="one board")
+    ap.add_argument("--office", action="store_true", help="indoors: boards at 12.5 m and 25 m, walls 2.5 m behind")
     ap.add_argument("--orientations", type=int, metavar="N", help="N trials with random boards")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--nd", type=float, default=0.1, help="one way transmission of the attenuator")
@@ -264,7 +282,8 @@ def main(argv=None):
         print("trial  " + "  ".join("%13s" % k for k in keys))
         worst = {k: 0.0 for k in keys}
         for i in range(args.orientations):
-            pls = [random_placement(rng, 20), random_placement(rng, 80)]
+            far = (12.5, 25) if args.office else (20, 80)
+            pls = [random_placement(rng, far[0], args.office), random_placement(rng, far[1], args.office)]
             bds = [random_board(rng), random_board(rng)]
             cal, truth, intr, _ = run(pls, bds, seed=args.seed + i, nd=args.nd, bootstrap=0, quiet=True)
             e = errors(cal, truth, intr)
@@ -276,7 +295,15 @@ def main(argv=None):
         print("worst  " + "  ".join("%13.3f" % worst[k] for k in keys))
         return 0
 
-    if args.single:
+    if args.office:
+        pls = [Placement(12.5, right_m=0.3, up_m=0.2, yaw_deg=10, pitch_deg=-4, roll_deg=2,
+                         wall_behind_m=2.5, wall_albedo=0.6),
+               Placement(25, right_m=-0.8, up_m=0.4, yaw_deg=-15, pitch_deg=5, roll_deg=-3,
+                         wall_behind_m=2.5, wall_albedo=0.6)]
+        bds = [Board(), Board(center_in_tag_m=(0.05, 0.0))]
+        if args.single:
+            pls, bds = pls[:1], bds[:1]
+    elif args.single:
         pls, bds = [Placement(20, right_m=0.6, up_m=0.4, yaw_deg=12)], [Board()]
     else:
         pls = [Placement(20, right_m=0.6, up_m=0.4, yaw_deg=12, pitch_deg=-5, roll_deg=3),

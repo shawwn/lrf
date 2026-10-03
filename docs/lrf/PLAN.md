@@ -59,6 +59,10 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
 26. A realistic Python implementation of the calibration, saved to disk, that works for
     arbitrary AprilTag orientations: docs/lrf/calibration/ (algorithm, simulator, README).
 27. The beam is rectangular, not elliptical (DLEM 20: ~0.8 mrad, symmetrical, so square).
+28. In practice the board is in an office with a wall ~2.5 m behind it: the board's and the
+    wall's echoes merge, and the reading interpolates linearly between their distances as
+    the footprint leaves the board. Calibrate from that depth ramp (walk outward from
+    inside each edge until the reading changes); the code's "depth mode".
 
 ## Decisions (from Q&A)
 

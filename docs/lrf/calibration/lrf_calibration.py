@@ -12,22 +12,31 @@ turret should aim at (Calibration.boresight_pixel).
 
 Method
 ------
-An AprilTag is printed in the middle of a larger white board, which stands
-in front of an empty background (open sky, or anything more than the range
-finder's target discrimination distance behind it). The turret steps the
-beam across the board's edges, stopping for each measurement. At every stop
+An AprilTag is printed in the middle of a larger white board. The turret
+steps the beam across the board's edges, stopping for each measurement. At
+every stop the camera finds the tag's four corners, which give the board's
+exact pose (position and orientation) in the camera's frame, and the range
+finder takes a measurement. What the measurement says depends on what's
+behind the board:
 
-  * the camera finds the tag's four corners, which give the board's exact
-    pose (position and orientation) in the camera's frame, and
-  * the range finder either reports an echo at the board's distance (a hit)
-    or it doesn't (a miss).
+  * Depth mode, the usual indoor setup: a wall a few meters behind the
+    board, closer than the range finder's target discrimination distance
+    (25 m for the DLEM 20). The board's echo and the wall's merge into one,
+    and the reported distance is their average weighted by how much light
+    each returns. As the footprint slides off an edge, the reading ramps
+    linearly from the board's distance to the wall's.
+  * Hit/miss mode: open sky, or a background more than the discrimination
+    distance behind. The range finder either reports an echo at the board's
+    distance (a hit) or it doesn't (a miss).
 
 The camera can't see the 1.55 um beam, but every stop says: "a beam along
-this ray would land at this point of the board, and it did (or didn't)
-produce an echo". The ray that best explains all the hits and misses is the
-calibration. The fit models how much of a Gaussian beam lands on the board,
-so the stops near the edges, where the beam is only partly on the board,
-carry most of the information, and that's where the sweep spends its time.
+this ray would land at this point of the board, and this is what the range
+finder saw". The ray that best explains all the measurements is the
+calibration. The fit models how much of the beam's footprint lands on the
+board, so the stops near the edges, where the footprint is only partly on
+the board, carry most of the information, and that's where the sweep
+spends its time. The mode is chosen automatically by looking past the
+board's edges before the sweep.
 
 The board can be at any orientation the camera can still read the tag at:
 yawed, pitched, rolled in its own plane, upside down, off to the side, and
@@ -74,7 +83,7 @@ import json
 import math
 import sys
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from typing import Callable, Optional, Protocol, Sequence
 
 import numpy as np
@@ -488,8 +497,9 @@ class Stop:
     rms_px: float           # corner reprojection error of the pose
     echoes: list
     expected_m: float       # distance to the board along the beam guess at the time
-    hit: bool
-    range_m: Optional[float]
+    hit: bool               # hit/miss mode: an echo from the board; depth mode: reading nearer the board than the background
+    range_m: Optional[float]    # the board's echo (hit/miss) or the merged reading (depth)
+    mode: str = "hits"          # "hits" or "depth"
 
     def to_dict(self):
         d = asdict(self)
@@ -512,6 +522,14 @@ def classify(echoes, expected_m, gate_m):
     return False, None
 
 
+def depth_reading(echoes, expected_m, gap_m, gate_m):
+    """In depth mode, the one echo between the board and the background
+    (with the gate's slack for noise and range offset), or None."""
+    lo, hi = expected_m - gate_m, expected_m + gap_m + gate_m
+    cand = [r for r in echoes if lo <= r <= hi]
+    return min(cand, key=lambda r: abs(r - (expected_m + gap_m / 2)), default=None)
+
+
 class Collector:
     """Runs the sweep for one board placement (a "session")."""
 
@@ -522,6 +540,7 @@ class Collector:
         self.rng = np.random.default_rng(seed)
         self.gate_m = max(1.5, 3 * spec.accuracy_m)
         self.boards = {}            # session -> board, for fits that include earlier sessions
+        self.modes = {}             # session -> ("hits", None) or ("depth", background gap in m)
 
     def pose(self, board: Board):
         corners = self.rig.tag_corners(board.tag_id, self.frames)
@@ -539,9 +558,19 @@ class Collector:
             return None
         R, t, rms = pose
         s, _, _ = beam_on_board(np.array(guess.origin_m), guess.direction(), R[None], t[None])
-        echoes = list(self.rig.measure())
-        hit, r = classify(echoes, float(s[0]), self.gate_m)
-        return Stop(session, pan, tilt, R, t, rms, echoes, float(s[0]), hit, r)
+        st = Stop(session, pan, tilt, R, t, rms, list(self.rig.measure()), float(s[0]), False, None)
+        self.classify(st)
+        return st
+
+    def classify(self, st: Stop):
+        """Read a stop's echoes according to its session's mode."""
+        mode, gap = self.modes.get(st.session, ("hits", None))
+        st.mode = mode
+        if mode == "depth":
+            st.range_m = depth_reading(st.echoes, st.expected_m, gap, self.gate_m)
+            st.hit = st.range_m is not None and st.range_m - st.expected_m < gap / 2
+        else:
+            st.hit, st.range_m = classify(st.echoes, st.expected_m, self.gate_m)
 
     def aim(self, board, guess: MountGuess, p_tag=(0.0, 0.0), iters=4):
         """Move so the guessed beam lands on p_tag; returns the reference
@@ -605,21 +634,55 @@ class Collector:
         return math.hypot(J00, J01), math.hypot(J10, J11)
 
     def check_background(self, board, session, guess, ref, s0):
-        """Point the beam well off the board: anything echoing within the
-        discrimination distance behind the board would merge with its echo
-        near the edges and spoil the measurement."""
+        """Point the beam well off each side of the board and decide the
+        mode: a background within the discrimination distance behind the
+        board merges with its echo (depth mode); a farther one, or none,
+        leaves the board's echo on its own (hit/miss mode). Returns the
+        stops, which also count as measurements."""
         x0, x1, y0, y1 = board.extents()
         kx, ky = self.stretch(guess, ref)
         far = guess.tolerance_mrad * 1e-3 * s0 + 4 * float(self.spec.beam_radius(s0))
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-        pts = [(x0 - far * kx, cy), (x1 + far * kx, cy), (cx, y0 - far * ky)]
-        close = []
-        for st in self.run_points(board, session, guess, ref, pts):
-            close += [r for r in st.echoes if r < st.expected_m + self.spec.discrimination_m]
-        if close:
-            self.log("  warning: echoes at %s m with the beam off the board; the background is "
-                     "closer than %.0f m behind it" % (sorted(round(r, 1) for r in close),
-                                                       self.spec.discrimination_m))
+        pts = [(x0 - far * kx, cy), (x1 + far * kx, cy), (cx, y0 - far * ky), (cx, y1 + far * ky)]
+        stops = self.run_points(board, session, guess, ref, pts)
+        behind = [r - st.expected_m for st in stops for r in st.echoes
+                  if 2 * self.spec.accuracy_m < r - st.expected_m < self.spec.discrimination_m]
+        if behind:
+            gap = float(np.median(behind))
+            self.modes[session] = ("depth", gap)
+            self.log("  background %.1f m behind the board, within the %.0f m discrimination: depth mode"
+                     % (gap, self.spec.discrimination_m))
+            if gap < 3 * self.spec.accuracy_m:
+                self.log("  warning: the depth step (%.1f m) is small next to the range noise" % gap)
+        else:
+            self.modes[session] = ("hits", None)
+            self.log("  nothing echoes within %.0f m behind the board: hit/miss mode"
+                     % self.spec.discrimination_m)
+        for st in stops:
+            self.classify(st)
+        return stops
+
+    def walk_out(self, board, session, guess, ref, s0, w, gap):
+        """Depth mode's coarse pass: from inside each edge, step outward
+        until the reading has passed halfway to the background a few times,
+        so each line crosses the whole ramp from the board's distance to the
+        background's."""
+        x0, x1, y0, y1 = board.extents()
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        kx, ky = self.stretch(guess, ref)
+        tol = guess.tolerance_mrad * 1e-3 * s0
+        stops = []
+        for base, normal, k in (((x0, cy), (-1, 0), kx), ((x1, cy), (1, 0), kx),
+                                ((cx, y0), (0, -1), ky), ((cx, y1), (0, 1), ky)):
+            base, normal = np.array(base), np.array(normal, float)
+            u, beyond = -(tol + 2 * w) * k, 0
+            while u <= (tol + 6 * w) * k and beyond < 4:
+                st = self.run_points(board, session, guess, ref, [base + u * normal])
+                stops += st
+                if st and (st[0].range_m is None or st[0].range_m - st[0].expected_m > gap / 2):
+                    beyond += 1
+                u += w / 2 * k
+        return stops
 
     def find_board(self, board, session, guess, ref, s0):
         """If the guessed beam misses the board entirely, search a grid of
@@ -656,7 +719,7 @@ class Collector:
         center = ((x0 + x1) / 2, (y0 + y1) / 2)
         ref = self.aim(board, guess, center)
         s0 = float(np.linalg.norm(ref[3]))
-        if s0 < self.spec.min_range_m * 1.2:
+        if s0 < self.spec.min_range_m:
             raise RuntimeError("board at %.1f m is too close; the range finder's minimum is %.0f m"
                                % (s0, self.spec.min_range_m))
         w = float(self.spec.beam_radius(s0))
@@ -668,42 +731,55 @@ class Collector:
                                % incidence)
         self.log("session %d: board %.1f m away, %.0f degrees from facing the beam, footprint ~%.1f cm"
                  % (session, s0, incidence, 200 * w))
-        self.check_background(board, session, guess, ref, s0)
-        guess, stops = self.find_board(board, session, guess, ref, s0)
+        stops = self.check_background(board, session, guess, ref, s0)
+        mode, gap = self.modes[session]
+        guess, found = self.find_board(board, session, guess, ref, s0)
+        stops += found
         if guess.tolerance_mrad * 1e-3 * s0 > min(board.width_m, board.height_m) / 2:
             # the beam could be far off: re-aim with the improved guess
             ref = self.aim(board, guess, center)
 
-        # coarse pass: one line across each edge, wide enough for the tolerance
+        # coarse pass, wide enough for the tolerance
         tol = guess.tolerance_mrad * 1e-3 * s0
-        step = max(w / 2, 0.25e-3 * s0)
-        lines = self.transects(board, 1, {"x": (0.0, (tol + 3 * w) * kx, step * kx),
-                                           "y": (0.0, (tol + 3 * w) * ky, step * ky)})
-        for line in lines:
-            stops += self.run_points(board, session, guess, ref, line)
+        if mode == "depth":
+            stops += self.walk_out(board, session, guess, ref, s0, w, gap)
+        else:
+            step = max(w / 2, 0.25e-3 * s0)
+            for line in self.transects(board, 1, {"x": (0.0, (tol + 3 * w) * kx, step * kx),
+                                                  "y": (0.0, (tol + 3 * w) * ky, step * ky)}):
+                stops += self.run_points(board, session, guess, ref, line)
         fit = fit_beam(list(earlier) + stops, self.boards, self.spec, guess, fit_origin=False, bootstrap=0)
-        strength = fit.strength[session]
         sigma = max(0.1, 0.25 * w / s0 * 1e3)       # mrad; the coarse step limits it
         guess = MountGuess(guess.origin_m, fit.yaw_mrad, fit.pitch_mrad, 3 * sigma)
-        if strength < 2 * self.spec.threshold_sigma:
-            self.log("  warning: weak echo (full beam SNR ~%.0f): use less attenuation" % strength)
-        self.log("  coarse: %d stops, %d hits, beam at yaw %.2f, pitch %.2f mrad, full beam SNR ~%.0f"
-                 % (len(stops), sum(s.hit for s in stops), fit.yaw_mrad, fit.pitch_mrad, strength))
+        if mode == "depth":
+            dp = fit.depth[session]
+            self.log("  coarse: %d stops, beam at yaw %.2f, pitch %.2f mrad; range noise %.2f m, "
+                     "background %.0f%% as bright as the board" % (len(stops), fit.yaw_mrad, fit.pitch_mrad,
+                                                                    dp["sigma_m"], 100 * dp["k"]))
+        else:
+            strength = fit.strength[session]
+            if strength < 2 * self.spec.threshold_sigma:
+                self.log("  warning: weak echo (full beam SNR ~%.0f): use less attenuation" % strength)
+            self.log("  coarse: %d stops, %d hits, beam at yaw %.2f, pitch %.2f mrad, full beam SNR ~%.0f"
+                     % (len(stops), sum(s.hit for s in stops), fit.yaw_mrad, fit.pitch_mrad, strength))
 
-        # fine pass: five lines per edge, centered on where the hits should
-        # stop, stepping a third of the beam radius
+        # fine pass: five lines per edge across where the reading changes
         ref = self.aim(board, guess, center)
         kx, ky = self.stretch(guess, ref)
-        mx, my = footprint(self.spec, np.array([s0]), ref[2][None], guess.direction())
-        half = 3 * sigma * 1e-3 * s0 + 1.5 * w
-        lines = self.transects(board, 5, {
-            "x": (boundary_offset(strength, mx, self.spec), half * kx, w * kx / 3),
-            "y": (boundary_offset(strength, my, self.spec), half * ky, w * ky / 3)})
+        if mode == "depth":
+            # the whole ramp plus some pure board and pure background
+            half = 3 * sigma * 1e-3 * s0 + 2.5 * w
+            axes = {"x": (0.0, half * kx, w * kx / 4), "y": (0.0, half * ky, w * ky / 4)}
+        else:
+            # centered on where the hits should stop
+            mx, my = footprint(self.spec, np.array([s0]), ref[2][None], guess.direction())
+            half = 3 * sigma * 1e-3 * s0 + 1.5 * w
+            axes = {"x": (boundary_offset(strength, mx, self.spec), half * kx, w * kx / 3),
+                    "y": (boundary_offset(strength, my, self.spec), half * ky, w * ky / 3)}
         n0 = len(stops)
-        for line in lines:
+        for line in self.transects(board, 5, axes):
             stops += self.run_points(board, session, guess, ref, line)
-        self.log("  fine: %d stops, %d hits (%.0f s of computation)"
-                 % (len(stops) - n0, sum(s.hit for s in stops[n0:]), time.time() - t_start))
+        self.log("  fine: %d stops (%.0f s of computation)" % (len(stops) - n0, time.time() - t_start))
         return stops, guess
 
 
@@ -716,12 +792,32 @@ def _shift_guess(guess: MountGuess, dyaw_rad, dpitch_rad, tolerance_mrad):
 # The fit
 # ---------------------------------------------------------------------------
 
-class HitModel:
-    """Probability of a hit at every stop, as a function of the beam.
+class SweepModel:
+    """Predicts every stop's measurement as a function of the beam.
+
+    Hit/miss sessions: the probability of an echo from the board, given the
+    fraction of the footprint on it (hit_probability).
+
+    Depth sessions: the reported range. The board's and the background's
+    echoes merge into one pulse, and the range finder reports where its
+    middle is, which is their distances averaged with weights proportional
+    to the light each returns:
+
+        range = g s + (1 - g) d + b,   g = F / (F + k (1 - F_board))
+
+    with s the board's distance along the beam (from the camera's pose), d
+    the background's, b the range finder's offset, F the footprint's echo
+    from the board (relative to all of it on white), F_board the fraction of
+    the footprint the board blocks, and k how bright the background is
+    relative to the board. With k = 1 the reading moves linearly from the
+    board's distance to the background's as the footprint slides off.
 
     Parameters: yaw and pitch (mrad), optionally the origin's sideways
-    offset from the drawings (dx, dy in mm), and the log of each session's
-    full beam signal to noise ratio.
+    offset from the drawings (dx, dy in mm), and the log of each hit/miss
+    session's full beam signal to noise ratio. A depth session's own
+    unknowns (k, b, and d near each of the board's four edges, since the
+    background needn't be parallel to the board) are solved for inside, for
+    every candidate beam: for a given k the range is linear in b and d.
     """
 
     def __init__(self, stops: Sequence[Stop], boards: dict, spec: LRFSpec, origin0,
@@ -732,38 +828,133 @@ class HitModel:
         self.R = np.stack([s.R for s in stops])
         self.t = np.stack([s.t for s in stops])
         self.hit = np.array([s.hit for s in stops], bool)
+        self.range = np.array([np.nan if s.range_m is None else s.range_m for s in stops])
         sess = np.array([s.session for s in stops])
         self.sessions = sorted(set(sess.tolist()))
         self.masks = [sess == k for k in self.sessions]
         self.boards = [boards[k] for k in self.sessions]
+        mode = {s.session: s.mode for s in stops}
+        self.depth = [mode[k] == "depth" for k in self.sessions]
+        self.hit_sessions = [i for i, dpt in enumerate(self.depth) if not dpt]
         self.n_geo = 4 if fit_origin else 2
+        self.log_k = {}         # warm start for each depth session's k
+        # range noise of each depth session, from readings near the board's
+        # distance (robust, so the ramp's readings don't inflate it)
+        self.sigma = {}
+        exp_m = np.array([s.expected_m for s in stops])
+        for i, m in enumerate(self.masks):
+            if self.depth[i]:
+                r = (self.range - exp_m)[m & self.hit & np.isfinite(self.range)]
+                med = np.median(r) if len(r) else 0.0
+                mad = 1.4826 * np.median(np.abs(r - med)) if len(r) > 5 else 0.15
+                self.sigma[i] = max(0.03, float(mad))
 
     def split(self, p):
         origin = self.origin0.copy()
         if self.fit_origin:
             origin[:2] += np.asarray(p[2:4]) * 1e-3
-        return origin, beam_direction(p[0], p[1]), np.exp(np.asarray(p[self.n_geo:]))
+        strength = np.full(len(self.sessions), np.nan)
+        strength[self.hit_sessions] = np.exp(np.asarray(p[self.n_geo:]))
+        return origin, beam_direction(p[0], p[1]), strength
 
-    def fractions(self, origin, direction):
+    def fractions(self, origin, direction, blocked=False):
+        """Each stop's echo fraction F (or with blocked=True, the fraction of
+        the footprint on the board at all, dark tag or not) and distance s."""
         F = np.empty(len(self.hit))
         s_all = np.empty(len(self.hit))
         for m, b in zip(self.masks, self.boards):
+            if blocked:
+                b = replace(b, tag_relative_reflectance=1.0)
             s, xy, _ = beam_on_board(origin, direction, self.R[m], self.t[m])
             F[m], s_all[m] = echo_fraction(b, self.spec, s, xy, self.R[m], direction), s
         return F, s_all
 
+    def nearest_edge(self, i, origin, direction):
+        """Index (left, right, top, bottom) of the board edge nearest to
+        where the beam lands, for each stop of session i."""
+        m = self.masks[i]
+        _, xy, _ = beam_on_board(origin, direction, self.R[m], self.t[m])
+        x0, x1, y0, y1 = self.boards[i].extents()
+        return np.argmin(np.stack([xy[:, 0] - x0, x1 - xy[:, 0], xy[:, 1] - y0, y1 - xy[:, 1]]), axis=0)
+
     def probabilities(self, p):
+        """Hit probability of every stop (NaN for depth sessions)."""
         origin, direction, strength = self.split(p)
         F, _ = self.fractions(origin, direction)
-        a = np.empty(len(F))
+        a = np.full(len(F), np.nan)
         for m, st in zip(self.masks, strength):
             a[m] = st
         return hit_probability(F, a, self.spec, self.lapse)
 
+    @staticmethod
+    def _huber(z, c=2.0):
+        a = np.abs(z)
+        return np.where(a < c, z * z, 2 * c * a - c * c)
+
+    def _depth_solve(self, log_k, F, Fb, s, r, edge, sigma, wts):
+        """For a given k: least squares b and d (Huber weighted, by
+        iterative reweighting). Returns (loss, b, d[4], residuals)."""
+        g = F / (F + math.exp(log_k) * (1 - Fb) + 1e-12)
+        y = r - g * s
+        A = np.zeros((len(r), 5))
+        A[:, 0] = 1.0
+        A[np.arange(len(r)), 1 + edge] = 1 - g
+        w = wts.copy()
+        for _ in range(4):
+            sw = np.sqrt(w)
+            x = np.linalg.lstsq(A * sw[:, None], y * sw, rcond=None)[0]
+            res = y - A @ x
+            z = np.abs(res) / sigma
+            w = wts * np.where(z < 2.0, 1.0, 2.0 / np.maximum(z, 1e-12))
+        return 0.5 * float(np.sum(wts * self._huber(res / sigma))), x[0], x[1:], res
+
+    def depth_fit(self, i, origin, direction, F, Fb, s, weights=None):
+        """Profile out session i's depth unknowns: returns (loss, details)."""
+        m = self.masks[i] & np.isfinite(self.range)
+        mi = np.isfinite(self.range[self.masks[i]])
+        edge = self.nearest_edge(i, origin, direction)[mi]
+        wts = np.ones(m.sum()) if weights is None else weights[m]
+        args = (F[m], Fb[m], s[m], self.range[m], edge, self.sigma[i], wts)
+        f = lambda lk: self._depth_solve(lk, *args)[0]
+        lk0 = self.log_k.get(i)
+        if lk0 is None:
+            grid = np.linspace(-2.5, 2.5, 21)
+            lk0 = float(grid[np.argmin([f(v) for v in grid])])
+        r = optimize.minimize_scalar(f, bounds=(lk0 - 0.6, lk0 + 0.6), method="bounded",
+                                     options={"xatol": 0.01})
+        self.log_k[i] = float(r.x)
+        loss, b, d, res = self._depth_solve(r.x, *args)
+        return loss, {"k": math.exp(r.x), "range_offset_m": float(b), "background_m": d.tolist(),
+                      "sigma_m": self.sigma[i], "rms_m": float(np.sqrt(np.mean(res ** 2)))}
+
     def nll(self, p, weights=None):
-        P = np.clip(self.probabilities(p), 1e-12, 1 - 1e-12)
-        ll = np.where(self.hit, np.log(P), np.log1p(-P))
-        return -float(np.sum(ll if weights is None else weights * ll))
+        origin, direction, strength = self.split(p)
+        F, s = self.fractions(origin, direction)
+        total = 0.0
+        if self.hit_sessions:
+            a = np.full(len(F), np.nan)
+            for m, st in zip(self.masks, strength):
+                a[m] = st
+            hm = np.isfinite(a)
+            P = np.clip(hit_probability(F[hm], a[hm], self.spec, self.lapse), 1e-12, 1 - 1e-12)
+            ll = np.where(self.hit[hm], np.log(P), np.log1p(-P))
+            total -= float(np.sum(ll if weights is None else weights[hm] * ll))
+        if any(self.depth):
+            Fb, _ = self.fractions(origin, direction, blocked=True)
+            for i, dpt in enumerate(self.depth):
+                if dpt:
+                    total += self.depth_fit(i, origin, direction, F, Fb, s, weights)[0]
+        return total
+
+    def depth_details(self, p):
+        origin, direction, _ = self.split(p)
+        F, s = self.fractions(origin, direction)
+        Fb, _ = self.fractions(origin, direction, blocked=True)
+        return {self.sessions[i]: self.depth_fit(i, origin, direction, F, Fb, s)[1]
+                for i, dpt in enumerate(self.depth) if dpt}
+
+
+HitModel = SweepModel       # the earlier name
 
 
 @dataclass
@@ -771,18 +962,20 @@ class FitResult:
     yaw_mrad: float
     pitch_mrad: float
     origin_m: np.ndarray
-    strength: dict              # session -> full beam SNR
+    strength: dict              # hit/miss session -> full beam SNR
+    depth: dict                 # depth session -> k, range offset, background distances, noise, rms
     nll: float
-    agreement: float            # fraction of stops the fit classifies correctly
+    agreement: float            # fraction of hit/miss stops the fit classifies correctly (NaN if none)
     samples: Optional[np.ndarray] = None    # bootstrap parameter vectors
-    model: Optional[HitModel] = None
+    model: Optional[SweepModel] = None
     params: Optional[np.ndarray] = None
 
 
-def _initial_angles(model: HitModel, guess: MountGuess):
+def _initial_angles(model: SweepModel, guess: MountGuess):
     """Shift of the beam that centers the hits on the boards: when the
     guessed beam lands at q and the true beam at q + delta, the hits are
-    the stops with q + delta on the board, centered on (center - delta)."""
+    the stops with q + delta on the board, centered on (center - delta).
+    In depth mode a "hit" is a reading nearer the board than the background."""
     o, d = np.asarray(guess.origin_m, float), guess.direction()
     shifts = []
     for m, b in zip(model.masks, model.boards):
@@ -819,23 +1012,23 @@ def _minimize(f, p0, scale):
 def fit_beam(stops: Sequence[Stop], boards: dict, spec: LRFSpec, guess: MountGuess,
              fit_origin: Optional[bool] = None, lapse: float = 0.01, bootstrap: int = 40,
              seed: int = 0) -> FitResult:
-    """Maximum likelihood beam from hits and misses; bootstrap resampling
-    of the stops gives the uncertainties."""
+    """Maximum likelihood beam from all the measurements; bootstrap
+    resampling of the stops gives the uncertainties."""
     if fit_origin is None:
         # the origin is only observable with clearly different distances
         dist = [np.median(np.linalg.norm(np.stack([s.t for s in stops if s.session == k]), axis=1))
                 for k in sorted(set(s.session for s in stops))]
         fit_origin = len(dist) >= 2 and max(dist) / min(dist) > 1.8
-    model = HitModel(stops, boards, spec, guess.origin_m, fit_origin, lapse)
+    model = SweepModel(stops, boards, spec, guess.origin_m, fit_origin, lapse)
     yaw0, pitch0 = _initial_angles(model, guess)
     geo0 = [yaw0, pitch0] + ([0.0, 0.0] if fit_origin else [])
 
-    # each session's echo strength: a 1D search with the angles held
+    # each hit/miss session's echo strength: a 1D search with the angles held
     logs = []
-    for k in range(len(model.sessions)):
+    for j, k in enumerate(model.hit_sessions):
         best = None
         for la in np.arange(0.0, 18.0, 0.5):
-            p = np.r_[geo0, [la if j == k else 4.0 for j in range(len(model.sessions))]]
+            p = np.r_[geo0, [la if jj == j else 4.0 for jj in range(len(model.hit_sessions))]]
             m = model.masks[k]
             P = np.clip(model.probabilities(p)[m], 1e-12, 1 - 1e-12)
             v = -np.sum(np.where(model.hit[m], np.log(P), np.log1p(-P)))
@@ -862,11 +1055,14 @@ def fit_beam(stops: Sequence[Stop], boards: dict, spec: LRFSpec, guess: MountGue
         samples = np.array(samples)
 
     origin, direction, strength = model.split(p)
-    agree = float(np.mean((model.probabilities(p) > 0.5) == model.hit))
+    P = model.probabilities(p)
+    hm = np.isfinite(P)
+    agree = float(np.mean((P[hm] > 0.5) == model.hit[hm])) if hm.any() else float("nan")
     yaw = math.atan2(direction[0], direction[2]) * 1e3
     pitch = math.atan2(direction[1], direction[2]) * 1e3
-    return FitResult(yaw, pitch, origin, dict(zip(model.sessions, strength.tolist())),
-                     model.nll(p), agree, samples, model, p)
+    strengths = {model.sessions[i]: float(strength[i]) for i in model.hit_sessions}
+    return FitResult(yaw, pitch, origin, strengths, model.depth_details(p), model.nll(p), agree,
+                     samples, model, p)
 
 
 # ---------------------------------------------------------------------------
@@ -922,7 +1118,7 @@ def solve(stops: Sequence[Stop], boards: dict, intr: Intrinsics, spec: LRFSpec,
 
     # range offset, from stops where the whole beam was on the white board
     F, s = model.fractions(origin, direction)
-    ranges = np.array([np.nan if st.range_m is None else st.range_m for st in stops])
+    ranges = model.range
     full = (F > 0.95) & model.hit & np.isfinite(ranges)
     offset = offset_sigma = None
     if full.sum() >= 10:
@@ -944,14 +1140,18 @@ def solve(stops: Sequence[Stop], boards: dict, intr: Intrinsics, spec: LRFSpec,
             cal.sigma["origin_mm"] = np.std(S[:, 2:4], axis=0).tolist()
     if offset_sigma is not None:
         cal.sigma["range_offset_m"] = offset_sigma
-    cal.info = {
-        "stops": len(stops), "hits": int(model.hit.sum()), "agreement": fit.agreement,
-        "sessions": {str(k): {"distance_m": float(np.median(np.linalg.norm(model.t[m], axis=1))),
-                              "stops": int(m.sum()), "hits": int(model.hit[m].sum()),
-                              "full_beam_snr": float(fit.strength[k])}
-                     for k, m in zip(model.sessions, model.masks)},
-        "created": time.strftime("%Y-%m-%d %H:%M:%S"),
-    }
+    sessions = {}
+    for i, (k, m) in enumerate(zip(model.sessions, model.masks)):
+        d = {"distance_m": float(np.median(s[m])), "stops": int(m.sum())}
+        if model.depth[i]:
+            dp = fit.depth[k]
+            d.update(mode="depth", background_behind_m=float(np.median(dp["background_m"]) - d["distance_m"]),
+                     background_brightness=dp["k"], range_noise_m=dp["sigma_m"], fit_rms_m=dp["rms_m"])
+        else:
+            d.update(mode="hits", hits=int(model.hit[m].sum()), full_beam_snr=fit.strength[k])
+        sessions[str(k)] = d
+    cal.info = {"stops": len(stops), "agreement": fit.agreement, "sessions": sessions,
+                "created": time.strftime("%Y-%m-%d %H:%M:%S")}
     return cal
 
 
@@ -974,8 +1174,17 @@ def report(cal: Calibration, log: Callable = print):
     if cal.range_offset_m is not None:
         log("range offset: %+.2f +/- %.2f m (reported minus distance from the beam origin)" % (
             cal.range_offset_m, sg.get("range_offset_m", float("nan"))))
-    i = cal.info
-    log("%d stops, %d hits; the fit explains %.1f%% of them" % (i["stops"], i["hits"], 100 * i["agreement"]))
+    for k, d in cal.info["sessions"].items():
+        if d["mode"] == "depth":
+            log("session %s, depth: board %.1f m, background %.1f m behind and %.0f%% as bright; "
+                "range noise %.2f m, fit rms %.2f m" % (k, d["distance_m"], d["background_behind_m"],
+                                                       100 * d["background_brightness"], d["range_noise_m"],
+                                                       d["fit_rms_m"]))
+        else:
+            log("session %s, hit/miss: board %.1f m, %d of %d stops hit, full beam SNR ~%.0f"
+                % (k, d["distance_m"], d["hits"], d["stops"], d["full_beam_snr"]))
+    if math.isfinite(cal.info["agreement"]):
+        log("the fit explains %.1f%% of the hits and misses" % (100 * cal.info["agreement"]))
     log("one pixel is %.3f mrad" % (1e3 / f))
 
 
