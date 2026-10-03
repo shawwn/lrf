@@ -1,0 +1,65 @@
+# WO2011026487A3
+WO2011026487A3 - Adjusting method and modular adjusting device for aligning the axis of a shooting simulator parallel to the line of sight of a firearm 
+ - Google Patents
+inventor: Heinrich Hünniger
+inventor: Uwe Schaller
+inventor: Frank Schneider
+inventor: Gunther DÖGE
+assigneeOriginal: ESW GmbH
+assigneeOriginal: Jenoptik Advanced Systems Gmbh
+assigneeOriginal: Esw Gmbh
+assigneeOriginal: Precitronic
+assigneeOriginal: Cubic Defense Systems, Inc.
+assigneeOriginal: Per Renntoft
+assigneeOriginal: Lockheed Corp
+assigneeOriginal: Jenoptik Laser, Optik, Systeme Gmbh
+assigneeOriginal: Cubic Defense Systems, Inc.
+assigneeOriginal: Saab Ab
+assigneeOriginal: Precitronic
+assigneeOriginal: Cubic Defense Systems, Inc.
+assigneeOriginal: Per Renntoft
+assigneeOriginal: Lockheed Corp
+assigneeOriginal: Jenoptik Laser, Optik, Systeme Gmbh
+assigneeCurrent: Vincorion Advanced Systems GmbH
+priorityDate: 2009-09-04
+priorityDate: 2009-09-04
+filingDate: 2010-09-03
+filingDate: 2010-09-03
+filingDate: 2010-09-03
+filingDate: 2010-09-03
+filingDate: 2010-09-03
+publicationDate: 2011-04-28
+publicationDate: 2021-03-16
+publicationDate: 2008-11-20
+publicationDate: 2014-09-09
+publicationDate: 2009-12-30
+publicationDate: 2009-09-10
+publicationDate: 2013-04-04
+publicationDate: 2012-05-10
+publicationDate: 2002-08-22
+publicationDate: 2009-09-03
+publicationDate: 2007-01-11
+publicationDate: 2012-09-19
+publicationDate: 2000-09-14
+publicationDate: 2015-06-03
+publicationDate: 2010-09-01
+publicationDate: 2004-10-13
+publicationDate: 2012-07-05
+publicationDate: 2015-08-19
+publicationDate: 2020-10-13
+publicationDate: 2014-06-05
+publicationDate: 2018-07-25
+publicationDate: 2002-12-20
+publicationDate: 2001-03-23
+publicationDate: 2011-11-02
+publicationDate: 2015-06-10
+publicationDate: 2010-09-29
+
+## ABSTRACT
+Abstract
+The invention relates to an adjusting method and an adjusting device for adjusting an axis (2.3) of a shooting simulator (2) to the line of sight (1.2) of the sighting apparatus (1.1) of a firearm (1). The adjusting device is composed of two modules, i.e. a display module (3) having an axis (3.3) and a camera module (4) having an axis (4.3). The axis (3.3) of the display module can be adjusted so as to be aligned with the line of sight (1.2) by moving crosshairs on the display (3.1). In order to align the axis (2.3) of the simulator with the previously adjusted axis (3.3) of the display module, and thus with the line of sight (1.2), a laser beam emitted by the shooting simulator is represented on the camera chip and is moved into a position that is adequate to the crosshairs by actuating a tilting mechanism which is part of the shooting simulator (2).
+
+## DESCRIPTION
+
+
+## CLAIMS

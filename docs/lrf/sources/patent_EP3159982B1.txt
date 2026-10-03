@@ -1,0 +1,157 @@
+# EP3159982B1
+EP3159982B1 - Generation of laser pulses with stable shape 
+ - Google Patents
+inventor: Otto JÜNEMANN
+inventor: Uwe Schaller
+assigneeOriginal: Jenoptik Optical Systems GmbH
+assigneeOriginal: Argo AI, LLC
+assigneeOriginal: ams AG
+assigneeOriginal: Waymo Llc
+assigneeOriginal: 中国电子科技集团公司第十三研究所
+assigneeOriginal: Charles L Shano
+assigneeOriginal: Johann F. Dipl.-Phys. 2000 Hamburg Hipp
+assigneeOriginal: 富士通株式会社
+assigneeOriginal: Laser Technology, Inc.
+assigneeOriginal: Sick Ag
+assigneeOriginal: Ingenieurbüro Spies GbR (vertretungsberechtigte Gesellschafter: Hans Spies, Martin Spies, 86558 Hohenwart)
+assigneeCurrent: Jenoptik Optical Systems GmbH
+priorityDate: 2015-10-22
+priorityDate: 2015-10-22
+filingDate: 2016-10-21
+filingDate: 2016-10-21
+filingDate: 2015-10-22
+filingDate: 2016-10-21
+publicationDate: 2019-11-27
+publicationDate: 2025-09-18
+publicationDate: 2018-08-01
+publicationDate: 1995-01-18
+publicationDate: 1986-04-09
+publicationDate: 2015-02-05
+publicationDate: 2013-04-04
+publicationDate: 2017-04-26
+publicationDate: 1997-01-16
+publicationDate: 2015-02-05
+publicationDate: 2012-09-20
+publicationDate: 2016-01-06
+publicationDate: 1981-02-12
+publicationDate: 2020-06-18
+publicationDate: 2014-12-31
+publicationDate: 2015-03-25
+publicationDate: 2023-01-12
+publicationDate: 2014-09-04
+publicationDate: 2018-03-01
+publicationDate: 1986-11-06
+publicationDate: 1984-04-26
+publicationDate: 2003-01-30
+publicationDate: 2015-01-22
+publicationDate: 1977-12-15
+publicationDate: 2016-09-30
+publicationDate: 2015-12-31
+
+## ABSTRACT
+
+
+## DESCRIPTION
+Description
+ Translated from German
+ In the case of laser pulse transit time measurement, the transit time Δt between a transmission instant of a laser pulse and a reception instant of a reflex pulse is converted into a distance D in accordance with D = v light * Δt / 2. The transmission time and the reception time result from the pulse shapes of the laser pulse and the reflection pulse and are obtained by means of the sampling method or the threshold value method. The pulse shape can be characterized, for example, by rise and fall time, pulse width and pulse height. The distance measuring accuracy depends on the stability of the pulse shapes in the operating temperature range of the laser pulse generating laser pulse generator.
+ Typically, the generation of the laser pulses by a laser diode, which is controlled via a capacitor discharge, cascaded via an avalanche transistor. In this case, temperature-dependent electrical parameters, in particular the electrical resistances of the avalanche transistor and the laser diode, lead to a change in the pulse shape of the laser pulse and thus also of the reflex pulse in the sub-nanosecond range. These changes lead to fluctuations of the distance determined from the transit time measurement within the operating temperature range of up to a few cm.
+ In addition, efforts are being made to exhaust the frame of a laser pulse assigned to the laser pulse generator, that is to keep the energy of the generated laser pulses always just below the allowable limit in order to achieve a maximum scan width. In the course of the life of the laser pulse generator, however, the aging of the components of the laser pulse generator despite a constant pumping voltage leads to a reduction in the energy of the laser pulses and thus to a shortening of the measuring distance.
+ With a laser pulse generator according to the invention, both the measurement tolerance due to temperature fluctuations and, advantageously, the energy drop of the laser pulses over the life of the laser pulse generator should also be avoided. 
+ In the patent 
+ DE 10 2011 011 875 C5 a circuit arrangement for operating a plurality of individual lasers is described in which a common charging capacitor is charged by the discharge of a common inductance before the triggering of a laser pulse by a single laser to a voltage depending on the measuring distance and / or efficiency per single laser. The charging time of the inductance required for a certain charging voltage is measured and stored.
+ Thus, different efficiencies of the individual lasers can be compensated.
+ In the patent 
+ DE 32 16 312 C2 a circuit arrangement for the operation of pulse laser diodes is described, in which by means of a pulse transformer with a corresponding winding ratio, a high voltage pulse is generated, which charges a charging capacitor. Upon reaching a predetermined voltage across the charging capacitor, a transistor is ignited and the charging capacitor discharges with a short discharge current pulse across the laser diode. At the same time, the charge pulse on the primary side of the pulse transformer is terminated, so that the charge supply to the storage capacitor is stopped.
+ This ensures that the same amount of charge is stored in the charging capacitor before each discharge, so that the laser pulse energy of each laser pulse of a sequence of laser pulses is predetermined, provided that the resistors of the transistor and the laser diode are stable.
+ In the aforementioned laser pulse generators for semiconductor pulse laser diodes, the need for a dimensionally stable over the operating temperature range and over the life of the laser pulse generator laser pulse is disregarded. The components contained in the discharge circuits described, in particular the semiconductor components, naturally have a more or less temperature-dependent behavior, which leads in the operating temperature range for changing the shape of the laser pulse. If such a circuit arrangement is used as a laser pulse generator in a distance sensor, which is based on a pulse transit time measurement, a temperature-dependent pulse deformation will result, which is one for many Applications insufficient measurement accuracy in the operating temperature range and long-term leads to a smaller measuring range.
+ It is the object of the invention to find a laser pulse generator in which the pulse shape of the laser pulse in the operating temperature range is stabilized in order to increase the distance measuring accuracy. The circuitry and procedural means necessary for this purpose should be cost-effective and easy to integrate in already designed as well as in future distance sensors, based on the pulse transit time measurement.
+ The object of the invention is achieved with a laser pulse generator according to claim 1, comprising a mono-pulse high-voltage generator with a voltage source, an inductive component and a switch, and a pulse current generator having a first diode, a pump capacitor, a second diode, an avalanche transistor and a laser diode ,
+ When the switch is open, the first diode, the pump capacitor and the second diode form a second charging circuit. When the avalanche transistor is switched, the pump capacitor forms a discharge circuit with the avalanche transistor and the laser diode.
+ The laser pulse generator further includes a pulse width generator which provides control pulses to the switch, having a clock frequency and a control pulse width, determining a closing time of the switch and thus the charging time of the inductive component, and a delay generator which switches the avalanche transistor after a delay time.
+ It is essential to the invention that a temperature sensor is present, which detects the temperature of the avalanche transistor, and the temperature sensor is connected to the pulse width generator, so that it generates the control pulse width depending on a temperature signal provided by the temperature sensor. 
+ This compensates for the temperature-dependent change in resistance which influences the discharge current pulse which excites the laser diode. The detected temperature is used to control the duration of the charging of the inductive component and thus the amount of charge voltage generated upon opening of the switch, so that a concomitant change in the shape of the discharge current pulse and thus a change in the pulse shape of the laser pulse, for a Distance sensor represents a transmission pulse to be compensated.
+ Advantageously, the temperature sensor is connected to the delay generator so that it generates the delay time depending on a temperature signal provided by the temperature sensor.
+ Fig. 1 eine Schaltungsanordnung eines erfindungsgemäßen Laserimpulsgenerators. The invention will be explained in more detail with reference to an embodiment with reference to a drawing. This shows: Fig. 1 a circuit arrangement of a laser pulse generator according to the invention. 
+ A laser pulse generator according to the invention consists of a prior art mono pulse high voltage generator GH, a pulse current generator GI, a pulse width generator GB and a delay generator GV.
+ In addition, a laser pulse generator according to the invention contains as essential to the invention a temperature sensor TS which communicates with the pulse width generator GB and advantageously also with the delay generator GV and detects a temperature which is due to heat conduction and heat radiation of the components of the discharge circuit, which is part of the pulse generator GI, in particular the avalanche transistor T aval , is caused, whose resistances are dominantly temperature-dependent.
+ The mono-pulse high-voltage generator GH basically contains an inductive component B and a switch S and, connected to a voltage source V, forms a first charging circuit in which the inductive component B is inductively charged while the switch S is closed in a charging time t L Opening the switch S outputs a charging voltage U L , which corresponds to a Monoimpulschochspannung.
+ The pulse current generator GI includes a first diode D 1 , a pump capacitor K, a second diode D 2 , an avalanche transistor T aval and a laser diode LD.
+ Together with the inductive component B form after opening of the switch S, the first diode D 1 , the pump capacitor K and the second diode D 2, a second charging circuit. While the inductive component B discharges after opening of the switch S, a charging current pulse I L flows through the first diode D1, the pumping capacitor K and the second diode D 2 and the pumping capacitor K is charged to the pumping voltage U C. The first diode D 1 prevents the charge from flowing back into the inductive component B. The second diode D 2 is connected in anti-parallel to the laser diode LD and allows both the charging of the pump capacitor K and the discharge of the pump capacitor K only via the laser diode LD.
+ After the pump capacitor K is fully charged, an ignition pulse P t is applied to the base of the avalanche transistor T aval , which is in connection with the delay generator GV, so that the avalanche transistor T aval is turned on, that is, it is from a high-impedance state into one switched low-impedance state. At this moment, the discharge circuit formed by the pump capacitor K, the avalanche transistor T aval and the laser diode LD closes . The pump capacitor K discharges via the low-impedance switched avalanche transistor T aval and the laser diode LD. The discharge current pulse I E flowing through the laser diode LD excites the laser radiation whose pulse shape nearly coincides with the time profile and thus with the pulse shape of the discharge current pulse I E. 
+ When discharging the resistors of the discharge circuit are effective, with the temporal course of the discharge current pulse I E, the low resistance of the Avalanchetransistors T aval dominant. This is much larger with about 10 ohms compared to the other resistors of the discharge circuit, but temperature-dependent. So the low resistance has one Temperature coefficient of about -0,011 ohms / K, so that z. B. the low-resistance in the temperature range -20 ° C ... + 50 ° C by about 15% changes.
+ Upon discharge of an unchanged high pump voltage Uc, according to the prior art, regardless of the temperature-dependent changing value of the low-resistance, the pulse shape of the discharge current I E and thus the shape of the laser pulse over the operating temperature range of the laser pulse generator would change significantly.
+ The temperature sensor TS according to the invention is located directly in the vicinity of the avalanche transistor T aval and preferably also the laser diode LD so that it detects a temperature which is influenced by heat radiation and heat conduction of at least the avalanche transistor T aval , but preferably both components. It is of no importance to know the exact actual temperature of the avalanche transistor T aval or the laser diode LD or the dependence of the resistances of the two components on its temperature. Although the temperature of the two components in each case differently influences the resistance thereof, both changes in total influence the magnitude of the discharge current pulse I E , which is why a change in temperature caused and measured by both components can be attributed to a change of a type of equivalent resistance.
+ Before commissioning of the laser pulse generator charging times t L are determined over the operating temperature range associated with the measurement temperatures, which are each required to charge the inductive component B to a charging voltage U L , which compensates the change in resistance of the resistors of the discharge circuit, in particular the avalanche transistor T aval and keeps the pulse shape of the discharge current pulse I E and thus of the laser pulse constant over the operating temperature range.
+ For an even better stabilization of the laser pulse, the determined temperature-dependent charging times t L can be subjected to an adaptation with the aid of empirical values in order, if appropriate, to be temperature-dependent Deviations of the laser pulse shape from the shape of the discharge current pulse I E or long-term changes of the laser pulse to compensate.
+ The temperature sensor TS is connected to a first control input of the pulse width generator GB, so that a continuously generated by the temperature sensor TS temperature signal P temp is applied here. At a second control input of the pulse width generator GB is a clock signal P clock having a predetermined clock frequency f s is applied for generating the laser pulse frequency. The output of the pulse width generator GB is connected to the switch S and the delay generator GV. At the switch S and the delay generator GV are correspondingly generated by the pulse width generator GB digital control pulses P s with the clock frequency f s and with a control pulse width b s , which determines the closing time of the switch S and thus equal to the charging time t L of the inductive component B is. During the charging time t L , the switch S is closed and the inductive component B is charged by the charging current pulse I L. With the end of the charging time t L , the switch S is opened and the inductive component B transmits its stored energy W L via the first diode D 1 to the pump capacitor K in an energy transfer time that is dependent on the amount of stored stored energy W L so that the energy W L stored in the inductive component B is virtually completely used to charge the pump capacitor K and is present there as stored energy W C above the pump capacitor K.
+ With the end of the charging time t L and the delay generator GV is triggered, which generates a delay time t v . Only with the expiration of the delay time t v , and thus after completion of the transmission of stored in the inductive component B energy W L , with an energy transfer time in the delay generator GV a short ignition pulse P t is generated, which turns on the Avalanchetransistor T aval .
+ Since the charging time t L is dependent on the temperature signal P temp and the delay generator GV is switched at the end of the charging time t L , the delay generator GV is also dependent on the temperature signal P temp connected. From the time of switching of the delay generator GV and a fixed delay time t v , the timing of the ignition pulse P t .
+ In this case, a delay time t v is chosen such that it is longer than the maximum energy transfer time proportional to the charging time t L. 
+ However, in order to switch the avalanche transistor T aval as directly as possible after the end of the energy transfer time, the temperature sensor TS can also be connected directly to an input of the delay generator GV and the delay time t v can also be controlled in dependence on the temperature signal P temp .
+ With the temperature sensor TS, the temperature of the avalanche transistor T aval is continuously measured. For the most accurate measurement, the temperature sensor TS is arranged in the immediate vicinity of the avalanche transistor T aval , preferably glued on the avalanche transistor T aval .
+ By tracking the electrical charge Q = C * U C of the pump capacitor K by means of a pump voltage U C generated as a function of the temperature proportional to the closing time of the switch S, the discharge current pulse I E is kept constant, so that the temperature-dependent influence of the low resistance is compensated ,
+ Starting from the almost complete transmission of the energy stored in the inductive component B W L = L / 2 * I L 2 (where L is the inductance of the inductive component B) to the pump capacitor K with the stored energy W C = C / 2 * U C 2 (where C is the capacitance of the pump capacitor K) results from W L ≈ W C and I L = U q * t L / L (where t L is the charging time of the inductive component B, U q is the bias voltage of the voltage source V and I L is the charging current pulse). U C ≈ U q * t L / √ L * √ C 
+ Since the bias voltage U q , the inductance L and the capacitance C can be regarded as constant, the pumping voltage Uc results as a proportional function of the charging time t L U C = f t L 
+ with the proportionality factor U q / √ L * √ C , 
+ In this case, the bias voltage U q , the inductance L and the capacitance C were assumed to be constant and the electrical losses were disregarded.
+ For a simple, digital controllability of the charging voltage U L and thus the pumping voltage U C over the charging time t L is given.
+ To stabilize the laser pulse shape, the temperature of the avalanche transistor T aval is measured according to the invention and a temperature signal P temp is obtained, with which the pump voltage U C is controlled. 
+ LIST OF REFERENCE NUMBERS
+ GH
+ Mono pulse high voltage generator
+ GI
+ Pulse Generator
+ GB
+ Pulse width generator
+ GV
+ delay generator
+ V
+ voltage source
+ U q 
+ preload
+ B
+ inductive component
+ U L 
+ charging voltage
+ I L 
+ Charging current pulse
+ S
+ counter
+ D 1 
+ first diode
+ K
+ pump capacitor
+ U C 
+ pump voltage
+ D 2 
+ second diode
+ T aval 
+ avalanche transistor
+ LD
+ laser diode
+ TS
+ temperature sensor
+ P temp 
+ temperature signal
+ P tact 
+ clock signal
+ t L 
+ Charge time (of inductive component B)
+ f s 
+ clock speed
+ t v 
+ Delay Time
+ P t 
+ ignition pulse
+ I E 
+ discharge current
+ P s 
+ control pulse
+ b s 
+ Control pulse width
+
+## CLAIMS
+Claims (2)
+Laser pulse generator with stable pulse shape of laser pulses, containing a mono pulse high voltage generator (GH) having a voltage source (V), an inductive component (B) and a switch (S), a pulse current generator (GI) having a first diode (D1), a pumping capacitor (K), a second diode (D2), an avalanche transistor (Taval) and a laser diode (LD), wherein, when the switch (S) is open, the first diode (D1), the pumping capacitor (K) and the second diode (D2) form a second charging circuit and, when the avalanche transistor (Taval) is switched, the pumping capacitor (K) forms a discharge circuit with the avalanche transistor (Taval) and the laser diode (LD), a pulse width generator (GB) which provides control pulses (Ps) to the switch (S) with a pulse frequency (fs) and a control pulse width (bs) determining a closing time of the switch (S) and thus a charging time (tL) of the inductive component (B), and a delay generator (GV) switching the avalanche transistor (Taval) after a delay time (tv), characterized in that a temperature sensor (TS) is present which detects the temperature of the avalanche transistor (Taval) and the temperature sensor (TS) is connected to the pulse width generator (GB) which is configured in such a way that it generates the control pulse width (bs) depending on a temperature signal (Ptemp) respectively provided by the temperature sensor (TS), which control pulse width (bs) is required for the charging time (tL) of the inductive component (B) to a charging voltage (UL) in each instance in order to compensate changes in the pulse shape of the laser pulses.
+Laser pulse generator with stable pulse shape of laser pulses according to claim 1, characterized in that the temperature sensor (TS) is connected to the delay generator (GV) so that the latter generates the delay time (tv) depending on the temperature signal (Ptemp) provided by the temperature sensor (TS).

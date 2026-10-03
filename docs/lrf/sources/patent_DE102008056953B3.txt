@@ -1,0 +1,386 @@
+# DE102008056953B3
+DE102008056953B3 - 
+ Laser rangefinder with two laser radiation sources
+ - Google Patents
+inventor: Jörg Schubert
+inventor: Volker Döge
+inventor: André Dr. Große
+inventor: Uwe Schaller
+assigneeOriginal: ESW GmbH
+assigneeOriginal: Valeo Schalter Und Sensoren Gmbh
+assigneeOriginal: Airbus Ds Optronics Gmbh
+assigneeOriginal: 深圳市大疆创新科技有限公司
+assigneeOriginal: 深圳市大疆创新科技有限公司
+assigneeOriginal: 浙江缔科新技术发展有限公司
+assigneeOriginal: 宁波飞芯电子科技有限公司
+assigneeOriginal: Leuze Electronic Gmbh & Co
+assigneeOriginal: Zeiss Optronik Gmbh
+assigneeOriginal: Bundesrepublik Deutschland, vertreten durch das Bundesministerium der Verteidigung, dieses vertreten durch das Bundesamt für Wehrtechnik und Beschaffung
+assigneeOriginal: Leuze Electronic Gmbh & Co Kg
+assigneeOriginal: Nec Corp
+assigneeOriginal: Denso Corp
+assigneeOriginal: Leuze Electronic Gmbh & Co
+assigneeOriginal: Zeiss Optronik Gmbh
+assigneeOriginal: Bundesrepublik Deutschland, vertreten durch das Bundesministerium der Verteidigung, dieses vertreten durch das Bundesamt für Wehrtechnik und Beschaffung
+assigneeOriginal: Leuze Electronic Gmbh & Co Kg
+assigneeOriginal: Valeo Schalter Und Sensoren Gmbh
+assigneeOriginal: Airbus Ds Optronics Gmbh
+assigneeOriginal: Hubert Becht
+assigneeOriginal: Hensoldt Optronics Gmbh
+assigneeCurrent: Jenoptik Optical Systems GmbH
+priorityDate: 2008-11-10
+priorityDate: 2008-11-10
+filingDate: 2008-11-10
+filingDate: 2008-11-10
+filingDate: 2008-11-10
+filingDate: 2009-11-09
+publicationDate: 2010-05-27
+publicationDate: 2019-02-20
+publicationDate: 2011-07-06
+publicationDate: 2018-06-13
+publicationDate: 2018-02-28
+publicationDate: 2013-01-02
+publicationDate: 1983-09-22
+publicationDate: 2013-06-12
+publicationDate: 1982-12-15
+publicationDate: 2007-09-27
+publicationDate: 2008-01-16
+publicationDate: 2002-08-14
+publicationDate: 2010-05-14
+publicationDate: 2014-07-03
+publicationDate: 1994-12-22
+publicationDate: 2009-01-08
+publicationDate: 2006-08-30
+publicationDate: 2005-11-24
+publicationDate: 2019-06-05
+publicationDate: 2026-04-01
+publicationDate: 2008-03-26
+publicationDate: 1978-09-14
+publicationDate: 2018-02-15
+publicationDate: 2014-07-17
+publicationDate: 2018-06-07
+publicationDate: 2018-01-25
+
+## ABSTRACT
+Abstract
+ Translated from German
+ The invention relates to a laser rangefinder and a method for measuring the distance of a targeted target (3), operating on the principle of pulse transit time measurement, in which the optoelectronic receiver (4) protected from hitting destructive, at the target (3) reflected radiation energy components of the emitted laser pulses becomes. The rangefinder has two laser radiation sources (1), (8) of different pulse energy. Only when a laser pulse with the low pulse energy leads to no evaluable received signal, a laser pulse of high pulse energy is emitted.
+
+## DESCRIPTION
+Description
+ Translated from German
+ The invention relates to a laser rangefinder, as he generically from the 
+ DE 102 15 109 B4 is known.
+ Laser rangefinders
+work preferably according to the principle of pulse transit time measurement. You send
+a laser pulse (hereinafter laser pulse) in the direction of a to be measured
+Goal from, receive a reflected at the target portion of the radiation energy
+of the laser pulse (hereinafter laser echo) and determine from the running time
+of the laser pulse with the help of the speed of light the distance
+of the fair target of the laser rangefinder.
+ A
+Laser radiation source and an optoelectronic receiver
+for the
+Laser Rangefinder Selected
+that an expected laser echo, which in particular of the
+Distance of the target and its reflectivity is determined within
+the sensitivity range of the receiver is located.
+ from that
+on the one hand results that a rangefinder basically not
+at the same time for the measurement of very close close targets and very distant
+Long-term goals and on the other hand also not for measuring goals strongly
+different reflectivity
+suitable is.
+ For rangefinder
+with a range of 10-20
+km are destinations within a distance of up to 1000 m as Nahziele
+designated. From a distance of about 500 m up to about 20
+km, the destinations are called remote destinations. The overlapping
+Average range of distance can usually be from range finders
+be measured for
+are designed for the near or far range, which is why it is for the definition
+There is no clear distinction between local and long-term objectives.
+ At the
+Measuring goals in open terrain will make goals different
+Distance, in particular also far away, diffusely reflecting
+Targets appropriate, which is why as a transmitter a laser radiation source
+must be used with a high pulse energy, so the laser echo
+within the sensitivity range of the receiver.
+ there
+However, the laser pulse can also on highly reflective targets, so-called
+Retroreflectors impinge, causing the laser echo to overdrive
+or even destruction
+of the optoelectronic receiver
+to lead
+can.
+ Around
+the optoelectronic receiver
+before the impact of destructive,
+at the target reflected radiation energy components of the emitted
+Protect laser pulses
+and thus the danger of destruction
+Recipient
+and thus the rangefinder are excluded from the prior art
+different measures
+known.
+ From the 
+ DE 102 15 109 B4 a device for the protection of laser receiver diodes is known. This device is a laser rangefinder with a laser receiver diode and a vorschbaren protective filter.
+ During the
+Sending out and receiving a first laser pulse is the protective filter of
+Laser receiver diode
+upstream. The incident on the laser receiver diode radiation energy component
+the laser pulse is compared with a threshold value. Only when falling below
+this threshold, a second laser pulse is emitted, this time
+without one of the laser receiver diode
+upstream protection filter.
+ A disadvantage of the in the 
+ DE 102 15 109 B4 described rangefinder is the need for a pivoting mechanism and a motor drive, which increase the susceptibility of the laser rangefinder. In addition, the triggering of the second laser pulse can take place only after actuation of the relatively slow mechanical unit, whereby the measurement time increases.
+ Unlike in the 
+ DE 102 15 109 B4 , which describes a passive optical protection system for the receiver, is in the 
+ DE 101 55 830 A1 discloses an active optical protection system for a receiver, here photodetector.
+ the
+Photodetectors are an optoelectronic shutter, a delay device
+and a beam splitter upstream.
+ On the
+Beam splitter is a percentage known of the reflected
+Radiation energy is directed to a sensor, which controls the signals
+for the
+Shutter delivers, so the shutter on an expected, on
+closed the photodetector incident, destructive radiation energy
+can be before the over
+the delay device guided portion
+the reflected radiation energy impinges on the photodetector.
+A disadvantage of this method is that by an unavoidable
+Absorption and reflection of the additional
+optical components of the fiber and the shutter radiant energy
+for the
+receiver
+get lost.
+ In both of the above solutions, the optoelectronic receiver is protected from hitting high radiation energy (laser echo) by shading. The use of a laser radiation source high pulse energy and thus high power consumption is in the case of shading both optically and electrically energetically ineffizi ent.
+ Of the
+Invention is therefore the object of a laser rangefinder,
+working on the principle of pulse transit time measurement, to find
+the one with a high optical and electrical energy efficiency
+the removal of targets of different reflectivity within
+can measure the near and far range and the receiver before the
+Impact of excessive radiation energy is protected.
+ Furthermore
+should the rangefinder advantageous as compact, small and
+be light and need only a short measuring time.
+ It
+is also the object of the invention, one on the principle of pulse transit time measurement
+working, optically and electrically energy-efficient measuring method
+Finding, with the objectives within the near and far range appropriate
+can be.
+ Under
+a high optical energy efficiency of the laser rangefinder
+one understands an optimal adaptation of the emitted laser light
+the characteristics of the recipient,
+in particular its sensitivity range, taking into account
+the reflection properties of the adequate target, the transmission characteristics
+the atmosphere,
+the distance range and the parameters of the transmitting and receiving optics.
+ Under
+a high electrical energy efficiency of the laser rangefinder
+one understands one as possible
+low consumption of electrical energy. Especially in hand-held,
+battery operated observation systems with range finders
+can
+due to lower energy consumption, advantageously smaller and
+lighter batteries are used.
+ For one
+Rangefinder is the task with the features of the claim
+1 solved. For a measuring procedure
+the problem is solved with the features of claim 9.
+ advantageous
+versions
+are in the subclaims
+called.
+ It
+is essential to the invention that the rangefinder two laser radiation sources
+which emit laser pulses of very different pulse energies.
+The first laser radiation source, with a high consumption of electrical
+Energy in the range of several Ws and a high pulse energy in the range
+from a few mJ, will only for
+activated low-reflection targets in the long-range, and the second laser radiation source,
+with only a small consumption of electrical energy of only a few
+mWs and a low pulse energy in the range of a few nJ to μJ, is used for highly reflective
+Targets targeted in the vicinity.
+ Advantageous
+the first laser radiation source is a solid-state laser and the second laser radiation source
+a diode laser.
+ by virtue of
+the different emission characteristics of the two laser radiation sources
+Each of them is preceded by a transmission optics optimized for them.
+ For the reception
+a laser echo generated by a laser pulse independent of
+which of the two laser sources, however, a receiving channel is sufficient
+with a receiver
+from, in particular, when the two laser radiation sources with a
+same wavelength
+emit.
+ at
+the measurement of targets in open terrain, with the removal of the
+Goals and their reflectivity
+can vary greatly
+lets it
+not predict whether lower when emitting a laser pulse
+Pulse energy at all
+a laser echo is received, from which an evaluable received signal
+can derive
+or whether the laser echo is emitted when a laser pulse of higher pulse energy is emitted
+the recipient
+to destroy
+could.
+ According to the invention
+after sighting a target, make a first guess with one or even
+several laser pulses of lower pulse energy. Only when the laser echo
+is not sufficient to form an evaluable received signal,
+and advantageously also no evaluable received signal from several
+successive accumulated laser echoes can be formed,
+the measurement is repeated with a laser pulse of high pulse energy.
+ Out
+the fact that with one or more laser pulses no
+evaluable received signal could be generated, can be
+safely deduce that the distance and the reflectivity of the targeted
+Target are so small that the laser echo is not above the destructive limit
+Recipient
+lies and thus the recipient
+do not harm
+can.
+ Compared to the known from the prior art rangefinders, a rangefinder according to the invention is both electrically and optically more energy efficient, since an assessment of near and highly reflective targets is not made possible by attenuation of the reflected radiation component and thus reducing the laser echo, but by using a laser radiation source lower pulse energy and thus lower power consumption. Also advantageous is the short measurement time, because the two laser radiation sources can be ignited one after the other at intervals of only a few ms.
+ The
+Invention will be described below by means of a drawing with reference to a
+embodiment
+be explained in more detail.
+This shows:
+ 1 a schematic diagram for a rangefinder
+ 2 an advantageous embodiment of a rangefinder.
+ Like conventional range finders, a range finder according to the invention as shown in FIG 1 is shown, a transmitting and a receiving channel, which are aligned parallel to each other.
+ In the transmission channel is a first transmission optics 2 , here a telescope, with an optical axis A1 and a first laser radiation source 1 , which is advantageous here a solid-state laser.
+ The receiving channel comprises a receiving optics 5 with an optical axis A3 and an optoelectronic receiver 4 , the focal point of the receiving optics 5 stands.
+ New is an additional second transmission channel with a second laser radiation source 8th , here advantageously a diode laser, and a second transmission optics 9 with an optical axis A2, wherein the emitting surface of the diode laser at the focal point of the second transmission optical system 9 is arranged.
+ The two optical axes A1 and A2 of the transmission optics 2 and 9 are to each other and to the optical axis A3 of the receiving optics 5 aligned in parallel.
+ Advantageously, the second transmission optics 9 a slightly larger divergence than the first transmission optics 2 , This ensures that when moving the targeted goal 3 in the period between the triggering of the diode laser and the possible triggering of the solid-state laser, a too highly reflective target 3 detected in any case and the triggering of the solid-state laser is blocked.
+ Advantageously, a laser source are used for the solid-state laser and the diode laser, both of which emit in the same wavelength range of light. This is the receiving optics 5 and the receiver 4 for both laser radiation sources 1 . 8th optimized running.
+ Advantageous
+is used as a laser medium, a material whose emitting
+Light wavelength
+is considered eye safe at the given pulse energy.
+ Furthermore, there is a computing and evaluation unit 7 present, the input side with the receiver 4 communicates. The computing and evaluation unit 7 forms from the laser echo a received signal and determines from this a reception time, with the knowledge of the radiating time and the speed of light, the distance of the appropriate target 3 is determined.
+ According to the in 1 illustrated schematic diagram, the laser rangefinder basically three separate channels, namely two transmission channels and a receiving channel on.
+ However, an embodiment according to is particularly advantageous 2 in which the transmission channel of the diode laser is integrated in the reception channel.
+ The representation in 2 was reduced to this special feature and designed for better understanding in perspective, that is, that the solid state laser with the first transmission optics 2 not shown.
+ As with a separate execution of the channels is the receiver 4 on the optical axis A3 of the receiving optics 5 arranged in the focal plane.
+ To align the range finder to a sight line is to the receiver 4 a beam splitter precedes, so that a conjugate to the first focal plane second focal plane is formed in which a point radiation source is arranged, the visible point radiation in the direction of the optical axis A3 of the receiving optics 5 sending out.
+ The
+Arrangement of the spot radiation source and the beam splitter in the receiving channel
+are common as mentioned, but
+for one
+inventive rangefinder
+not mandatory.
+ The transmission channel of the second laser radiation source 8th , here a diode laser with FAC optics, is integrated into the receive channel by placing the main plane of the FAC optic of the diode laser at an off-axis point in a focal plane of the receive optics 5 is arranged and the transmission beam over an optical wedge 10 in a narrow strip 12 through the receiving optics 5 to be led. An FAC optics (fast-axis collimation optics) is usually a cylindrical lens, which reduces the radiation divergence of the so-called "fast axis" of the diode laser.
+ This is the reception optics 5 in the area of the strip 12 the second transmission optics 9 so that the optical axes A 2 and A 3 coincide, with the transmission beam and the receiving beam passing over different portions of the receiving optics 5 be guided.
+ By the transmission beam over a narrow strip 12 the actual receiving optics 5 is guided, the entrance pupil of the receiver 4 passing through the entrance surface of the receiving optics 5 is determined, only slightly limited. The laser echo is due to the percentage of only a small area of the strip 12 at the entrance surface only imperceptibly lower.
+ When displayed in 2 put the strip 12 However, it can be at any point on the receiving optics 5 are located. For easy explanation of the course and the shaping of the transmission beam of the diode laser, the effective optical structure first against the emission direction and on the basis of an incident beam to 2 be explained.
+ The receiving optics 5 is along the strip 12 , which is provided for the passage of the transmitted beam, an optical wedge 10 the same footprint as the strip 12 downstream.
+ This wedge 10 indicates one of the focal length of the receiving optics 5 and the distance of the strip 12 to the optical axis A3 predetermined wedge angle, so that the incident on him portion of a through the receiving optics 5 incident beam is deflected so that this after distraction over the deflection mirror 11 in an off-axis point one to the actual focal plane of the receiving optics 5 conjugated third focal plane is imaged. In this third conjugate focal plane the main plane of the FAC optics of the diode laser is arranged.
+ The deflection mirror 11 is outside of the optical wedge 10 uninfluenced portion of the focal point of the actual focal plane of the receiving optics 5 arranged focused incident beam.
+ The arrangement of a deflecting mirror 11 is advantageous because with it to the actual focal plane conjugate third focal plane at a convenient location for mounting the diode, z. B. accessible from the outside in the housing of the laser rangefinder and as far away from the susceptible receiver 4 , is produced. In principle, the diode laser could also be arranged in the actual focal plane, in which case the transmit beam must be guided past the beam splitter.
+ Instead of an optical wedge 10 can also be used another optically deflecting element, such as. B. a deflection mirror or a diffractive element. Describing the structure correctly in the direction of the transmission radiation, the main plane of the FAC optics, which acts as a secondary emitting surface of the diode laser, in a focal plane to the focal plane of the third focal plane of the receiving optics 5 arranged. The FAC optics, in whose focal plane the emitting surface of the diode laser is located, does not affect the low dispersion divergence of the "slow axis" of the diode laser and reduces the high radiation divergence of the "fast axis" of the diode laser so much that the optical wedge 10 is optimally illuminated. The illuminated surface of the FAC optics, which acts as a secondary radiator, forms the image through the receiving optics 5 the measuring divergence of the diode laser. By a suitable selection of the focal length of the FAC optics, the area illuminated as a secondary radiator can be changed in size such that a desired measurement divergence can be set.
+ The axis of the transmitted beam passes through deflection by the deflection mirror 11 , the optical wedge 10 and the receiving optics 5 , parallel to the optical axis A3 of the receiving optics 5 ,
+ The indicated advantageous embodiment, in which the transmission channel of the diode laser is integrated in the receiving channel, whereby the receiving optics 5 and the second transmission optics 9 are formed by the same optics, it allows the rangefinder compared to a three-channel design to make even smaller, lighter and more compact.
+ According to the invention
+a first measurement with a laser pulse of the diode laser.
+ Even with a very close, highly reflective target 3 the laser echo is always below the destruction threshold of the receiver 4 ,
+ With greater distance and / or lower reflectivity of a target 3 the laser echo and in particular its important for the signal evaluation pulse peak power is lower.
+ It
+happens that from a received signal a reception time
+can no longer be determined, so no measurement is possible.
+ By acting in the computing and evaluation unit 7 Receive signals, formed by a plurality of laser echoes, are accumulated, the range of the diode laser can be advantageously increased. Only if it is not possible to form a signal that can be evaluated here, ie a time of reception can not be derived, then the solid-state laser must be activated for further measurements.
+ For this purpose, the arithmetic and evaluation unit 7 on the output side with a control unit 6 connected to the control of the two laser radiation sources 1 and 8th connected to these via a signal line.
+ The
+Solid-state lasers
+only to be used if the diode laser is no longer sufficient
+has the particular advantage that the high pulse energy of the
+Solid-state laser
+is only retrieved when it is actually necessary. The laser rangefinder
+works thus in particular more electrically energy-efficient than comparable,
+known in the art laser rangefinder.
+ For military purposes,
+for the
+an inventive rangefinder
+and a measuring method according to the invention
+be used advantageously, it is also very advantageous
+if the measurements with one as possible
+low pulse energy, because then the lower is also
+the probability that the measuring radiation is detected by third parties
+becomes. It is also advantageous for this application, a battery-powered
+Laser rangefinder with a low power consumption too
+have, thereby increasing its useful life comparatively
+can or by a smaller version of the battery of the laser rangefinder
+can be made smaller and lighter.
+ Also
+is it for this
+particularly advantageous if the rangefinder mechanically stable, without
+movable components such as switchable filters, is executed,
+and only a short measuring time needed.
+ 1
+ first
+Laser radiation source
+ 2
+ first
+transmission optics
+ 3
+ aim
+ 4
+ optoelectronic
+receiver
+ 5
+ receiving optics
+ 6
+ control unit
+ 7
+ Rake-
+and evaluation unit
+ 8th
+ second
+Laser radiation source
+ 9
+ second
+transmission optics
+ 10
+ optical
+wedge
+ 11
+ deflecting
+ 12
+ strip
+ A1
+ optical
+Axis of the first transmission optics
+ A2
+ optical
+Axis of the second transmission optics
+ A3
+ optical
+Axis of the receiving optics
+
+## CLAIMS
+Claims (11)
+ Translated from German
+ Laser rangefinder, working on the principle of pulse transit time measurement, with a first laser radiation source ( 1 ), which emits laser pulses of a given pulse energy, a first transmission optics ( 2 ) having an optical axis (A1) in the direction of which the laser pulses are directed to a distant target (A1). 3 ), an opto-electronic receiver ( 4 ), which is at the focal point of a receiving optical system ( 5 ), about the one at the destination ( 3 ) reflected radiation energy portion of a laser pulse, hereinafter called laser echo, on the receiver ( 4 ), and one with the first laser radiation source ( 1 ) connected control unit ( 6 ) and one with the receiver ( 4 ) and the control unit ( 6 ) associated computing and evaluation unit ( 7 ) for evaluating received signals derived from the laser echoes, in that receiving times are determined from the received signals, characterized in that a signal which is likewise transmitted to the control unit ( 6 ) second laser radiation source ( 8th ) is present which emits laser pulses with a lower pulse energy than the first laser radiation source ( 1 ), and the second laser radiation source ( 8th ) a second transmission optics ( 9 ) whose optical axis (A2) is parallel to the optical axis (A1) of the first transmitting optics (A2). 2 ) and that the control unit ( 6 ) is designed so that the first laser radiation source ( 1 ) is optionally controlled when received signals, caused by laser pulses of the second laser radiation source ( 8th ), are not evaluable.
+ Laser rangefinder according to claim 1, characterized in that the first laser radiation source ( 1 ) a solid-state laser and the second laser radiation source ( 8th ) is a diode laser.
+ Laser rangefinder according to claim 1 or 2, characterized in that the two laser radiation sources ( 1 ) 8th ) Emit laser pulses in the same wavelength range.
+ Laser rangefinder according to claim 3, characterized in that the divergence of the first transmission optics ( 2 ), which is arranged upstream of the solid-state laser, is lower than the divergence of the second transmission optics ( 9 ), which is upstream of the diode laser.
+ Laser rangefinder according to claim 4, characterized in that the second transmission optics ( 9 ) and the receiving optics ( 5 ) are formed by the same optics by the receiving optics ( 5 ) to the recipient ( 4 ) is arranged downstream of a strip-shaped, optically deflecting element, which is a part of the inlet opening of the receiving optics ( 5 ), whereby a portion of an incident beam into an off-axis point of a focal plane of the receiver optics ( 5 ), in which the diode laser is arranged.
+ Laser rangefinder according to claim 5, characterized in that the diode laser has a FAC optics and the main plane of the FAC optics in the focal plane of the receiving optics ( 5 ) stands.
+ Laser rangefinder according to claim 6, characterized in that the deflection element, a deflection mirror ( 11 ), whereby one to the actual focal plane of the receiving optics ( 5 ) conjugate, further focal plane is formed.
+ Laser rangefinder according to claim 7, characterized in that the optical element is an optical wedge ( 10 ).
+ Method for measuring the distance of a target ( 3 ) according to the principle of pulse transit time measurement, with a laser rangefinder according to one of claims 1 to 8, characterized by the following method steps: - sighting of a target ( 3 ) and emitting at least one laser pulse with a predetermined lower pulse energy by the second laser radiation source ( 8th ), Receiving a laser echo and forming a received signal from the laser echo, determining the time of receipt from the received signal, transmitting a further laser pulse with a higher pulse energy through the first laser radiation source, 1 ), if no reception signal is formed or no reception time can be determined from the reception signal, - determining the distance of the appropriate destination from the reception time, the knowledge of the emission time and the speed of light.
+ Method according to claim 9, characterized in that
+that the laser pulses of the higher
+Pulse energy through a solid-state laser
+and the laser pulses of lower pulse energy through a diode laser
+be formed.
+ A method according to claim 9 or 10, characterized in that a plurality of laser pulses of lower pulse energy to a target ( 3 ) and the individual receive signals are accumulated to obtain an evaluable signal.

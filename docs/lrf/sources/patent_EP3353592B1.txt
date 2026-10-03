@@ -1,0 +1,139 @@
+# EP3353592B1
+EP3353592B1 - Distance measuring device 
+ - Google Patents
+inventor: Uwe Schaller
+inventor: Marco FRIESEL
+assigneeOriginal: Jenoptik Optical Systems GmbH
+assigneeOriginal: 浙江大学
+assigneeOriginal: Harbin Institute Of Technology
+assigneeOriginal: Robert Bosch Gmbh
+assigneeOriginal: Siemens Aktiengesellschaft
+assigneeOriginal: Hommelwerke Gmbh
+assigneeOriginal: 株式会社カンセイ
+assigneeOriginal: Lucent Technologies Inc.
+assigneeOriginal: Lucent Technologies, Inc.
+assigneeOriginal: オリンパス株式会社
+assigneeOriginal: Automatic Timing & Controls, Inc.
+assigneeOriginal: Matsushita Electric Ind Co Ltd
+assigneeOriginal: Sensys Instruments Corporation
+assigneeOriginal: Bosch Gmbh Robert
+assigneeOriginal: Optiscope Technologies Ltd.
+assigneeOriginal: Avago Technologies Fiber Ip (Singapore) Pte. Ltd.
+assigneeOriginal: Seiko Epson Corp
+assigneeOriginal: Panasonic Corporation
+assigneeOriginal: 삼성전기주식회사
+assigneeOriginal: Trimble Jena Gmbh
+assigneeOriginal: Robert Bosch Gmbh
+assigneeOriginal: Esw Gmbh
+assigneeOriginal: 애플 인크.
+assigneeOriginal: Bernhard Böck
+assigneeOriginal: 株式会社キーエンス
+assigneeOriginal: 重庆触视科技有限公司
+assigneeOriginal: Harbin Institute Of Technology
+assigneeOriginal: Robert Bosch Gmbh
+assigneeCurrent: Jenoptik Optical Systems GmbH
+priorityDate: 2016-07-08
+priorityDate: 2016-07-08
+filingDate: 2017-07-07
+filingDate: 2017-07-07
+filingDate: 2016-07-08
+filingDate: 2017-07-07
+filingDate: 2017-07-07
+filingDate: 2017-07-07
+filingDate: 2017-07-07
+filingDate: 2017-07-07
+filingDate: 2019-01-08
+publicationDate: 2020-06-17
+publicationDate: 2020-06-18
+publicationDate: 2004-04-07
+publicationDate: 2019-03-07
+publicationDate: 2006-03-23
+publicationDate: 2006-07-13
+publicationDate: 2020-02-06
+publicationDate: 2008-06-04
+publicationDate: 2015-12-16
+publicationDate: 2006-07-14
+publicationDate: 2018-01-04
+publicationDate: 2021-06-17
+publicationDate: 2025-03-27
+publicationDate: 2019-08-28
+publicationDate: 2019-08-22
+publicationDate: 2020-05-20
+publicationDate: 2024-06-06
+publicationDate: 2024-03-07
+publicationDate: 2006-10-25
+publicationDate: 2019-02-25
+publicationDate: 2024-02-14
+publicationDate: 2004-10-07
+publicationDate: 2024-02-14
+publicationDate: 2021-08-05
+publicationDate: 2025-03-18
+publicationDate: 2006-01-11
+
+## ABSTRACT
+
+
+## DESCRIPTION
+Description
+ Translated from German
+ The present invention relates to a distance measuring device.
+ From the publication 
+ EP 0 468 302 A2 a distance measuring device is known. This distance measuring device is an interferometric device, with the ball lens acting as a resonator (multiple reflections or standing waves inside the ball). This would not work well, ie there would be no sufficiently pronounced interference pattern (which the device described there requires to function) if the ball lens used there were highly transmissive (in the relevant wavelength range).
+ The 
+ US 2002/0018217 A1 and the 
+ WO 2010/108365 A1 disclose an optical beam shaping unit for shaping a beam bundle, the optical beam shaping unit having at least one spherical lens for shaping the bundle of rays, the spherical lens allowing a majority of the light incident on the spherical lens to pass through, and the optical beam shaping unit having at least one optical unit with a positive effective focal length , which is arranged in a beam path with the spherical lens.
+ Against this background, the present invention provides an improved distance measuring device according to the main claim. Advantageous embodiments result from the subclaims and the following description.
+ An optical beam shaping unit for shaping a beam is presented. The optical beam shaping unit has at least one spherical lens for shaping the beam, the spherical lens allowing a majority of the light incident on the spherical lens to pass through, and the optical beam shaping unit having at least one optical unit with a positive effective focal length, which is arranged in a beam path with the spherical lens is.
+ An optical beam shaping unit can be understood to mean a device for the optical deflection or refraction of a beam. A spherical lens can be understood to mean an essentially spherical lens. The Ball lens can be designed to image the beam from an object plane to an image plane. For example, the ball lens can be made of glass or a transparent plastic. In particular, the ball lens can be made from a sapphire material with a high refractive index. The spherical lens can, for example, be a mass product for fiber coupling, such as is used for lens connectors for connecting optical fibers. The ball lens can, for example, be part of a laser diode collimator of the optical beam shaping unit. The spherical lens should let the main part, ie at least half of the light impinging on the spherical lens, pass through, ie be transparent or transmitting for this part of the light. The spherical lens is preferably transparent for at least three quarters of the light incident on the spherical lens; in particular, the spherical lens should be transparent or transmissive for at least eighty percent or even more favorably for at least ninety percent of the light incident on the spherical lens. The optical unit can be a unit with a positive effective focal length. For example, the optical unit can be designed to collimate the beam and / or the optical unit can be, for example, a lens, a lens system or a mirror. The design of the lens is designed (layer design) to transmit the maximum amount of light that is physically possible (limits are the Fresnel losses).
+ The approach described here is based on the knowledge that by using spherical optics to form a beam within an optical beam shaping unit, an overall length of the optical beam shaping unit can be minimized. Another advantage is the simple variability of the overall length and focal length as well as a simplified adjustment. The fact that expensive lenses with a correspondingly expensive frame and assembly can be dispensed with and simple frame technology such as burr grips can be used also significantly reduce the production costs of the optical beam shaping unit.
+ According to the invention, the distance measuring device comprises at least one light source for generating the beam. The spherical lens is designed to image the beam of rays generated by the light source on the optical element. A light source can be understood to mean, for example, a light-emitting diode or a laser diode. Here, the ball lens is in a beam path of the beam between the optical unit and the Light source arranged. For example, a distance between the ball lens and the light source or a distance between the ball lens and the optical unit can be varied. In this way, for example in the case of an optical beam shaping unit installed in a distance measuring device, the resulting focal length of the arrangement can be varied, as a result of which a change in the divergence of a transmission or reception channel is brought about. The performance (such as the range) of the distance measuring device can be improved in this way. The spherical lens maps the source (laser diode or APD, ...) into an intermediate image plane, which represents the focal plane of the optical element. In addition to other factors, the improved range essentially depends on the divergence of the laser beam, which is influenced by distance variation.
+ The optical unit can be designed as a converging lens, mirror and / or lens system. In particular, the optical unit can be designed, for example, as a plano-convex converging lens. Such an optical unit can be provided particularly inexpensively. The plano-convex lens is usually an aspherical lens, which is expensive. According to a special embodiment for use here, however, it is pressed bright and is therefore inexpensive.
+ According to a further embodiment, the light source can be designed to emit a laser beam as the beam. In particular, the light source can be designed as a laser diode. Depending on the embodiment, the optical beam shaping unit can have a laser diode. Single stacks, stacked single bars or nanostack laser diodes can be used.
+ According to a further embodiment, the light source can emit the beam bundle in a wavelength range Lambda_B and the ball lens allows a majority of the light impinging on the ball lens to pass in the wavelength range Lambda_B, preferably exclusively in the wavelength range Lambda_B.
+ According to the invention, the ball lens and / or the optical unit is designed to be displaceable in a z-direction z. For example, the ball lens can be held in a first version. For example, the optical unit in one second version. Both the assembly from the spherical lens and the first frame and the assembly from the optical unit and the second frame can be designed to be displaceable. With this embodiment, a divergence of the beam after the optical unit can be set.
+ According to a further embodiment, the light source can be designed to be displaceable in the z direction z. With such an embodiment, a predefined beam cross section can be generated in the case of light sources with an astigmatic radiation characteristic.
+ The distance measuring device also has a detector device for detecting an incident beam. Additionally or alternatively, the optical beam shaping unit can have at least one further spherical lens. In this case, the further spherical lens can be designed to direct the incident beam onto the detector device. The incident beam of rays can be, for example, the beam of rays emitted by the light source in that it is deflected back to the optical beam shaping unit by reflection on a distant object. A detector device can be understood as a light-sensitive component, for example in the form of a camera, a photodiode or a CCD line. For example, the light source, the ball lens and the optical system with positive EFL (effective focal length) can represent a transmission channel of the optical beam shaping unit, while the detector device and the further ball lens and the optical system with positive EFL can represent a reception channel of the optical beam shaping unit. Depending on the embodiment, the transmit channel and the receive channel can be spatially separate channels or the same channel. In the latter case, the spherical lens can serve both to direct the incident beam onto the detector direction and, in the opposite direction, to direct the beam generated by the light source onto the optical element. With this embodiment, when the optical beam shaping unit is installed in a distance measuring device, a distance measurement by means of e.g. Runtime measurement or phase position measurement enabled.
+ According to a further embodiment, the optical beam shaping unit can have at least one additional optical unit for directing the incident beam onto the further spherical lens. The additional optical unit can be, for example, a lens, a lens system or a mirror. 
+ The additional optical unit can be designed to focus the incident beam onto the object plane or image plane of the spherical lens. This embodiment allows the incident beam of rays to be imaged specifically on the object plane or image plane of the further spherical lens.
+ An embodiment of the approach presented here is particularly advantageous in which a distance measuring device with an optical beam shaping unit according to a variant presented here is provided. For example, the distance measuring device or the laser illuminator can include a semiconductor laser transmitter or the distance measuring device can include a semiconductor laser receiver.
+ Figur 1 eine schematische Darstellung einer Entfernungsmessvorrichtung gemäß einem Ausführungsbeispiel; und Figur 2 eine schematische Darstellung einer optischen Strahlformungseinheit gemäß einem Ausführungsbeispiel; und Figur 3 eine schematische Darstellung einer optischen Strahlformungseinheit gemäß einem weiteren Ausführungsbeispiel; und Figur 4 eine schematische Darstellung einer Abstrahlcharakteristik einer erfindungsgemäßen Lichtquelle; und Figur 5 eine schematische Darstellung einer optischen Strahlformungseinheit gemäß einem weiteren Ausführungsbeispiel. The invention is explained in more detail by way of example with reference to the accompanying drawings. Show it: Figure 1 a schematic representation of a distance measuring device according to an embodiment; and Figure 2 a schematic representation of an optical beam shaping unit according to an embodiment; and Figure 3 a schematic representation of an optical beam shaping unit according to a further embodiment; and Figure 4 a schematic representation of a radiation characteristic of a light source according to the invention; and Figure 5 a schematic representation of an optical beam shaping unit according to a further embodiment. 
+ In the following description of preferred exemplary embodiments of the present invention, the same or similar reference numerals are used for the elements shown in the different figures and acting in a similar manner, a repeated description of these elements being dispensed with.
+ Figure 1 shows a schematic representation of a distance measuring device 100 with an optical beam shaping unit according to an embodiment. The Distance measuring device 100 comprises a spherical lens 102, which is designed to form a beam 106, here a laser beam, emitted by a light source 104. The beam 106 is in Figure 1 schematically indicated as an arrow. In reality, the beam 106 is a beam of a plurality of partial beams.
+ According to this exemplary embodiment, the spherical lens 102 is arranged between the light source 104 and an optical unit 108, for example a converging lens. Here, the spherical lens 102 images the beam 106 in a suitable manner on the object plane or image plane of the optical unit 108. The optical unit 108 is designed to collimate the beam 106 imaged by the spherical lens 102.
+ The ball lens 102 has a diameter between 0.5 mm and 8 mm, depending on the exemplary embodiment.
+ The light source 104, the spherical lens 102 and the optical unit 108 form a transmission channel 110 of the distance measuring device 100. In addition to the transmission channel 110, the distance measuring device 100 according to FIG Figure 1 Embodiment shown a receiving channel 112, which includes a further ball lens 114 and a detector device 116. The further spherical lens 114 and the further optical unit 122 are designed to focus a beam 118, reflected here in the transmission channel 110, also indicated here as an arrow, on the detector device 116 for detecting the incident beam 118. As a result of the detection, the detector device 116 outputs a detector signal 120.
+ In addition, in the exemplary embodiment described here, the additional spherical lens 114 is preceded by an additional optical unit 122, for example in the form of a further converging lens. The additional optical unit 122 is designed to appropriately direct the incident beam 118 onto the object plane or image plane of the spherical lens 114.
+ As in Figure 1 As can be seen, the transmission channel 110 and the reception channel 112 are arranged adjacent to one another. Furthermore, the two channels 110, 112 here run essentially parallel to one another. As a result, the design of the distance measuring device 100 can be kept as compact as possible. 
+ According to one exemplary embodiment, the light source 104 and the detector device 116 are each connected to a device 124. The device 124 comprises a reading unit 126 for reading the detector signal 120. The reading unit 126 forwards the detector signal 120 to a determination unit 128 for determining a measured value 130 representing the distance using the detector signal 120.
+ According to this exemplary embodiment, the device 124 comprises an optional control unit 132 for controlling the light source 104 by means of a corresponding control signal 134. For example, the control unit 132 also forwards the control signal 134 to the determination unit 128, wherein the determination unit 128 is designed to further reduce the measurement value 130 To determine the use of the drive signal 134.
+ Figure 2 shows a schematic representation of a beam path in an optical beam shaping unit according to an embodiment, for example one previously based on Figure 1 described distance measuring device 100. The optical beam shaping unit has the spherical lens 102 and the optical unit 108, which is designed here as an aspherical plano-convex lens. In contrast to Figure 1 The ray bundle 106 is shown here as a ray bundle with the aperture ray 200 and the field ray 210. An object y in the object plane 220 is imaged by the spherical lens 102 onto the image plane 240 of the spherical lens 102, an image height y ′ resulting in this image plane 240 of the spherical lens 102. The field beams 210 have a divergence θ between the transmitter and the receiver. The field rays begin at the edge points of the object (ie here the laser diode) and form the edge rays of the divergence after collimation.
+ In summary, it can be noted that, according to the approach presented here, the first optical system is designed as a transparent, highly transmissive sphere. Setting the object distance (i.e. the object plane of the source to the main plane of the spherical lens) results in a certain image spacing (main plane of the spherical lens - image plane of the source) according to the imaging equation described below, and thus a defined and widely variable imaging scale. This means that the image size of the radiation source or receiving area can be reduced or enlarged. With the same focal length (EFL) of the second optical system (here an aspherical single lens) results this results in a different divergence of the laser radiation or the reception beam. 
+ θ beam = y '/ f 2 ' = image size of the first optical system / EFL of the second optical system; 
+ where the focal length f 2 'in the Fig. 2 corresponds to the distance between the main plane of the lens 108 and the plane 240. 
+ So if the image scale 
+ β '= y' / y = image size as shown by the first optical system / object size of the source 
+ is smaller than 1, a reduced real image of the source is generated and a smaller resulting divergence occurs with the same focal length f 2 '.
+ If the overall length of the entire optical beam shaping unit (TOTR) is to be short, the first optical system should have an extremely short focal length.
+ The ball, which is available as standard with diameters in the range of 0.5 mm to 8 mm, is ideal for this. The diameters from 0.5 mm to 2 mm are particularly interesting (focal lengths for sapphire material from 0.3 mm to 1.2 mm).
+ Due to the very short object focal lengths (object plane main plane of the first optical system) and the small radiation apertures of the laser source, the optical effective area on the sphere is limited to an area close to the axis. This is the only way to keep the imaging errors of the sphere low. The remaining imaging errors (especially opening errors) are corrected by the aspherical shape of the second optical system, as described in the exemplary embodiment.
+ Figure 3 shows a schematic representation of a beam path in an optical beam shaping unit according to an embodiment, for example one previously based on Figure 1 described distance measuring device 100. The optical The beam shaping unit has the spherical lens 102 and the optical unit 108, which is designed here as an aspherical plano-convex lens.
+ As a rule, in the case of distance measuring devices, the smallest possible divergence of the laser radiation from a defined radiation area AF of a light source 104 is to be achieved, ie that a reduced image of the radiation area in the intermediate image plane ZBE sphere of the arrangement must be generated by the ball lens 102. In the exemplary embodiment, the spherical lens 102 is held in a mount 102a which can be displaced in the z direction. If you move this assembly in the z direction, ie if you change the distance Z LD , then the distance of the radiation surface AF to the main plane HH ' sphere of the spherical lens 102 changes. The position of the intermediate image ZBE sphere also changes according to the known relation Z' LD = f ' 2 sphere / Z LD (paraxial mapping equation). The optical unit 108 mounted in a further version 108a and designed as a collimator can also be displaced in the z direction and is displaced such that the focal plane F colli of the collimator 108 again coincides with the intermediate image plane ZBE sphere of the spherical lens 102. This ensures a clean collimation of the beam emerging from the radiation surface AF. The result is a laser divergence proportional to the intermediate image according to the formula: tanΘ = y LD / f ' package .
+ If one assumes, for example, a 1: 1 mapping of the exit surface AF into the ZBE sphere and selects a spherical lens 102 of 1 mm diameter, a displacement of the spherical lens 102 in the z direction of 1 mm results in a halving of the laser output divergence.
+ Figure 5 shows a schematic representation of a beam path in an optical beam shaping unit according to an embodiment, for example one previously based on Figure 1 described distance measuring device 100. The optical beam shaping unit has the spherical lens 102 and the optical unit 108, which is designed here as an aspherical plano-convex lens.
+ This further exemplary embodiment is intended to show how the relationship of the meridional and sagittal dimensions of the laser beam in the far field can be varied by the arrangement described. 
+ Due to their structure, semiconductor laser diodes have a laser exit opening in the slow axis direction (SA) from 80 µm to approximately 200 µm and the fast axis direction (FA) from 1 µm to approximately 10 µm. The semiconductor laser diodes used in laser measurement technology have a strong astigmatic radiation characteristic. Typical beam angles are 6 ° to 15 ° in the SA and 20 ° to 25 ° in the FA. Figure 4 shows such a radiation characteristic qualitatively. The figure clearly shows how the relation S 0 / M 0 , ... S 4 / M 4 changes continuously depending on the z position (Z 0 , ...... Z 4 ).
+ When using such semiconductor laser diodes in laser distance measuring devices or laser illuminators, the aim is to produce a square (Z 1 ), or at least a predefined, beam cross section (Z 2 , .... Z 4 ).
+ An arrangement for generating a predefined beam cross section shows Fig. 5 . The optical arrangement, for example a distance measuring device, is identical to that in FIG Fig. 1 basic arrangement shown. In this embodiment according to Fig. 5 However, the laser diode designed as a light source 104 is arranged to be displaceable in the z direction, the position of the ball lens 102 relative to the collimator 108 cannot be changed and the intermediate image plane of the ball lens ZBE ball coincides with the focal plane F colli of the collimator 108.
+ By shifting the laser diode 104 in the z direction, different beam cross sections of the laser aperture (S 1 -M 1 ....... S 4 -M 4 ) always come out Fig. 4 into the object plane OE sphere of the spherical lens 102. In the image plane of the spherical lens ZBE sphere, intermediate images are formed in the meridional and sagittal directions. These are imaged by the collimator 108 into the far field (collimated). Depending on the z position (Z 1 ... Z 4 in Fig. 4 ) therefore laser beam cross-sections with different meridional and sagittal expansion ratio. For example, the laser diode 104 is shifted such that the z position Z 1 in Fig. 4 Positioned in the object plane of the spherical lens 102, a square beam cross section is created in the far field.
+ The exemplary embodiments described and shown in the figures are selected only as examples. Different exemplary embodiments can be combined with one another completely or with regard to individual features. Also one can Embodiment can be supplemented by features of another embodiment.
+ If an exemplary embodiment comprises a “and / or” link between a first feature and a second feature, this can be read in such a way that the embodiment according to one embodiment has both the first feature and the second feature and according to a further embodiment either only the first Feature or only the second feature.
+
+## CLAIMS
+Claims (7)
+Distance measuring device (100) with an optical beam shaping unit (102, 108) for shaping a beam (106), wherein the optical beam shaping unit (102, 108) has at least one spherical lens (102) for shaping the beam (106), wherein the spherical lens (102) allows a major portion of light that is incident on the spherical lens (102) to pass and wherein the optical beam shaping unit (102, 108) has at least one optical unit (108) with a positive effective focal length, which is arranged in one beam path with the spherical lens (102), characterized in that the spherical lens (102) and/or the optical unit (108) are/is embodied to be displaceable in a z-direction (z) with respect to a co-ordinate system xyz to set a divergence of the beam downstream of the optical unit and at least one light source (104) for producing the beam (106) is provided and the z-direction corresponds to the propagation direction of the beam, wherein the spherical lens (102) is embodied to image the beam (106), which is produced by the light source (104), in the direction of the optical unit (108) and a detector apparatus (116) for detecting an incident beam (118) is provided.
+Distance measuring device (100) according to Claim 1, characterized in that the optical unit (108) is embodied as a converging lens, as a mirror and/or as a lens system.
+Distance measuring device (100) according to Claim 1 or 2, characterized in that the light source (104) is embodied to emit a laser beam as the beam (106), in particular wherein the light source (104) is embodied as a laser diode.
+Distance measuring device (100) according to any one of the preceding claims, characterized in that the light source (104) emits the beam in a wavelength range Lambda_B and the spherical lens (102) allows a major portion of light that is incident on the spherical lens (102) in the wavelength range Lambda_B to pass.
+Distance measuring device (100) according to any one of the preceding claims, characterized in that the light source (104) is embodied to be displaceable in the z-direction (z).
+Distance measuring device (100) according to any one of the preceding claims, characterized by at least one further spherical lens (114), wherein the further spherical lens (114) is embodied to direct the incident beam (118) onto the detector apparatus (116).
+Distance measuring device (100) according to Claim 6, characterized by at least one optical additional unit (122) for directing the incident beam (118) onto the further spherical lens (114).

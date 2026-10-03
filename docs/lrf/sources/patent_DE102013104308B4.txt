@@ -1,0 +1,195 @@
+# DE102013104308B4
+DE102013104308B4 - 
+ Adjusting method and adjusting device for parallel alignment of the simulator line of a weft simulator to the sighting line of a firearm
+ - Google Patents
+inventor: Frank Schneider
+assigneeOriginal: Jenoptik Advanced Systems GmbH
+assigneeOriginal: 南京从人光电科技有限公司
+assigneeOriginal: Raytheon Company
+assigneeOriginal: Per Renntoft
+assigneeOriginal: Lockheed Corp
+assigneeOriginal: Thales
+assigneeOriginal: Jenoptik Laser, Optik, Systeme Gmbh
+assigneeOriginal: Esw Gmbh
+assigneeOriginal: Raytheon Company
+assigneeOriginal: Thales
+assigneeOriginal: Per Renntoft
+assigneeOriginal: Lockheed Corp
+assigneeOriginal: Jenoptik Laser, Optik, Systeme Gmbh
+assigneeOriginal: Esw Gmbh
+assigneeCurrent: Jenoptik Optical Systems GmbH
+priorityDate: 2013-04-29
+priorityDate: 2013-04-29
+filingDate: 2013-04-29
+filingDate: 2013-04-29
+filingDate: 2013-04-29
+publicationDate: 2017-12-14
+publicationDate: 1987-08-20
+publicationDate: 1997-06-25
+publicationDate: 1986-04-17
+publicationDate: 1979-01-04
+publicationDate: 1988-11-24
+publicationDate: 1983-05-05
+publicationDate: 1979-03-22
+publicationDate: 1992-01-22
+publicationDate: 1981-04-23
+publicationDate: 1990-09-27
+publicationDate: 2008-09-11
+publicationDate: 1974-03-28
+publicationDate: 2015-04-09
+publicationDate: 2014-10-30
+publicationDate: 2011-03-24
+publicationDate: 1977-12-15
+publicationDate: 1994-02-24
+publicationDate: 2009-05-27
+publicationDate: 2021-10-27
+publicationDate: 1973-10-04
+publicationDate: 2012-07-11
+publicationDate: 1981-01-22
+publicationDate: 2016-10-06
+publicationDate: 2013-05-01
+publicationDate: 1994-04-21
+
+## ABSTRACT
+Abstract
+ Translated from German
+ Adjustment device (3) for parallel alignment of a simulator line (2.3) of a firearm (11) fixed shot simulator (11) to a sighting line (1.2) of the firearm (1), wherein the shot simulator (11) for emitting a simulator laser beam, a simulator laser source (2 ) with a simulator laser axis (2.1) and a first deflection unit (2.5) for tilting the simulator laser beam in a direction parallel to the line of sight (1.2), which represents a simulator line (2.3) and a cover glass (2.4), with servomotors (6.1, 6.2 ) for adjusting the first deflection unit (2.5), with a camera (4) having a camera axis (4), a partially transparent beam splitter (5) arranged upstream of the camera (4) and a camera (4) and the servomotors (6.1, 6.2) connecting computing and control unit (7), wherein the adjusting device (3) on the weft simulator (11) via a designated connection (2.2) is temporarily fixed so that along the Si mulator laser axis (2.1) emitted simulator laser beam to the camera (4), characterized in that a projection laser source (9) with a projection laser axis (9.1) is present, which emits a projection laser beam (9.2) along the projection laser axis (9.1) and on the projection laser axis (9.1) a second deflection unit (10) for tilting the projection laser beam (9.2) with respect to the projection axis (9.1) is present, which is connected to further servo motors (6.3, 6.4) and the computing and control unit (7) that the camera axis ( 4.1) and the projection axis (9.1) are aligned parallel to each other, that a measuring laser source (8) with a measuring laser axis (8.1) is provided which is arranged to the beam splitter (5) so that this along the measuring laser axis (8.1) emitted measuring laser beam ( 8.2) in the direction of the camera axis (4.1), away from the camera (4), onto the cover glass (2.4), from where the measuring laser beam (8.2) back through the beam splitter (5) to the camera (4) is reflected, and that at least one operating element (13) is present, which communicates with the computing and control unit (7) and via which one along the line of sight (1.2) sighted shooter can control the tilt of the projection laser beam (9.2).
+
+## DESCRIPTION
+Description
+ Translated from German
+ The invention relates to an adjustment method and an alignment device for aligning the simulator line of a firearm-mounted firing simulator to the line of sight of the firearm in order to hit a targeted object with a laser beam emitted by the firing simulator. Such adjusting device is generic to the patent 
+ DE 10 2005 054 156 B4 known.
+ Duel simulators are training devices that can be used to demonstrate the effect of your own weapon on targets. Here are used to simulate a sharp shot systems consisting of a equipped with a laser transmitter weft simulator as an active and a receiver system as a passive part, the active part is attached to the firearm and the passive part of the enemy weapon system or infantry at their equipment , The firearm and the opposing weapon system may be or consist of real weapons or dummy weapons both in the prior art and in the invention.
+ Before a weft simulator mounted on the firearm can be used, it is necessary to align the simulator line of the weft simulator (often called simulator axis in the prior art) to the sighting line of the firearm, so that they run exactly parallel to one another.
+ From the prior art, a variety of weft simulators and / or devices for adjusting such weft simulators are known, which differ mainly by the means by which the simulator line is aligned parallel to the line of sight of a firearm to which the weft simulator is attached. From an economic point of view, the different solutions differ in particular as to whether they can be used specifically for certain firearms, for different firearms of the same weapon type, or even for firearms of different types of weapons.
+ A first shot simulator is from the patent 
+ US 2004/0076928 A1 known. The shot simulator disclosed here has to generate a laser beam, in addition to the usual laser source and an upstream optics with an optical axis, a conjugate to the laser source source of visible radiation and a beam splitter, which couples the visible beam in the laser beam. The upstream optics comprises a wedge disk pair, which makes it possible to tilt the laser beam leaving the weft simulator and thus also the visible beam with respect to the optical axis. To adjust the laser beam, which embodies the simulator line, a retroprisma with dimensions adapted to the distance of the sighting line and the weft simulator axis (in this case the optical axis) of the weft simulator is required as an aid. The retro prism is placed in front of the weft simulator and sighting channel of the weapon so that the visible beam exiting the weft simulator is coupled into the sighting channel. The target sighting shooter then sees a point whose position he can move by the rotation of the wedge disk pair on the adjustment line. As soon as the point lies on the adjustment line, the simulator line is adjusted parallel to the sight line. An advantage of this solution is that the adjustment can be controlled and repeated by a simple adjustment-free Vorsetzen a retroprism. A disadvantage is the technical complexity of a visible source and a beam splitter, which is required for each individual weft simulator, which increases in particular the cost of such a weft simulator. A further disadvantage is that, for the temporary preparation of the retroprism in front of the weft simulator, it can only be fastened to the weapon at a predetermined position in which its exit surface lies in a plane with a mounting surface suitable for the weapon. It is also disadvantageous that differently sized retroprisms are required for different distances between the sighting line and the optical axis of the weft simulator.
+ From the patent application 
+ GB
+ 2 417 314 A An adjusting device for aligning the simulator line of a gun barrel mounted weft simulator to the line of sight of the rifle is known according to the second-mentioned type. The boresight device is arranged downstream of the gun barrel in the direction of the sighting line and the simulator line, which is aligned parallel to the sighting line and after the adjustment, and essentially comprises an optical system consisting of an LCD camera as well as optically imaging and deflecting elements that image a laser beam coming from the shot simulator on the LCD camera, and a cruciform target located in a plane conjugate to the receiving plane of the LCD camera, which additionally requires a beam splitter. The target is slidable in the direction of its cross lines, allowing the operator to use a joystick to move the target in two directions until the center of the cross is on the line of sight. Subsequently, the laser transmitter of the weft simulator is activated and the laser beam is imaged as a laser spot on the receiving plane of the LCD camera. The alignment of the laser beam is now changed via the adjustment of a prism pair belonging to the shot simulator until the laser spot, which together with the image of the Target mark is displayed on a display, the target is superimposed.
+ Undoubtedly, the target and the receiver plane must be arranged so that the line of sight is perpendicular to the receiver plane, which must be secured via the connection of the adjusting device with the gun barrel. A disadvantage is the urgent need to attach the shot simulator to the weapon so that the simulator line runs directly next to the sighting line, since both are guided by a same optical channel. The possible distance of the simulator line is limited at the latest by the aperture stop of the optical system.
+ From the patent 
+ DE 10 2005 054 156 B4 is an adjusting device for aligning the simulator line (simulator axis here) of a weft simulator, embodied by a laser beam, known to the line of sight of a firearm with a arranged on a camera axis in a telescope luminous visor, on the one hand via a prism, reflected in the sighting channel of the shooter and on the other hand on a camera. By tipping the telescope, the sighting mark is moved centrally to the sighting line, so that then the optical axis of the telescope is parallel to the sighting line. By placing the adjusting device with the camera channel in front of the weft simulator, the simulator line is coupled into it. While a laser beam is emitted via the weft simulator and thus imaged on the camera of the camera channel together with the illuminated sighting mark, a wedge disk pair present in the weft simulator is rotated until the laser beam hits the center of the image of the sighting mark on the camera. As a result, the simulator line is aligned parallel to the sight line. It is advantageous here that all means that are required to adjust the simulator axis, are housed in a separate adjusting device. However, this device must be mounted on the weapon so that the target can be faded into the sighting channel, so it is particularly suitable when the distance between the sighting line and simulator axis is small. The device must be configured to a known distance of line of sight and simulator line in its design, and therefore can not be used flexibly for different types of weapons.
+ From the 
+ WO 2011/026 487 A2 For example, a modular adjustment device with a display module and a camera module as well as a method for adjusting a simulator line (here simulator axis) to a sighting line are known. The display module is a bar cross projection device, consisting of a display on which a movable line cross can be generated. Its center, together with a first imaging optics, defines a tiltable display module axis. The camera module includes a digital camera with a camera chip and a second imaging optics. The optical axis of the second imaging optic defines a fixed camera module axis. The optical axes of the first and the second imaging optics are aligned parallel to one another. The display defines a display coordinate system and the camera chip defines a camera coordinate system and there is a calculator designed to convert a point relative to a coordinate system into a point relative to the other coordinate system. Due to their design, the display module and the camera module can be arranged differently from one another, with which the adjustment device can be adjusted on different firearms with a shot simulator, which differ by the distance of the sighting line to the simulator axis, such that when the adjustment device is attached to the shooting simulator or the firearm the operator sighting device can see the line cross and a laser beam emitted by the laser source impinges on the camera chip. Although a higher flexibility for the use of the adjusting device on different weapons or weapon types equipped with a weft simulator is achieved here by the modular design, a specific adjustment device must be configured for each individual case by a selected composition of the modules.
+ The object of the invention is to provide an adjusting device and an adjustment method which can be carried out, which are suitable for aligning the simulator line parallel to the alignment line independently of the weapon-specific mounting options for a shotgun simulator and thus independently of the distance of the simulator line to the sighting line Firearms equipped with firing simulators, one or even different weapon types, can be used. Advantageously, the adjustment should not only be feasible while the weapon is fixed on a solid surface, but also if it is held by a shooter.
+ The object is for an alignment device for parallel alignment of a simulator line of a firearm-mounted firing simulator to a sight line of the firearm, the simulator-beam firing simulator having a simulator laser axis with a simulator laser axis and a first deflecting unit for tilting the simulator beam in a direction parallel to the line of sight which represents a simulator line and a cover glass, solved. The adjusting device comprises servomotors for adjusting the first deflecting unit, a camera with a camera axis, a partially transparent beam splitter upstream of the camera and a camera and the servo motors connecting computing and control unit. The adjustment device is temporarily attached to the weft simulator via a connection provided for this purpose, so that a simulator laser beam emitted along the simulator laser axis can be securely applied to the camera ( 4 ). It also comprises a projection laser source with a projection laser axis which emits a projection laser beam along the projection laser axis, and a second deflection unit arranged on the projection laser axis for tilting the projection laser beam with respect to the projection axis. The second deflection unit is connected to other servo motors and the computing and control unit. The camera axis and the projection axis are aligned parallel to each other and fixed mechanically. There is at least one operating element, via which a contactor looking along the sighting line can control the tilting of the projection laser beam. The at least one operating element communicates with the computing and control unit.
+ Advantageously, the adjusting device has a measuring laser source with a measuring laser axis which is arranged relative to the beam splitter such that it reflects a measuring laser beam emitted along the measuring laser axis in the direction of the camera axis, away from the camera, onto the cover glass, from where the measuring laser beam back through the beam splitter is reflected on the camera.
+ It is advantageous if the adjusting device has a rangefinder.
+ Advantageously, the deflection units are designed as wedge disk pairs.
+ The object is for an alignment method for aligning in parallel a simulator line of a firearm-mounted firing simulator to a sight line of the firearm, the simulator-beam firing simulator having a simulator laser axis with a simulator laser axis and a first deflector for tilting the simulator beam in a direction parallel to the line of sight , which represents the simulator line, as well as a cover glass, with an adjusting device according to one of claims 1 to 3 solved. At this time, from a distance of the adjusting device to the aimed target and a perpendicular distance of the sighting line to the projection laser axis, a target projection angle which the projection laser beam and the sighting line include when the projection laser beam and the sighting line intersect at the target is calculated. The projection laser beam, controlled by a shooter looking along the sight line, is adjusted by adjusting a second deflection unit (FIG. 10 ) is tilted until it coincides with the line of sight on the target and thus has been tilted by an actual projection angle with respect to the projection laser axis. From the difference of the actual projection angle and the target projection angle, a first fixed angle is derived, which describes the tilt of the projection laser axis to the line of sight and it is calculated from this first angle, an adjustment angle and the simulator laser beam tilted by this adjustment angle with respect to the simulator laser axis, after which Simulator line is aligned parallel to the sight line.
+ Advantageously, a measurement laser beam is imaged on the camera via a reflection on the cover glass and a second fixed angle is determined from an angular position of the simulator laser axis to the cover glass and the position of the image of the measurement laser beam on the camera, which describes the tilt of the camera axis to the simulator laser axis and the adjustment angle becomes calculated from the second angle and the first angle.
+ It is advantageous if the distance is measured during the process.
+ Advantageously, the distance is repeatedly measured until the shooter confirms that the projection laser beam coincides with the line of sight at the target and uses the last measured distance for the calculation.
+ A more precise adjustment result can be achieved if the distance between the simulator laser axis and the sight line is included in the calculation of the adjustment angle.
+ The invention will be explained in more detail with reference to an embodiment of drawings. Show:
+ 1 a schematic diagram of the adjusting device 3 connected with one at a firearm 1 fixed shot simulator 11 .
+ 2 the beam path of the measuring laser beam 8.2 and the undeflected simulator laser beam to the camera 4 and
+ 3 a sketch to demonstrate the axis and angle relationships, the distance C was neglected and the distance B was set equal to the distance D.
+ 1 shows a firearm 1 with a sighting line 1.2 that z. B. determined by the sight and grain, and a attached attached weft simulator 11 with a simulator line 2.3 , The shot simulator 11 includes a laser source, hereinafter used to distinguish simulator laser source 2 called, and a first deflection unit 2.5 , It should be assumed here for the sake of simplicity that the simulator laser source 2 a beam shaping optics for collimating an emitting laser beam (hereinafter referred to as simulator laser beam). Such a beam-shaping optical system could also be separate in the emission direction behind the simulator laser source 2 be provided. The emission direction of the main beam of the simulator laser beam (which is strictly a beam) coincides with the optical axis of the beam shaping optics and represents the simulator laser axis 2.1 represents.
+ The first deflection unit 2.5 , z. B. a pair of wedges, is in the direction of the simulator laser source 2 downstream. By a targeted adjustment of the deflection unit 2.5 the incident simulator laser beam may face the simulator laser axis 2.1 be tilted, in one direction, which the simulator line 2.3 represents. The shot simulator 11 has a cover glass 2.4 on, which closes its housing in the region of the exit of the simulator laser beam. This graduation glass 2.4 comes in connection with an adjusting device according to the invention 3 and an adjustment method according to the invention of particular importance to and the simulator laser axis 2.1 runs advantageously perpendicular to the cover glass 2.4 , Otherwise the angle deviation from the right angle must be known.
+ The simulator line 2.3 a shot simulator 11 parallel to the sight line 1.2 a firearm 1 Aligning is the purpose of the adjustment, as it is to be met in the prior art as well as in the present invention.
+ The shot simulator 11 is with the firearm 1 mechanically firmly connected, bringing the sighting line 1.2 and the simulator laser axis 2.1 have a fixed relative position to each other and include an unknown fixed angle to each other by the mounting tolerances. The simulator line must ultimately be around this unknown angle 2.3 , typified by the simulator laser beam, to the sight line 1.2 be tilted so that the simulator line 2.3 to the sighting line 1.2 runs parallel.
+ 1 also shows an adjustment device 3 , It is for the duration of the adjustment on the shot simulator 11 via a dedicated connection 2.2 temporarily attached. This connection 2.2 must be stable over the duration of the adjustment, but is subject to positional tolerances (here exaggerated), which cause the projection laser axis 9.1 and the camera axis 4.1 that by means of the adjusting device 3 be defined and parallel to each other, with the simulator laser axis 2.1 include a second angle γ, which advantageously flows into the calculation of the adjustment angle. If these positional tolerances are only slight, it is possible to dispense with the determination of the second angle γ, with which also the adjusting device 3 , then without the measuring channel described later, can be performed.
+ After mechanical connection of the adjusting device 3 with the shot simulator 11 become the data interfaces between the adjustment device 3 and the shot simulator 11 connected with each other. The adjusting device 3 is like that before the shot simulator 11 arranged that one along the simulator laser axis 2.1 emitted simulator laser beam confidently on the camera 4 the adjusting device 3 would strike.
+ The adjusting device 3 consists essentially of a projection channel or advantageously a measuring channel and a projection channel.
+ The measuring channel is controlled by a camera 4 with a camera axis 4.1 , one of the camera 4 upstream partially transparent beam splitter 5 , preferably a half cube prism and a measuring laser source 8th with a measuring laser axis 8.1 educated. Again, it should be assumed for the sake of simplicity, as well as in the projection laser source described later 9 in that an imaging optic is part of the measuring laser source 8th or the projection laser source 9 is. The camera 4 , the partially transparent beam splitter 5 and the measuring laser source 8th are arranged to each other so that one along the measuring laser axis 8.1 emitted measuring laser beam 8.2 in the direction of the camera axis 4.1 , from the camera 4 away, on the graduation glass 2.4 and then back through the beam splitter 5 through to the camera 4 is reflected. Stand the camera axis 4.1 theoretically perpendicular to the cover glass 2.4 , then the measuring laser beam 8.2 into the camera axis 4.1 reflected and in the center of the camera 4 be imaged. However, because the adjustment device 3 with a tolerance with the weft simulator 11 connected, the camera axis 4.1 and the simulator laser axis 2.1 not parallel to each other, which is why the camera axis 4.1 also not perpendicular to the cover glass 2.4 but they include the fixed second angle γ together and the measuring laser beam 8.2 becomes dependent on the second angle γ on the camera 4 , away from the center of the camera 4 , pictured. From the location of the image of the measuring laser beam 8.2 in the coordinate system of the camera 4 the second fixed angle γ can be calculated.
+ The projection channel is through a projection laser source 9 with a projection laser axis 9.1 and a second deflection unit 10 formed one from the projection laser source 9 in the direction of the projection laser axis 9.1 emitted projection laser beam 9.2 can deflect to the projection laser beam 9.2 on one over the sighting line 1.2 targeted destination 12 to be able to judge.
+ The adjusting device 3 further includes a first and second servomotor 6.1 . 6.2 on, each using mechanical coupling points with the in the weft simulator 11 existing first deflection unit 2.5 are connected. A third and fourth servomotor 6.3 . 6.4 are present, with the projection channel associated with the second deflection 10 keep in touch. In addition, belongs to the adjustment device 3 a computing and control unit 7 connected via data lines with the servomotors 6.1 . 6.2 . 6.3 and 6.4 , the simulator laser source 2 , the measuring laser source 8th , the projection laser source 9 and the camera 4 communicates. The camera axis 4.1 and the projection laser axis 9.1 are mechanically stable parallel to each other.
+ The computing and control unit 7 is with at least one control 13 connected, over which the shooter, while he through the visor of the firearm 1 a target 12 sighted, the projection laser beam 9.2 can tilt.
+ The functioning of the adjusting device 3 and the adjustment method that can be carried out with it are described below.
+ To carry out the adjustment, the distance A of the adjusting device 3 to a targeted goal 12 and the vertical distance B of the sight line 1.2 to the simulator laser axis 2.1 and the vertical distance D of the sighting line 1.2 to the projection laser axis 9.1 be known. The distance B is basically the design dimensions of the firearm 1 and the shot simulator 11 predetermined, which determine their relative mounting position to each other. Tolerances are negligible. The distance D results from the design dimensions of the adjusting device 3 , the worm simulator 11 and the firearm 1 , which determine their relative mounting position to each other. Tolerances are negligible. The most accurate results are obtained when, as the distance A, the distance between the piercing point of the projection laser axis 9.1 through the second deflection unit 10 and the goal 12 is used. To accurately detect this distance A, a laser rangefinder would have to be integrated in the projection channel and a range finding beam would be integrated via the second deflection unit 10 to the goal 12 and be led back. Instead, however, a range finder may be elsewhere on or in the adjustment device 3 , the firearm 1 or the shot simulator 11 be provided and the measured distance to the destination 12 in knowledge of the relative position of the rangefinder to the puncture point of the projection laser axis 9.1 through the second deflection unit 10 be corrected accordingly. For longer distances A to the finish 12 this positional deviation could also be neglected.
+ The distance A is determined once or repeatedly checked during the adjustment, if the weapon is not fixed during adjustment on a solid surface, but is held by a shooter, so that by its not sure to avoid avoiding movement almost the target 12 relatively able changed. By means of the distance A and the distance D is in the computing and control unit 7 a target projection angle α is to be calculated, that of the projection laser beam 9.2 with the sighting line 1.2 includes when the projection laser beam 9.2 in the target 12 the sight line 1.2 cuts. At long distances A can also be dispensed with a differentiation between the distances B and D, and their differences are neglected.
+• Durch einen Schützen wird ein Ziel 12 anvisiert, während ein Projektionslaserstrahl 9.2 ausgesendet wird. Initiiert durch den Schützen, wird der Projektionslaserstrahl 9.2 in seiner Winkellage zur Projektionslaserachse 9.1 verstellt, bis er auf das anvisierte Ziel 12 auftrifft und dann bestätigt. Der Projektionslaserstrahl 9.2 wird damit aus einer nicht ausgelenkten Abstrahlrichtung, in Richtung der Projektionslaserachse 9.1, um einen Ist-Projektionswinkel αIST verkippt. Der Ist-Projektionswinkel αIST, weicht um einen festen ersten Winkel β vom Soll-Projektionswinkel αSOLL ab, welcher der nicht bekannten Verkippung der Projektionslaserachse 9.1 zur Visierlinie 1.2 entspricht. 
+• Vorher, gleichzeitig oder anschließend wird die Messlaserquelle 8 über Reflexion an dem Abschlussglas 2.4 auf der Kamera 4 abgebildet. Die Kamera 4 definiert durch die Empfangsmatrix und die Kameraachse 4.1 ein Kamera-Koordinatensystem, sodass mit Hilfe trigonometrischer Funktionen und bekannten Konstruktionsmaßen der Justiervorrichtung 3 aus der Lage der Abbildung des Messlaserstrahls 8.2', die Verkippung der Kameraachse 4.1 zur Simulatorlaserachse 2.1 um einen zweiten festen Winkel γ berechnet werden kann, siehe 2. Da die Kameraachse 4.1 mechanisch fest und parallel zur Projektionslaserachse 9.1 verläuft, schließen auch die Projektionslaserachse 9.1 und die Simulatorlaserachse 2.1 den zweiten Winkel γ miteinander ein. 
+• Anschließend wird über die Rechen- und Steuereinheit 7 der Justierwinkel berechnet. Er ergibt sich aus der Summe des zweiten Winkels γ unter Beachtung des Abstandes B und dem ersten Winkel β. Der erste und zweite Stellmotor 6.1, 6.2 werden angesteuert und die erste Ablenkeinheit 2.5 verstellt, bis der Simulatorlaserstrahl um den Justierwinkel gegenüber der Simulatorlaserachse 2.1 verkippt ist. Der Simulatorlaserstrahl ist dann parallel zur Visierlinie 1.2 ausgerichtet und verkörpert die justierte Simulatorlinie 2.3. The following steps will be used to adjust the simulator line 2.3 to the sighting line 1.2 carried out: 
+ • A shooter becomes a target 12 sighted while a projection laser beam 9.2 is sent out. Initiated by the shooter, the projection laser beam becomes 9.2 in its angular position to the projection laser axis 9.1 adjusted until he reaches the target 12 hits and then confirmed. The projection laser beam 9.2 thus becomes an undeflected emission direction in the direction of the projection laser axis 9.1 to an actual projection angle α IST tilted. The actual projection angle α IST deviates from the target projection angle α SOLL by a fixed first angle β, which is the unknown tilting of the projection laser axis 9.1 to the sighting line 1.2 equivalent. 
+ • Before, at the same time or subsequently, the measuring laser source 8th over reflection on the cover glass 2.4 on the camera 4 displayed. The camera 4 defined by the receive matrix and the camera axis 4.1 a camera coordinate system, so using trigonometric functions and known design dimensions of the adjusting device 3 from the position of the image of the measuring laser beam 8.2 ', the tilt of the camera axis 4.1 to the simulator laser axis 2.1 can be calculated by a second fixed angle γ, see 2 , Because the camera axis 4.1 mechanically fixed and parallel to the projection laser axis 9.1 runs, also close the projection laser axis 9.1 and the simulator laser axis 2.1 the second angle γ with each other. 
+ • Subsequently, via the computing and control unit 7 the adjustment angle is calculated. It results from the sum of the second angle γ taking into account the distance B and the first angle β. The first and second servomotor 6.1 . 6.2 are controlled and the first deflection unit 2.5 adjusted until the simulator laser beam to the adjustment angle relative to the simulator laser axis 2.1 is tilted. The simulator laser beam is then parallel to the sight line 1.2 aligned and embodies the adjusted simulator line 2.3 , 
+ By checking the distance and correcting it in the case of changes in the desired projection angles α SOLL , at the time when a set actual projection angle α ACT is confirmed by the shooter, a current desired projection angle α SOLL can also be calculated for the calculation. The method is therefore particularly advantageous when an adjustment under conditions of use to be made.
+ If the mounting tolerances between the adjustment 3 and the shot simulator 11 for the required accuracy of the adjustment of the simulator laser axis 2.1 to the sighting line 1.2 is negligible, can be dispensed with the calculation of the second fixed angle γ. The adjustment angle will then be calculated solely on the basis of the first angle β taking into account the distance B.
+ LIST OF REFERENCE NUMBERS
+ 1
+ firearm
+ 1.2
+ line of sight
+ 2
+ Simulator laser source
+ 2.1
+ Simulator laser axis
+ 2.2
+ connection
+ 2.3
+ simulator line
+ 2.4
+ cover glass
+ 2.5
+ first deflection unit
+ 3
+ adjusting
+ 4
+ camera
+ 4.1
+ camera axis
+ 5
+ partially transparent beam splitter
+ 6.1
+ first servomotor
+ 6.2
+ second servomotor
+ 6.3
+ third servomotor
+ 6.4
+ fourth servomotor
+ 7
+ Computing and control unit
+ 8th
+ Measuring laser source
+ 8.1
+ Measuring laser axis
+ 8.2
+ measurement laser beam
+ 8.2 '
+ Illustration of the measuring laser beam
+ 9
+ Projection laser source
+ 9.1
+ Projection laser axis
+ 9.2
+ projection laser beam
+ 10
+ second deflection unit
+ 11
+ shot simulator
+ 12
+ aim
+ 13
+ operating element
+ α TARGET 
+ Target projection angle
+ IS α
+ Actual projection angle
+ β
+ first solid angle between the line of sight and the projection laser axis
+ γ
+ second fixed angle between the projection laser axis and the simulator laser axis
+ A
+ Removal of the adjustment device to the intended target
+ B
+ Distance between the sight line and the simulator laser axis
+ C
+ Distance between the camera axis and the projection laser axis
+ D
+ Distance between the projection laser axis and the camera axis
+
+## CLAIMS
+Claims (7)
+ Translated from German
+ Adjusting device ( 3 ) for parallel alignment of a simulator line ( 2.3 ) one on a firearm ( 1 ) attached weft simulator ( 11 ) to a sighting line ( 1.2 ) of the firearm ( 1 ), whereby the shot simulator ( 11 ) for the emission of a simulator laser beam a simulator laser source ( 2 ) with a simulator laser axis ( 2.1 ) and a first deflection unit ( 2.5 ) for tilting the simulator laser beam in a direction parallel to the line of sight ( 1.2 ), which a simulator line ( 2.3 ), as well as a cover glass ( 2.4 ), with servomotors ( 6.1 . 6.2 ) for adjusting the first deflection unit ( 2.5 ), with a camera axis ( 4.1 ) camera ( 4 ), one of the camera ( 4 ) upstream partially transparent beam splitter ( 5 ) and one the camera ( 4 ) and the servomotors ( 6.1 . 6.2 ) connecting computing and control unit ( 7 ), wherein the adjusting device ( 3 ) on the weft simulator ( 11 ) via a dedicated connection ( 2.2 ) is temporarily fixed so that one along the simulator laser axis ( 2.1 ) simulator laser beam emitted to the camera ( 4 ), characterized in that a projection laser source ( 9 ) with a projection laser axis ( 9.1 ) having a projection laser beam ( 9.2 ) along the projection laser axis ( 9.1 ) and on the projection laser axis ( 9.1 ) a second deflection unit ( 10 ) for tilting the projection laser beam ( 9.2 ) opposite the projection axis ( 9.1 ) is present, with other servomotors ( 6.3 . 6.4 ) and the computing and control unit ( 7 ), that the camera axis ( 4.1 ) and the projection axis ( 9.1 ) are aligned parallel to each other, that a measuring laser source ( 8th ) with a measuring laser axis ( 8.1 ) present to the beam splitter ( 5 ) is arranged so that these along the measuring laser axis ( 8.1 ) emitted measuring laser beam ( 8.2 ) in the direction of the camera axis ( 4.1 ), from the camera ( 4 ), on the cover glass ( 2.4 ) from where the measuring laser beam ( 8.2 ) back through the beam splitter ( 5 ) on the camera ( 4 ) and that at least one control element ( 13 ), which is connected to the computing and control unit ( 7 ) and about which one along the sighting line ( 1.2 ) viewing shooter tilting the projection laser beam ( 9.2 ) can control.
+ Adjusting device ( 3 ) according to claim 1, characterized in that it comprises a rangefinder.
+ Adjusting device ( 3 ) according to claim 1, characterized in that the deflection units ( 2.5 . 10 ) Wedge pairs are.
+ Adjustment procedure for parallel alignment of a simulator line ( 2.3 ) one on a firearm ( 1 ) attached weft simulator ( 11 ) to a sighting line ( 1.2 ) of the firearm ( 1 ), whereby the shot simulator ( 11 ) for the emission of a simulator laser beam a simulator laser source ( 2 ) with a simulator laser axis ( 2.1 ) and a first deflection unit ( 2.5 ) for tilting the simulator laser beam in a direction parallel to the line of sight ( 1.2 ), which the simulator line ( 2.3 ), as well as a cover glass ( 2.4 ), with an adjusting device ( 3 ) according to one of claims 1 to 3, characterized in that from a distance (A) of the adjusting device ( 3 ) to a target ( 12 ) and a vertical distance (D) of the sighting line ( 1.2 ) to the projection laser axis ( 9.1 ) a desired projection angle (α SOLL ) that the projection laser beam ( 9.2 ) and the sighting line ( 1.2 ) when the projection laser beam ( 9.2 ) and the sighting line ( 1.2 ) in the target ( 12 ), it is calculated that the projection laser beam ( 9.2 ), controlled by one along the sighting line ( 1.2 ) by adjusting a second deflection unit ( 10 ) is tilted until this with the sighting line ( 1.2 ) on the target ( 12 ) coincides and by an actual projection angle (α IST ) with respect to the projection laser axis ( 9.1 ) was tilted, that a first fixed angle (β) is derived from the difference of the actual projection angle (α IST ) and the desired projection angle (α SOLL ), the tilt of the projection laser axis ( 9.1 ) to the sighting line ( 1.2 ) describes that a measuring laser beam ( 8.2 ) via a reflection on the cover glass ( 2.4 ) on the camera ( 4 ) and from an angular position of the simulator laser axis ( 2.1 ) to the cover glass ( 2.4 ) and the position of the image of the measuring laser beam ( 8.2 ) on the camera ( 4 ) a second fixed angle (γ) is determined, the tilt of the camera axis ( 4.1 ) to the simulator laser axis ( 2.1 ) and the adjustment angle from the second angle (γ) and the first angle (β) is calculated and the simulator laser beam by this adjustment angle by adjusting the first deflection unit ( 2.5 ) with respect to the simulator laser axis ( 2.1 ), after which the simulator line ( 2.3 ) parallel to the sighting line ( 1.2 ) is aligned.
+ Adjusting method according to claim 4, characterized in that the distance (A) is measured during the process.
+ Adjusting method according to claim 5, characterized in that the distance (A) is repeatedly measured until the shooter confirms that the projection laser beam ( 9.2 ) with the sighting line ( 1.2 ) in the target ( 12 ) and a last measured distance (A) is used for the calculation.
+ Adjustment method according to claim 4 or 5, characterized in that in the calculation of the adjustment angle and the distance (B) of the simulator laser axis ( 2.1 ) to the sighting line ( 1.2 ) received.

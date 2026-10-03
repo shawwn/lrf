@@ -29,3 +29,27 @@ Raw files are in `raw/`, extracted text in `<name>.txt`. Regenerate with `python
 | patent_US20190215459A1 | failed: HTTP Error 503: Service Unavailable | https://patents.google.com/patent/US20190215459A1/en |
 | wikipedia_hesa_shahed_136 | ok | https://en.wikipedia.org/wiki/HESA_Shahed_136 |
 | nap_laser_radar_2014_catalog | ok | https://nap.nationalacademies.org/catalog/18733/laser-radar-progress-and-opportunities-in-active-electro-optical-sensing |
+
+## Fetched by the patent research subagent
+
+`fetch_sources.py` got 503s from Google Patents, but the research subagent
+fetched these pages earlier with `tools/gpfetch.py` (and searched with
+`tools/gp.py`), saving each as text. US 6,917,415 came as a scanned PDF and
+was OCR'd page by page with `tools/pdfocr.py` (macOS Vision); US 8,767,188 is
+a scanned PDF that wasn't OCR'd. The figures taken from these (pulse length,
+pulse rate) are still marked unverified in NOTES.md.
+
+| Name | Status | Source |
+| --- | --- | --- |
+| patent_DE102008056953B3 | ok, text | https://patents.google.com/patent/DE102008056953B3/en |
+| patent_DE102013104308B4 | ok, text | https://patents.google.com/patent/DE102013104308B4/en |
+| patent_EP2256516B1 | ok, text | https://patents.google.com/patent/EP2256516B1/en |
+| patent_EP2766742B1 | ok, text | https://patents.google.com/patent/EP2766742B1/en |
+| patent_EP3159982B1 | ok, text | https://patents.google.com/patent/EP3159982B1/en |
+| patent_EP3353592B1 | ok, text | https://patents.google.com/patent/EP3353592B1/en |
+| patent_US11237399B2 | ok, text | https://patents.google.com/patent/US11237399B2/en |
+| patent_US11378785B2 | ok, text | https://patents.google.com/patent/US11378785B2/en |
+| patent_US6603534B2 | ok, text | https://patents.google.com/patent/US6603534B2/en |
+| patent_WO2011026487A3 | ok, text | https://patents.google.com/patent/WO2011026487A3/en |
+| patent_US6917415 | ok, OCR text (`patent_US6917415.ocr.txt`) and `raw/patent_US6917415.pdf` | US patent 6,917,415 |
+| patent_US8767188 | raw PDF only (`raw/patent_US8767188.pdf`), not OCR'd | US patent 8,767,188 |
