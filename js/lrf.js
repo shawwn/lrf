@@ -3510,8 +3510,9 @@ let lrf_demos = {};
 
     SCENES.two_echoes = {
         sliders: [
-            { anim: { period: 18 }, fmt: v => "trees " + round(v) + " m behind", visible: d => d.seg[0] === 0, map: lin_map(0, 150), def: 60 },
+            // the aim slider comes first so it doesn't move when the trees slider hides
             { fmt: v => "aim off " + v.toFixed(2) + " mrad", map: lin_map(0, 0.6), def: 0.15 },
+            { anim: { period: 18 }, fmt: v => "trees " + round(v) + " m behind", visible: d => d.seg[0] === 0, map: lin_map(0, 150), def: 60 },
         ],
         segs: [["Trees behind", "Sky behind"]],
         init(d) {
@@ -3521,7 +3522,7 @@ let lrf_demos = {};
         },
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
-            let gap = d.v[0], off = d.v[1] * 1e-3;
+            let off = d.v[0] * 1e-3, gap = d.v[1];
             let sky = d.seg[0] === 1;
             let Rq = TWO_R, Rb = TWO_R + gap;
             let top = h * 0.36;
