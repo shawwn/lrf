@@ -380,15 +380,16 @@
 
 <p>The distance from the pinhole to the sensor, measured in pixels, is the <em>focal length</em> <strong>f</strong>. A direction making an angle <strong>&alpha;</strong> with the camera's axis lands on the pixel that's <strong>f &times; tan(&alpha;)</strong> away from the image's center. For small angles that's just f &times; &alpha;, which means that every pixel spans the same small angle of 1/f radians.</p>
 
-<p>For this article I'll use a camera with a resolution of 1920 &times; 1080 pixels and a horizontal field of view of 10 degrees, which is a typical tele lens setup for spotting drones. Its focal length is about 10,970 pixels, and each pixel spans about 0.091 milliradians. Since the range finder's beam spans 0.8 milliradians, in the camera's image it's about <span class="lrfv" data-k="beam_px">8.8</span> pixels wide, regardless of the distance. In the demonstration below you can see a zoomed in part of the camera's image, rendered the way the sensor would record it, including a little blur from the lens, with the <span class="c_laser"><strong>beam's footprint</strong></span> marked with a circle. The slider controls the drone's <span class="c_range"><strong>distance</strong></span>:</p>
+<p>For this article I'll use a 4K camera, with a resolution of 3840 &times; 2160 pixels, and a horizontal field of view of 10 degrees, which is a typical tele lens setup for spotting drones. Its focal length is about 21,950 pixels, and each pixel spans about 0.046 milliradians. Since the range finder's beam spans 0.8 milliradians, in the camera's image it's about <span class="lrfv" data-k="beam_px">8.8</span> pixels wide, regardless of the distance. In the demonstration below you can see a zoomed in part of the camera's image, rendered the way the sensor would record it, with the <span class="c_laser"><strong>beam's footprint</strong></span> marked with a circle. The first slider controls the drone's <span class="c_range"><strong>distance</strong></span>, and the second one how much the image is blurred by the lens, and by the shimmering air between the camera and the drone:</p>
 
 <div class="segmented_container" id="camera_sizes_seg0"></div>
 <div class="padding_wrapper">
 <div class="drawer_container full_width ratio_60" id="camera_sizes"></div>
 </div>
 <div class="sl_range" id="camera_sizes_sl0"></div>
+<div class="sl_gray" id="camera_sizes_sl1"></div>
 
-<p>Both the drone and the beam's footprint are angles, so we can compare their sizes directly in the image. When the drone appears smaller than the circle, it's smaller than the beam, and we're on the steep part of the fourth power curve. For the quad that happens at about <span class="lrfv" data-k="quad_cross">540 m</span>. At its maximum range the quad is just a handful of pixels across, a smudge that a tracker can still follow against the sky.</p>
+<p>Both the drone and the beam's footprint are angles, so we can compare their sizes directly in the image. When the drone appears smaller than the circle, it's smaller than the beam, and we're on the steep part of the fourth power curve. For the quad that happens at about <span class="lrfv" data-k="quad_cross">540 m</span>. At its maximum range the quad is only about a dozen pixels across: enough to make out its shape, but not much more.</p>
 
 <p>The camera and the range finder also complement each other in another way. The camera's field of view covers about 34,000 beam footprints. Searching that area by sweeping the beam over it, one measurement per footprint at 25 measurements per second, would take over 20 minutes. The camera finds the drone, and the range finder measures its distance.</p>
 
@@ -403,7 +404,7 @@
 </div>
 <div class="sl_range" id="parallax_top_sl0"></div>
 
-<p>Even though the beam is parallel to the camera's axis, the camera sees its spot off center. The spot is always 4 centimeters to the right of the axis, and the angle at which the camera sees those 4 centimeters shrinks with distance. This is <em>parallax</em>, the same effect that makes nearby objects shift more than distant ones when you move your head. The spot appears <strong>f &times; b / R</strong> pixels from the center: about 44 pixels at 10 meters, 9 pixels, one beam width, at 50 meters, and less than half a pixel at a kilometer.</p>
+<p>Even though the beam is parallel to the camera's axis, the camera sees its spot off center. The spot is always 4 centimeters to the right of the axis, and the angle at which the camera sees those 4 centimeters shrinks with distance. This is <em>parallax</em>, the same effect that makes nearby objects shift more than distant ones when you move your head. The spot appears <strong>f &times; b / R</strong> pixels from the center: about 88 pixels at 10 meters, 18 pixels, one beam width, at 50 meters, and less than a pixel at a kilometer.</p>
 
 <p>In reality the beam will never be exactly parallel to the camera. Machining tolerances, the way the module is screwed down, and the module's own internal alignment all add up to a small angle between the two. In the demonstration below you can introduce a <span class="c_mis"><strong>misalignment</strong></span> with the second slider. The plot on the right shows where the beam lands in the image, as a function of the inverse of the distance:</p>
 
@@ -417,7 +418,7 @@
 
 <div class="equation">u = f &times; &beta; + f &times; b &times; <span class="equation_frac"><span>1</span><span class="equation_div_symbol">/</span><span>R</span></span></div>
 
-<p>Its slope tells us the baseline, and its intercept tells us the misalignment. Very far away, where 1/R approaches zero, only the misalignment remains. The pixel at which the spot lands for an infinitely distant target is called the <em>boresight</em>. Note that a misalignment of a single milliradian, a tenth of a millimeter of tilt across a 10 centimeter mounting plate, shifts the spot by 11 pixels, more than the width of the beam. Mechanical tolerances alone can easily make the beam miss a distant drone entirely.</p>
+<p>Its slope tells us the baseline, and its intercept tells us the misalignment. Very far away, where 1/R approaches zero, only the misalignment remains. The pixel at which the spot lands for an infinitely distant target is called the <em>boresight</em>. Note that a misalignment of a single milliradian, a tenth of a millimeter of tilt across a 10 centimeter mounting plate, shifts the spot by 22 pixels, more than the width of the beam. Mechanical tolerances alone can easily make the beam miss a distant drone entirely.</p>
 
 <p>Of course, the baseline and the misalignment can point in any direction, so the spot moves along a line in the two dimensional image. In the demonstration below you can see that line, from 5 meters out to infinity, drawn on the camera's image. The slider controls the <span class="c_range"><strong>distance</strong></span> of the <span class="c_quad"><strong>quad</strong></span> and the beam's footprint:</p>
 
@@ -450,7 +451,7 @@
 <div class="sl_range" id="apriltag_pose_sl0"></div>
 <div class="sl_gray" id="apriltag_pose_sl1"></div>
 
-<p>At 20 meters our 30 centimeter tag spans about 165 pixels, and its distance can be computed to within a centimeter or so, far more precisely than the range finder's own accuracy of half a meter. This means we know, for every camera frame, exactly where the tag is in 3D space.</p>
+<p>At 20 meters our 30 centimeter tag spans about 330 pixels, and its distance can be computed to within a centimeter or so, far more precisely than the range finder's own accuracy of half a meter. This means we know, for every camera frame, exactly where the tag is in 3D space.</p>
 
 <p>Now we can calibrate. The turret slowly sweeps the beam across the tag, stopping for each measurement, so that the beam doesn't move during the accumulation. For every stop we record the camera's image and the range finder's measurement. Since the tag's distance is known, we can tell whether the beam hit the tag: if the range finder reports an echo within a meter or two of the tag's distance, it's a <span class="c_hit"><strong>hit</strong></span>, and if it reports something further away, or nothing at all, it's a <span class="c_miss"><strong>miss</strong></span>. For this to work the tag needs a clear background, at least 15 meters behind it.</p>
 

@@ -583,7 +583,8 @@
     /* Camera                                                              */
     /* ------------------------------------------------------------------ */
 
-    const DEFAULT_CAMERA = { width_px: 1920, height_px: 1080, hfov_deg: 10 };
+    // 4K sensor behind a 10 degree tele lens: about 0.046 mrad per pixel
+    const DEFAULT_CAMERA = { width_px: 3840, height_px: 2160, hfov_deg: 10 };
 
     function camera_focal_px(cam) {
         return cam.width_px / 2 / Math.tan(cam.hfov_deg * Math.PI / 360);

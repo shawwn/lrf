@@ -3712,9 +3712,9 @@ let lrf_demos = {};
         },
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
-            let f_px = 1100;
-            let sensor_w = min(w * 0.5, (h * 0.32) * 1920 / f_px);
-            let k = sensor_w / 1920;          // drawing pixels per sensor pixel
+            let f_px = 2200, SW = 3840;       // a wide angle camera with the article's sensor
+            let sensor_w = min(w * 0.5, (h * 0.32) * SW / f_px);
+            let k = sensor_w / SW;            // drawing pixels per sensor pixel
             let fdraw = f_px * k;
             let px = w / 2, py = h - fdraw - fs * 3.6;
             let sy = py + fdraw * 0.0;
@@ -3726,13 +3726,13 @@ let lrf_demos = {};
             line(ctx, px + 3, py, bx1, py, "#555", 3);
             // sensor
             line(ctx, px - sensor_w / 2, by1, px + sensor_w / 2, by1, col.cam, 4);
-            for (let u of [0, 480, 960, 1440, 1920]) {
+            for (let u of [0, 960, 1920, 2880, 3840]) {
                 let x = px - sensor_w / 2 + u * k;
                 line(ctx, x, by1 + 2, x, by1 + 7, col.cam, 1);
                 text(ctx, String(u), x, by1 + 7 + fs * 0.7, col.cam, fs - 3);
             }
             // field of view wedge
-            let fov_half = atan(960 / f_px);
+            let fov_half = atan(SW / 2 / f_px);
             for (let s of [-1, 1]) {
                 let L = py - 4;
                 line(ctx, px, py, px + s * tan(fov_half) * L, py - L, rgba(col.cam, 0.35), 1, [4, 4]);
@@ -3740,10 +3740,10 @@ let lrf_demos = {};
             // drone and ray
             let dx = d.st.drone[0] * w, dy = d.st.drone[1] * h;
             let a = atan2(dx - px, py - dy);
-            let u = 960 - f_px * tan(a);       // image is inverted on the sensor
+            let u = SW / 2 - f_px * tan(a);    // image is inverted on the sensor
             let hx = px - fdraw * tan(a);
             line(ctx, dx, dy, px, py, rgba(col.quad, 0.8), 1.5);
-            let inside = abs(tan(a) * f_px) <= 960;
+            let inside = abs(tan(a) * f_px) <= SW / 2;
             line(ctx, px, py, hx, by1, inside ? col.quad : col.miss, 1.5, inside ? null : [3, 3]);
             if (inside)
                 circle(ctx, hx, by1, 4, col.quad, "#fff", 1.5);
@@ -3760,7 +3760,7 @@ let lrf_demos = {};
             text(ctx, "α = " + (a * 180 / pi).toFixed(1) + "°", px + (a > 0 ? 1 : -1) * 54, py - 54, col.text, fs - 1, a > 0 ? "left" : "right");
             dimension(ctx, bx1 + 16, py, bx1 + 16, by1, col.cam, "", fs - 2);
             text(ctx, "f = " + fmt_int(f_px) + " px", bx1 + 24, (py + by1) / 2, col.cam, fs - 1, "left", "middle", 500);
-            let msg = inside ? "lands on pixel " + round(1920 - u) + " (image flipped back)" : "outside the field of view";
+            let msg = inside ? "lands on pixel " + round(SW - u) + " (image flipped back)" : "outside the field of view";
             halo_text(ctx, msg, w / 2, by1 + fs * 2.2, inside ? col.quad : col.light_text, fs - 1, "center", "middle", 500);
         },
     };
@@ -3771,14 +3771,14 @@ let lrf_demos = {};
      * A zoomed in part of the camera's image, rendered the way a sensor sees
      * it: the target is drawn at its true size with 16 x 16 samples per
      * camera pixel, each pixel takes the average of its samples (so a part
-     * covering 10% of a pixel tints it 10%), and a small Gaussian blur
-     * stands in for the lens (sigma 0.6 px, about the diffraction spot of a
-     * ~33 mm f/2.8 lens on ~3 um pixels).
+     * covering 10% of a pixel tints it 10%), and a Gaussian blur of sigma
+     * `blur` pixels stands in for the lens and the air. Around 0.6 to 1 px is
+     * typical for the diffraction spot of a tele lens on small pixels;
+     * turbulence and focus errors make it larger.
      */
     const CAM_SS = 16;
-    const CAM_BLUR = 0.6;
 
-    function camera_render(st, nw, nh, draw_target) {
+    function camera_render(st, nw, nh, draw_target, blur) {
         let SS = CAM_SS;
         if (!st.off || st.off.width !== nw * SS || st.off.height !== nh * SS) {
             st.off = document.createElement("canvas");
@@ -3814,9 +3814,10 @@ let lrf_demos = {};
         for (let j = 0; j < px.length; j++) px[j] *= inv;
 
         // lens blur: separable Gaussian, edges clamped
-        let kr = 2, ker = [];
+        let sg = max(0.05, blur === undefined ? 0.8 : blur);
+        let kr = max(1, ceil(3 * sg)), ker = [];
         let ks = 0;
-        for (let k = -kr; k <= kr; k++) { let v = exp(-k * k / (2 * CAM_BLUR * CAM_BLUR)); ker.push(v); ks += v; }
+        for (let k = -kr; k <= kr; k++) { let v = exp(-k * k / (2 * sg * sg)); ker.push(v); ks += v; }
         ker = ker.map(v => v / ks);
         let tmp = new Float32Array(px.length), out = new Float32Array(px.length);
         for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) for (let c = 0; c < 3; c++) {
@@ -3843,18 +3844,21 @@ let lrf_demos = {};
     }
 
     SCENES.camera_sizes = {
-        sliders: [{ anim: { period: 18 }, fmt: v => "R = " + fmt_dist(v), map: log_map(50, 4000), def: 400 }],
+        sliders: [
+            { anim: { period: 18 }, fmt: v => "R = " + fmt_dist(v), map: log_map(50, 4000), def: 400 },
+            { fmt: v => "blur \u03c3 " + v.toFixed(1) + " px", map: lin_map(0, 3), def: 0.8 },
+        ],
         segs: [["10\" quad", "Shahed-136"]],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let R = d.v[0];
             let shahed = d.seg[0] === 1;
-            let nw = 32, nh = max(8, round(nw * h / w));
+            let nw = 48, nh = max(8, round(nw * h / w));
             let size = (shahed ? 2.5 : 0.43) / R * FPX;
             let nat = camera_render(d.st, nw, nh, o => {
                 if (shahed) draw_shahed_front(o, nw / 2, nh / 2, size, "#55595D", true);
                 else draw_quad_sprite(o, nw / 2, nh / 2, size, "#2D3439", 0, 0, true);
-            });
+            }, d.v[1]);
 
             let k = w / nw;
             ctx.imageSmoothingEnabled = false;
@@ -3872,7 +3876,7 @@ let lrf_demos = {};
             circle(ctx, cx, cy, beam_px / 2 * k, null, col.laser, 2);
             halo_text(ctx, (shahed ? "Shahed wingspan " : "quad ") + size.toFixed(1) + " px", 12, 18, shahed ? col.shahed : col.quad, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
             halo_text(ctx, "beam " + beam_px.toFixed(1) + " px", 12, 18 + fs * 1.4, col.laser, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
-            halo_text(ctx, fmt_dist(R) + " away; one square = one camera pixel, with lens blur", w - 12, h - 14, col.text, fs - 2, "right", "middle", 400, "rgba(255,255,255,0.85)");
+            halo_text(ctx, fmt_dist(R) + " away; one square = one camera pixel", w - 12, h - 14, col.text, fs - 2, "right", "middle", 400, "rgba(255,255,255,0.85)");
         },
     };
 
@@ -3915,7 +3919,7 @@ let lrf_demos = {};
             // camera image strip
             let ix = left + 10, iw = w - left - 20;
             let iy = h * 0.2, ih = h * 0.36;
-            let range_px = 60;
+            let range_px = 120;
             round_rect(ctx, ix, iy, iw, ih, 6, "#EEF3F8", "#D5DCE4");
             let X = u => ix + iw / 2 + u / range_px * (iw / 2 - 8);
             line(ctx, X(0), iy + 4, X(0), iy + ih - 4, rgba(col.cam, 0.6), 1, [4, 3]);
@@ -3924,7 +3928,7 @@ let lrf_demos = {};
             let r_draw = beam_px / 2 * (iw / 2 - 8) / range_px;
             let ux = X(min(u, range_px * 1.2));
             draw_beam_spot(ctx, ux, iy + ih / 2, max(2, r_draw), col.laser, 0.9);
-            for (let p of [-60, -30, 0, 30, 60]) {
+            for (let p of [-120, -60, 0, 60, 120]) {
                 line(ctx, X(p), iy + ih, X(p), iy + ih + 5, col.axis, 1);
                 text(ctx, (p > 0 ? "+" : p < 0 ? "−" : "") + abs(p), X(p), iy + ih + 5 + fs * 0.7, col.light_text, fs - 3);
             }
@@ -3964,9 +3968,9 @@ let lrf_demos = {};
 
             // plot of pixel offset vs 1/R
             let plot = new Plot(ctx, left + 52, 18, w - left - 70, h - 18 - fs * 3.4, {
-                xmin: 0, xmax: 0.2, ymin: -40, ymax: 120, fs: fs - 1,
+                xmin: 0, xmax: 0.2, ymin: -80, ymax: 240, fs: fs - 1,
                 xticks: [0, 0.02, 0.05, 0.1, 0.2], xfmt: v => v === 0 ? "∞" : round(1 / v) + " m",
-                yticks: [-40, 0, 40, 80, 120], yfmt: v => (v > 0 ? "+" : v < 0 ? "−" : "") + abs(v),
+                yticks: [-80, 0, 80, 160, 240], yfmt: v => (v > 0 ? "+" : v < 0 ? "−" : "") + abs(v),
                 xlabel: "distance (spaced as 1/R)", ylabel: "pixels from center", ylabel_offset: fs * 3,
             });
             plot.frame();
@@ -3991,7 +3995,7 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let R = d.v[0];
             let mount = TRUE_MOUNT;
-            let u0 = -40, u1 = 140;
+            let u0 = -80, u1 = 280;
             let k = w / (u1 - u0);
             let vh = h / k;
             let v0 = -vh / 2 + 10;
@@ -4135,7 +4139,7 @@ let lrf_demos = {};
             text(ctx, "top view", 10, 12, col.light_text, fs - 3, "left");
 
             // camera image: the central 800 x 450 pixels
-            let crop = 800;
+            let crop = 1600;
             let ix = left + 10, iw = w - left - 20;
             let ih = iw * 9 / 16;
             if (ih > h - 50) { ih = h - 50; iw = ih * 16 / 9; ix = left + 10 + (w - left - 20 - iw) / 2; }
@@ -4166,7 +4170,7 @@ let lrf_demos = {};
             ax([-sin(yaw), 0, -cos(yaw)], "#1E88E5");
             ctx.restore();
             let span = abs(corners[1][0] - corners[0][0]) / k;
-            text(ctx, "camera image, central 800 × 450 pixels", ix + iw / 2, iy - 10, col.cam, fs - 2, "center", "middle", 500);
+            text(ctx, "camera image, central 1600 × 900 pixels", ix + iw / 2, iy - 10, col.cam, fs - 2, "center", "middle", 500);
             text(ctx, "distance " + D.toFixed(2) + " m,  yaw " + round(d.v[1]) + "°,  tag spans " + round(span) + " px", ix + iw / 2, iy + ih + fs * 1.2, col.text, fs - 1, "center", "middle", 500);
         },
     };
@@ -4174,8 +4178,8 @@ let lrf_demos = {};
     /* -------------------------- apriltag sweep ------------------------ */
 
     const SWEEP_R = 50;         // tag distance during the sweep, m
-    const SWEEP_STEP = 4;       // pixels between stops (0.36 mrad of pan or tilt)
-    const SWEEP_SPAN = 70;      // half range of tag center offsets around the spot, pixels
+    const SWEEP_STEP = 8;       // pixels between stops (0.36 mrad of pan or tilt)
+    const SWEEP_SPAN = 140;     // half range of tag center offsets around the spot, pixels
     const PAPER = TAG_SIZE * 1.25;  // the black square plus its white border
 
     function sweep_truth() {
@@ -4379,7 +4383,7 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let mode = d.seg[0];
             let plot = new Plot(ctx, 60, 16, w - 80, h - 16 - fs * 3.4, {
-                xmin: 0, xmax: 0.12, ymin: 0, ymax: 70, fs: fs - 1,
+                xmin: 0, xmax: 0.12, ymin: 0, ymax: 140, fs: fs - 1,
                 xticks: [0, 0.02, 0.05, 0.1], xfmt: v => v === 0 ? "∞" : round(1 / v) + " m",
                 xlabel: "tag distance (spaced as 1/R)", ylabel: "spot, pixels right of center", ylabel_offset: fs * 3.2,
             });
