@@ -56,6 +56,9 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
     visualization (Gaussian shaded beam, looking-down-the-beam inset, visible wings),
     sensor-like camera rendering, 4K camera with a blur slider.
 25. The camera is 72 mm horizontally offset from the LRF.
+26. A realistic Python implementation of the calibration, saved to disk, that works for
+    arbitrary AprilTag orientations: docs/lrf/calibration/ (algorithm, simulator, README).
+27. The beam is rectangular, not elliptical (DLEM 20: ~0.8 mrad, symmetrical, so square).
 
 ## Decisions (from Q&A)
 

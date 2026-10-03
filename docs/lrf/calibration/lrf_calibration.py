@@ -29,6 +29,13 @@ calibration. The fit models how much of a Gaussian beam lands on the board,
 so the stops near the edges, where the beam is only partly on the board,
 carry most of the information, and that's where the sweep spends its time.
 
+The board can be at any orientation the camera can still read the tag at:
+yawed, pitched, rolled in its own plane, upside down, off to the side, and
+the tag needn't be centered on the board. Everything is computed in the
+board's own frame from the measured pose; the sweep plans its lines along
+the board's edges, the turret moves are worked out from the 3D geometry,
+and the beam model uses the footprint's true stretch on a tilted board.
+
 Nothing here depends on the turret's kinematics or the accuracy of its
 encoders: the camera and the range finder share the moving plate, and the
 board's pose is measured from the image at every stop. The turret only has
@@ -73,7 +80,7 @@ from typing import Callable, Optional, Protocol, Sequence
 import numpy as np
 from scipy import optimize
 from scipy.spatial.transform import Rotation
-from scipy.special import erf, erfcinv, ndtr
+from scipy.special import ndtr
 
 
 # ---------------------------------------------------------------------------
@@ -154,19 +161,49 @@ class Board:
 
 @dataclass
 class LRFSpec:
-    """Range finder properties the calibration needs (defaults: DLEM 20)."""
-    divergence_mrad: float = 0.8        # full angle, 1/e^2
+    """Range finder properties the calibration needs (defaults: DLEM 20).
+
+    The beam is a rectangle, as from a collimator that images a laser
+    diode's emitter: evenly lit inside, with edges softened by diffraction
+    from the exit aperture. Jenoptik describes the DLEM 20's divergence as
+    about 0.8 mrad and symmetrical, so by default it's a square; the DLEM
+    4k's is 0.6 x 0.7 mrad. The rectangle's sides are u and v, u at
+    beam_roll_deg from the camera's x axis. beam_shape="gaussian" models a
+    round Gaussian beam instead, with divergence_mrad its 1/e^2 full angle.
+    """
+    beam_shape: str = "rectangular"
+    divergence_mrad: float = 0.8                # full angle across the u side
+    divergence_v_mrad: Optional[float] = None   # across the v side, if different
+    edge_blur_mrad: float = 0.1                 # 1 sigma edge softness (assumed: about diffraction at 8 mm)
+    beam_roll_deg: float = 0.0
     exit_beam_mm: float = 8.0
     min_range_m: float = 10.0
     resolution_m: float = 0.1
     accuracy_m: float = 0.5
-    discrimination_m: float = 25.0      # closer echoes merge into one
-    threshold_sigma: float = 5.0        # detection threshold, in noise sigmas
+    discrimination_m: float = 25.0              # closer echoes merge into one
+    threshold_sigma: float = 5.0                # detection threshold, in noise sigmas
+
+    def profile(self, s):
+        """The beam's cross section at distance s along its u and v axes:
+        each a uniform distribution of half width h plus Gaussian blur.
+        Returns (h_u, h_v, sigma_u, sigma_v) in meters."""
+        s = np.asarray(s, float)
+        d0 = self.exit_beam_mm * 1e-3
+        tu = self.divergence_mrad * 1e-3
+        tv = (self.divergence_v_mrad or self.divergence_mrad) * 1e-3
+        if self.beam_shape == "gaussian":
+            zero = np.zeros_like(s)
+            # sigma is half the 1/e^2 radius, as in the article's model
+            return zero, zero, 0.25 * np.sqrt(d0 * d0 + (tu * s) ** 2), 0.25 * np.sqrt(d0 * d0 + (tv * s) ** 2)
+        blur = np.maximum(0.5e-3, self.edge_blur_mrad * 1e-3 * s)
+        return 0.5 * (d0 + tu * s), 0.5 * (d0 + tv * s), blur, blur
 
     def beam_radius(self, s):
-        """1/e^2 radius of the beam at distance s (same model as the article)."""
-        d0 = self.exit_beam_mm * 1e-3
-        return 0.5 * np.sqrt(d0 * d0 + (self.divergence_mrad * 1e-3 * s) ** 2)
+        """Rough half size of the footprint, for planning the sweep."""
+        hu, hv, su, sv = self.profile(s)
+        if self.beam_shape == "gaussian":
+            return 2 * np.maximum(su, sv)
+        return np.maximum(hu, hv) + np.maximum(su, sv)
 
 
 @dataclass
@@ -300,25 +337,93 @@ def beam_on_board(origin, direction, R, t):
     return s, local[:, :2], d_tag
 
 
-def _inside(lo, hi, x, w):
-    """Fraction of a 1D Gaussian beam profile (1/e^2 radius w, centered at
-    x) that falls between lo and hi."""
-    k = math.sqrt(2.0) / w
-    return 0.5 * (erf(k * (hi - x)) - erf(k * (lo - x)))
+def beam_axes(spec: LRFSpec, direction):
+    """Unit vectors across the beam, along the rectangle's u and v sides
+    (camera frame)."""
+    d = np.asarray(direction, float)
+    u0 = np.array([1.0, 0.0, 0.0]) - d[0] * d
+    u0 /= np.linalg.norm(u0)
+    v0 = np.cross(d, u0)
+    r = math.radians(spec.beam_roll_deg)
+    return math.cos(r) * u0 + math.sin(r) * v0, -math.sin(r) * u0 + math.cos(r) * v0
 
 
-def echo_fraction(board: Board, spec: LRFSpec, s, xy, d_tag):
+def board_jacobian(spec: LRFSpec, R, direction):
+    """How positions across the beam map onto each board.
+
+    A board point (x, y), relative to where the beam's center lands, sits
+    at (u, v) = K (x, y) across the beam, the rows of K being the beam's u
+    and v axes in the tag's frame (light travels along the beam, so this is
+    a projection along it). Inverting, (x, y) = J (u, v). On a board facing
+    the beam J is a rotation; turning the board away stretches it by
+    1/cos of the angle. Returns J00, J01, J10, J11, each (N,).
+    """
+    eu, ev = beam_axes(spec, direction)
+    U = np.einsum("nji,j->ni", R, eu)
+    V = np.einsum("nji,j->ni", R, ev)
+    det = U[:, 0] * V[:, 1] - U[:, 1] * V[:, 0]
+    return V[:, 1] / det, -U[:, 1] / det, -V[:, 0] / det, U[:, 0] / det
+
+
+def footprint(spec: LRFSpec, s, R, direction):
+    """The footprint's spread along the board's x and y axes.
+
+    Along x, a footprint point sits at J00 u + J01 v, the sum of the
+    rectangle's two sides (uniform distributions, foreshortened and rotated
+    onto the board) and their Gaussian blur. Returns (a, b, sigma) for x and
+    for y: the two uniform half widths and the blur.
+    """
+    J00, J01, J10, J11 = board_jacobian(spec, R, direction)
+    hu, hv, su, sv = spec.profile(s)
+    mx = (np.abs(J00) * hu, np.abs(J01) * hv, np.hypot(J00 * su, J01 * sv))
+    my = (np.abs(J10) * hu, np.abs(J11) * hv, np.hypot(J10 * su, J11 * sv))
+    return mx, my
+
+
+_SQRT2PI = math.sqrt(2 * math.pi)
+
+
+def spread_cdf(x, a, b, sigma):
+    """P(A + B + G <= x) for A uniform on [-a, a], B uniform on [-b, b],
+    and G normal with standard deviation sigma.
+
+    With chi the second antiderivative of Phi(y / sigma), the double
+    integral over A and B is a second difference of chi.
+    """
+    x, a, b, sigma = np.broadcast_arrays(*(np.asarray(v, float) for v in (x, a, b, sigma)))
+    gaussian = a + b < 1e-2 * sigma
+    a = np.maximum(a, 1e-3 * sigma)
+    b = np.maximum(b, 1e-3 * sigma)
+
+    def chi(y):
+        z = y / sigma
+        return sigma * sigma * (0.5 * (z * z + 1) * ndtr(z) + 0.5 * z * np.exp(-0.5 * z * z) / _SQRT2PI)
+
+    boxed = (chi(x + a + b) - chi(x + a - b) - chi(x - a + b) + chi(x - a - b)) / (4 * a * b)
+    return np.where(gaussian, ndtr(x / sigma), np.clip(boxed, 0.0, 1.0))
+
+
+def _inside(lo, hi, c, m):
+    """Fraction of a footprint spread m = (a, b, sigma), centered at c,
+    that falls between lo and hi."""
+    return spread_cdf(hi - c, *m) - spread_cdf(lo - c, *m)
+
+
+def echo_fraction(board: Board, spec: LRFSpec, s, xy, R, direction):
     """Echo relative to the whole beam landing on white board: the beam's
     power on the board, minus what the darker tag pattern doesn't return.
-    A tilted board stretches the footprint by 1/cos(incidence)."""
-    w = spec.beam_radius(s)
-    wx = w * np.sqrt(1 + (d_tag[:, 0] / d_tag[:, 2]) ** 2)
-    wy = w * np.sqrt(1 + (d_tag[:, 1] / d_tag[:, 2]) ** 2)
+
+    Taking the product of the x and y spreads is exact wherever the
+    footprint crosses a single edge, at any orientation of the board or the
+    beam; near a corner it ignores how the footprint is sheared, and the
+    sweep stays away from the corners.
+    """
+    mx, my = footprint(spec, s, R, direction)
     x, y = xy[:, 0], xy[:, 1]
     x0, x1, y0, y1 = board.extents()
     h = board.tag_size_m / 2
-    on_board = _inside(x0, x1, x, wx) * _inside(y0, y1, y, wy)
-    on_tag = _inside(-h, h, x, wx) * _inside(-h, h, y, wy)
+    on_board = _inside(x0, x1, x, mx) * _inside(y0, y1, y, my)
+    on_tag = _inside(-h, h, x, mx) * _inside(-h, h, y, my)
     return on_board - (1 - board.tag_relative_reflectance) * on_tag
 
 
@@ -331,11 +436,27 @@ def hit_probability(F, strength, spec: LRFSpec, lapse: float):
     return lapse + (1 - 2 * lapse) * ndtr(strength * F - spec.threshold_sigma)
 
 
-def boundary_offset(strength, w, spec: LRFSpec):
+def boundary_offset(strength, m, spec: LRFSpec):
     """How far outside a straight board edge the beam's center can be and
-    still be detected half the time (negative: inside)."""
-    q = min(2 * spec.threshold_sigma / max(strength, 1e-9), 1.999)
-    return w / math.sqrt(2) * erfcinv(q)
+    still be detected half the time (negative: inside), for a footprint
+    spread m = (a, b, sigma) across the edge."""
+    q = spec.threshold_sigma / max(strength, 1e-9)
+    if q >= 1:
+        return 0.0
+    a, b, sg = (float(v) for v in m)
+    L = a + b + 15 * sg
+    return optimize.brentq(lambda u: float(spread_cdf(-u, a, b, sg)) - q, -L, L)
+
+
+def angles_for_shift(origin, direction, R, t, shift_tag):
+    """Change of the beam's (yaw, pitch), in radians, that moves where it
+    lands on a board at pose (R, t) by shift_tag (tag frame, meters)."""
+    _, xy, _ = beam_on_board(origin, direction, R[None], t[None])
+    P0 = R @ np.r_[xy[0], 0.0] + t
+    P1 = R @ np.r_[xy[0] + np.asarray(shift_tag, float), 0.0] + t
+    v0, v1 = P0 - origin, P1 - origin
+    return (math.atan2(v1[0], v1[2]) - math.atan2(v0[0], v0[2]),
+            math.atan2(v1[1], v1[2]) - math.atan2(v0[1], v0[2]))
 
 
 def _az_el(v):
@@ -400,6 +521,7 @@ class Collector:
         self.frames, self.max_rms_px, self.log = frames, max_rms_px, log
         self.rng = np.random.default_rng(seed)
         self.gate_m = max(1.5, 3 * spec.accuracy_m)
+        self.boards = {}            # session -> board, for fits that include earlier sessions
 
     def pose(self, board: Board):
         corners = self.rig.tag_corners(board.tag_id, self.frames)
@@ -449,11 +571,13 @@ class Collector:
                 out.append(st)
         return out
 
-    def transects(self, board, n_per_edge, offset_m, half_len_m, step_m):
-        """Lines of points crossing each edge of the board at right angles,
-        centered offset_m outside it. Each line starts at a random fraction
-        of a step, so the stops don't all land at the same place relative to
-        the edge; the fit then resolves the edge to a fraction of a step."""
+    def transects(self, board, n_per_edge, axes):
+        """Lines of points crossing each edge of the board at right angles.
+        axes["x"] (left and right edges) and axes["y"] (top and bottom) are
+        (offset_m, half_len_m, step_m): each line is centered offset_m
+        outside the edge. Each line starts at a random fraction of a step, so
+        the stops don't all land at the same place relative to the edge; the
+        fit then resolves the edge to a fraction of a step."""
         x0, x1, y0, y1 = board.extents()
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
         fr = [0.0] if n_per_edge == 1 else np.linspace(-0.3, 0.3, n_per_edge)
@@ -463,22 +587,32 @@ class Collector:
                 if edge in ("left", "right"):
                     base = np.array([x0 if edge == "left" else x1, cy + f * (y1 - y0)])
                     normal = np.array([-1.0 if edge == "left" else 1.0, 0.0])
+                    offset_m, half_len_m, step_m = axes["x"]
                 else:
                     base = np.array([cx + f * (x1 - x0), y0 if edge == "top" else y1])
                     normal = np.array([0.0, -1.0 if edge == "top" else 1.0])
+                    offset_m, half_len_m, step_m = axes["y"]
                 u = np.arange(-half_len_m, half_len_m, step_m) + self.rng.uniform(0, step_m)
                 if len(lines) % 2:
                     u = u[::-1]
                 lines.append(base + (offset_m + u)[:, None] * normal)
         return lines
 
+    def stretch(self, guess, ref):
+        """How much a tilted board stretches distances along its x and y
+        axes, as seen along the beam (1 for a board facing the beam)."""
+        J00, J01, J10, J11 = (float(v[0]) for v in board_jacobian(self.spec, ref[2][None], guess.direction()))
+        return math.hypot(J00, J01), math.hypot(J10, J11)
+
     def check_background(self, board, session, guess, ref, s0):
         """Point the beam well off the board: anything echoing within the
         discrimination distance behind the board would merge with its echo
         near the edges and spoil the measurement."""
         x0, x1, y0, y1 = board.extents()
+        kx, ky = self.stretch(guess, ref)
         far = guess.tolerance_mrad * 1e-3 * s0 + 4 * float(self.spec.beam_radius(s0))
-        pts = [(x0 - far, 0), (x1 + far, 0), (0, y0 - far)]
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        pts = [(x0 - far * kx, cy), (x1 + far * kx, cy), (cx, y0 - far * ky)]
         close = []
         for st in self.run_points(board, session, guess, ref, pts):
             close += [r for r in st.echoes if r < st.expected_m + self.spec.discrimination_m]
@@ -490,49 +624,64 @@ class Collector:
     def find_board(self, board, session, guess, ref, s0):
         """If the guessed beam misses the board entirely, search a grid of
         points until it hits, then shift the guess by the offset found."""
-        st = self.run_points(board, session, guess, ref, [(0.0, 0.0)])
+        x0, x1, y0, y1 = board.extents()
+        st = self.run_points(board, session, guess, ref, [((x0 + x1) / 2, (y0 + y1) / 2)])
         if st and st[0].hit:
             return guess, st
         x0, x1, y0, y1 = board.extents()
+        c = np.array([(x0 + x1) / 2, (y0 + y1) / 2])
         step = min(x1 - x0, y1 - y0) / 3
-        reach = guess.tolerance_mrad * 1e-3 * s0 + max(x1 - x0, y1 - y0) / 2
+        reach = guess.tolerance_mrad * 1e-3 * s0 * max(self.stretch(guess, ref)) + max(x1 - x0, y1 - y0) / 2
         n = int(math.ceil(reach / step))
-        grid = sorted(((i * step, j * step) for i in range(-n, n + 1) for j in range(-n, n + 1)),
-                      key=lambda p: math.hypot(*p))
+        grid = sorted((c + (i * step, j * step) for i in range(-n, n + 1) for j in range(-n, n + 1)),
+                      key=lambda p: math.hypot(*(p - c)))
         tried = st
         for p in grid[1:]:
             s = self.run_points(board, session, guess, ref, [p])
             tried += s
             if s and s[0].hit:
                 # the true beam lands near the board's center when the guess
-                # lands at p, so the true beam is offset by -p
-                return _shift_guess(guess, -p[0] / s0, -p[1] / s0, guess.tolerance_mrad / 3), tried
+                # lands at p: shift the guess by (center - p), on the board
+                dyaw, dpitch = angles_for_shift(np.array(guess.origin_m), guess.direction(),
+                                                ref[2], ref[3], c - p)
+                return _shift_guess(guess, dyaw, dpitch, guess.tolerance_mrad / 3), tried
         raise RuntimeError("no echo from the board anywhere within the tolerance; check the "
                            "range gate, the attenuation, and the tolerance")
 
     def session(self, board: Board, session: int, guess: MountGuess, earlier: Sequence[Stop] = ()):
         """Sweep one board placement. Returns its stops and an improved guess."""
         t_start = time.time()
-        ref = self.aim(board, guess)
+        self.boards[session] = board
+        x0, x1, y0, y1 = board.extents()
+        center = ((x0 + x1) / 2, (y0 + y1) / 2)
+        ref = self.aim(board, guess, center)
         s0 = float(np.linalg.norm(ref[3]))
         if s0 < self.spec.min_range_m * 1.2:
             raise RuntimeError("board at %.1f m is too close; the range finder's minimum is %.0f m"
                                % (s0, self.spec.min_range_m))
         w = float(self.spec.beam_radius(s0))
-        self.log("session %d: board %.1f m away, beam footprint %.1f cm" % (session, s0, 200 * w))
+        kx, ky = self.stretch(guess, ref)
+        _, _, d_tag = beam_on_board(np.array(guess.origin_m), guess.direction(), ref[2][None], ref[3][None])
+        incidence = math.degrees(math.acos(min(1.0, abs(float(d_tag[0, 2])))))
+        if incidence > 70:
+            raise RuntimeError("the board is turned %.0f degrees away from the beam; keep it under 70"
+                               % incidence)
+        self.log("session %d: board %.1f m away, %.0f degrees from facing the beam, footprint ~%.1f cm"
+                 % (session, s0, incidence, 200 * w))
         self.check_background(board, session, guess, ref, s0)
         guess, stops = self.find_board(board, session, guess, ref, s0)
         if guess.tolerance_mrad * 1e-3 * s0 > min(board.width_m, board.height_m) / 2:
             # the beam could be far off: re-aim with the improved guess
-            ref = self.aim(board, guess)
+            ref = self.aim(board, guess, center)
 
         # coarse pass: one line across each edge, wide enough for the tolerance
         tol = guess.tolerance_mrad * 1e-3 * s0
-        lines = self.transects(board, 1, 0.0, tol + 3 * w, max(w / 2, 0.25e-3 * s0))
+        step = max(w / 2, 0.25e-3 * s0)
+        lines = self.transects(board, 1, {"x": (0.0, (tol + 3 * w) * kx, step * kx),
+                                           "y": (0.0, (tol + 3 * w) * ky, step * ky)})
         for line in lines:
             stops += self.run_points(board, session, guess, ref, line)
-        fit = fit_beam(list(earlier) + stops, {**{e.session: board for e in earlier}, session: board},
-                       self.spec, guess, fit_origin=False, bootstrap=0)
+        fit = fit_beam(list(earlier) + stops, self.boards, self.spec, guess, fit_origin=False, bootstrap=0)
         strength = fit.strength[session]
         sigma = max(0.1, 0.25 * w / s0 * 1e3)       # mrad; the coarse step limits it
         guess = MountGuess(guess.origin_m, fit.yaw_mrad, fit.pitch_mrad, 3 * sigma)
@@ -543,9 +692,13 @@ class Collector:
 
         # fine pass: five lines per edge, centered on where the hits should
         # stop, stepping a third of the beam radius
-        ref = self.aim(board, guess)
-        u_b = boundary_offset(strength, w, self.spec)
-        lines = self.transects(board, 5, u_b, 3 * sigma * 1e-3 * s0 + 1.5 * w, w / 3)
+        ref = self.aim(board, guess, center)
+        kx, ky = self.stretch(guess, ref)
+        mx, my = footprint(self.spec, np.array([s0]), ref[2][None], guess.direction())
+        half = 3 * sigma * 1e-3 * s0 + 1.5 * w
+        lines = self.transects(board, 5, {
+            "x": (boundary_offset(strength, mx, self.spec), half * kx, w * kx / 3),
+            "y": (boundary_offset(strength, my, self.spec), half * ky, w * ky / 3)})
         n0 = len(stops)
         for line in lines:
             stops += self.run_points(board, session, guess, ref, line)
@@ -573,6 +726,7 @@ class HitModel:
 
     def __init__(self, stops: Sequence[Stop], boards: dict, spec: LRFSpec, origin0,
                  fit_origin: bool, lapse: float):
+        # boards: session -> Board; every session among the stops needs one
         self.spec, self.lapse, self.fit_origin = spec, lapse, fit_origin
         self.origin0 = np.asarray(origin0, float)
         self.R = np.stack([s.R for s in stops])
@@ -594,8 +748,8 @@ class HitModel:
         F = np.empty(len(self.hit))
         s_all = np.empty(len(self.hit))
         for m, b in zip(self.masks, self.boards):
-            s, xy, d_tag = beam_on_board(origin, direction, self.R[m], self.t[m])
-            F[m], s_all[m] = echo_fraction(b, self.spec, s, xy, d_tag), s
+            s, xy, _ = beam_on_board(origin, direction, self.R[m], self.t[m])
+            F[m], s_all[m] = echo_fraction(b, self.spec, s, xy, self.R[m], direction), s
         return F, s_all
 
     def probabilities(self, p):
@@ -632,18 +786,18 @@ def _initial_angles(model: HitModel, guess: MountGuess):
     o, d = np.asarray(guess.origin_m, float), guess.direction()
     shifts = []
     for m, b in zip(model.masks, model.boards):
-        s, xy, _ = beam_on_board(o, d, model.R[m], model.t[m])
+        _, xy, _ = beam_on_board(o, d, model.R[m], model.t[m])
         h = model.hit[m]
         if not h.any():
             raise RuntimeError("a session has no hits")
         x0, x1, y0, y1 = b.extents()
         q = xy[h]
-        cx = (q[:, 0].min() + q[:, 0].max()) / 2
-        cy = (q[:, 1].min() + q[:, 1].max()) / 2
-        sm = float(np.median(s))
-        shifts.append((((x0 + x1) / 2 - cx) / sm, ((y0 + y1) / 2 - cy) / sm))
-    dx, dy = np.mean(shifts, axis=0)
-    return guess.yaw_mrad + dx * 1e3, guess.pitch_mrad + dy * 1e3
+        delta = ((x0 + x1) / 2 - (q[:, 0].min() + q[:, 0].max()) / 2,
+                 (y0 + y1) / 2 - (q[:, 1].min() + q[:, 1].max()) / 2)
+        k = np.flatnonzero(m)[np.flatnonzero(h)[0]]       # any stop's pose will do
+        shifts.append(angles_for_shift(o, d, model.R[k], model.t[k], delta))
+    dyaw, dpitch = np.mean(shifts, axis=0)
+    return guess.yaw_mrad + dyaw * 1e3, guess.pitch_mrad + dpitch * 1e3
 
 
 def _minimize(f, p0, scale):
