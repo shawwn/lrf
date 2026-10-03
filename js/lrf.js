@@ -1680,10 +1680,11 @@ let lrf_demos = {};
         }
     };
 
-    window.lrf_set = function(id, vals, segs) {
+    window.lrf_set = function(id, vals, segs, st) {
         let d = lrf_demos[id];
         if (!d)
             return;
+        Object.assign(d.st, st || {});
         (segs || []).forEach((k, i) => {
             if (k === null || k === undefined)
                 return;
