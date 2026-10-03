@@ -49,8 +49,8 @@ Notes:
 | Divergence definition | 1/e^2 full angle of a Gaussian beam | common convention; datasheet doesn't define it |
 | Exit beam diameter | 8 mm | the module is 22 mm wide |
 | Internal pulse rate (PRF) | 10 kHz | must be < c / 2R_max = 30 kHz for 5 km |
-| Echo width (FWHM, in range) | 1.5 m (~10 ns) | typical for pulsed diode lasers |
-| Measurement time behind the ratings | 100 ms | unknown; because range ~ t^(1/8) for small targets, a 10x error only moves predictions by 33% |
+| Echo width (FWHM, in range) | 4.5 m (30 ns pulses) | was 1.5 m (10 ns) with no evidence; a Jenoptik patent example uses 50 ns pulses in accumulation mode and a DLEM 20 listing snippet says 30 ns (both from the patent research, not re-verified; see "Patent research" below) |
+| Measurement time behind the ratings | 0.5 s | was 0.1 s. Verified: the DLEM SR datasheet (the DLEM 20's ancestor) rates its NATO range with "0.5 s measuring time"; the DLEM 4k datasheet does the same. Because range ~ t^(1/8) for small targets, a 10x error only moves predictions by 33% |
 | Detection probability at rated range | 90% | unknown |
 | Threshold | 5 sigma | ~1.4e-3 false alarms per measurement over 4,990 bins |
 | 10 inch quad | silhouettes from rectangles: 0.019 m^2 side, 0.029 m^2 below (props as 8 to 30% filled blur), 10% albedo | carbon fiber and black plastic; 430 mm motor to motor |
@@ -79,7 +79,8 @@ P_r = P_t * eta * F(R) * albedo * (A_r / (pi R^2)) * T(R)^2
   The Shahed's wings are long thin line targets, so between ~1 and 3 km it sits near -3
   (plus atmosphere). Beyond the span it goes to -4.
 - Narrower beam on the same hardware: small target signal ~ 1/theta^2, range ~ theta^(-1/2)
-  (0.8 -> 0.6 mrad: +15.5% before atmosphere; model gives 673 -> 767 m).
+  (0.8 -> 0.6 mrad: +15.5% before atmosphere; with the original 0.1 s assumption the model
+  gave 673 -> 767 m for a 5 inch quad).
 - More power (gain g): small target range ~ g^(1/4); extended ~ g^(1/2).
 
 ### Atmosphere
@@ -112,10 +113,12 @@ from the small target is the most relevant choice for drones (point like regime)
   noise adds in quadrature).
 - Small target: S ~ R^-4 -> R_max ~ N^(1/8) ~ t^(1/8) ~ rate^(-1/8).
 - Extended: R_max ~ N^(1/4).
-- Detection range, DLEM 20 model, 25 km visibility, at 1 / 5 / 10 / 25 Hz:
-  10 inch quad side 951 / 767 / 698 / 615 m; below 1060 / 854 / 777 / 683 m.
-  Shahed head on (gray) 2215 / 1776 / 1614 / 1419 m; black paint (5%) 10 Hz 1015 m.
-  Shahed side 2845 / 2196 / 1961 / 1686 m; below 3731 / 2850 / 2522 / 2135 m.
+- Detection range, DLEM 20 model (0.5 s rating, 30 ns pulses), 25 km visibility,
+  at 1 / 2 / 5 / 10 / 25 Hz:
+  10 inch quad side 767 / 698 / 615 / 558 / 490 m; below 854 / 777 / 683 / 619 / 541 m.
+  Shahed head on (gray) 1776 / 1614 / 1419 / 1286 / 1126 m; black paint (5%) at 2 Hz 1015 m.
+  Shahed side 2196 / 1961 / 1686 / 1502 / 1285 m; below 2850 / 2522 / 2135 / 1874 / 1567 m.
+  (2 Hz = the 0.5 s rating time, which is what the datasheet section of the article quotes.)
 - Per pulse SNR at the 10 Hz detection range: ~0.2 (invisible in one shot).
 - Max PRF without ambiguity for 5 km: c / 2R = 30 kHz.
 - Eye safety (class 1) limits average power, so more pulses per second generally means
@@ -124,10 +127,11 @@ from the small target is the most relevant choice for drones (point like regime)
 ### Moving targets
 
 - Radial: range changes v t during a measurement; the accumulated peak smears. Peak factor
-  = sigma sqrt(2 pi) / L * erf(L / (2 sqrt 2 sigma)), L = v t, sigma = echo width (0.70 m with
-  the assumed 1.5 m FWHM and 1 m bins). SNR ~ sqrt(t) * factor rises then falls.
-  Optimal t: 5 m/s 0.39 s, 10 m/s 0.195 s, 20 m/s 98 ms, 25 m/s 78 ms (fast quad),
-  30 m/s 65 ms, 51 m/s 38 ms (Shahed at ~185 km/h, i.e. the 25 Hz maximum).
+  = sigma sqrt(2 pi) / L * erf(L / (2 sqrt 2 sigma)), L = v t, sigma = echo width (1.93 m with
+  the assumed 4.5 m FWHM and 1 m bins). SNR ~ sqrt(t) * factor rises then falls.
+  Optimal t: 10 m/s 0.54 s, 25 m/s 0.22 s (fast quad), 50 m/s 0.107 s (Shahed).
+  The optimum scales with the echo width, so it depends directly on the assumed pulse
+  length (with 10 ns pulses it was 78 ms and 38 ms).
   Velocity compensated accumulation (shift and add over hypothesized speeds) recovers it.
 - Angular: footprint at 500 m is 0.4 m; a 10 inch quad crossing at 20 m/s spends ~20 ms in it.
   Angular rate 0.04 rad/s; with 50 ms tracking latency the beam lags by 2 mrad (5 beam radii).
@@ -166,6 +170,14 @@ from the small target is the most relevant choice for drones (point like regime)
 - Sweep speed: the beam must move much less than its width during one measurement.
   At 20 m the beam is ~1.8 cm (0.9 mrad); at 25 Hz that limits continuous sweeps to a few
   mrad/s. Step and stare avoids it.
+- Geometry used in the article's sweep demos: tag at 50 m (paper 37.5 cm = 82 px, beam
+  ~9 px), 4 px raster steps (0.36 mrad of pan/tilt), raster extends +-70 px around the spot.
+  At 20 m the tag is ~200 px versus a ~10 px beam, and the hit/miss pattern barely depends
+  on the beam, which made the demo uninformative.
+- Hit test: fraction of a Gaussian beam on the tag's paper (albedo 0.8), SNR from the model
+  for a 40 ms measurement, times an echo strength factor, compared with the threshold. The
+  guess view uses the same test for the guessed spot, so the true spot gives zero misplaced
+  stops.
 - Time sync: pair each LRF result with the camera frame at the middle of its measurement window.
 - Range offset: compare LRF range on the tag with the tag's PnP distance.
 - Background behind the tag should be > discrimination distance (15 m) away, or open sky.
@@ -177,6 +189,47 @@ from the small target is the most relevant choice for drones (point like regime)
 - Silicon sensors stop at ~1.1 um, so a normal camera can't see the spot. InGaAs (0.9 to 1.7 um)
   can, and APDs at the receiver are InGaAs.
 - Invisible to image intensifier night vision.
+
+### Range resolution vs accuracy
+
+- The DLEM 20 reports distances in 0.1 m steps (e.g. 123.7 m) with 1 m range gates; the
+  datasheet lists resolution 0.1 m and accuracy (1 sigma) 0.5 m.
+- Sub-bin interpolation: an echo of a tens-of-nanoseconds pulse spans several 1 m bins; a
+  Gaussian three-point fit (peak and bins k to each side) locates its center. Noise jitter
+  ~ echo width / SNR. Accuracy also includes slower, echo-strength and temperature dependent
+  timing errors that range finders calibrate internally (general LRF knowledge, not DLEM
+  specific).
+
+## Patent research (subagent, stopped early; partial)
+
+Google Patents returned 503 for most of the session, so the patent figures below were read
+by the research agent but could not be re-verified afterwards. Raw copies could not be
+archived yet either; see `sources/INDEX.md` and re-run `sources/fetch_sources.py`.
+
+- Jenoptik's own laser distance sensor page (archived): DLEMs "send several thousand laser
+  pulses", superimpose the echoes, and process them with "sophisticated software algorithms".
+- EP2766742B1 (Jenoptik Advanced Systems, priority 2011): accumulation mode example 50 ns
+  pulses, 2 W peak, 1 kHz, ADC every 10 ns at 8 bit, receiver bandwidth 15 MHz, ~1 s to
+  usable SNR, up to 3,000 m, ~0.5 m accuracy; samples at equal delay are summed, SNR grows
+  with the root of the number of pulses; accumulation stops when SNR is sufficient (adaptive
+  measurement time); a threshold (single shot) mode uses 5 ns, 20 W, 150 MHz bandwidth.
+- Photonics.com DLEM 20 listing (search snippet only, low confidence, includes an
+  implausible "1 MW" peak power): 19 kHz max pulse rate, 30 ns pulse, 0.8 mrad.
+  19 kHz gives an unambiguous range of ~7.9 km, matching the 8 km DLEM 17 / 20LE limit.
+- EP3159982B1 (Jenoptik): diode driven by a capacitor discharged through an avalanche
+  transistor; temperature compensated charge keeps pulse energy just below the eye safety limit.
+- US11237399B2 / DE102016112557B4 / EP3353592B1 (Jenoptik, generic): ball lens images the
+  diode emitter into an intermediate plane, then an aspheric collimator; divergence
+  tan(theta) = image size / collimator focal length; diode position chosen for a square
+  far field spot. Suggests the DLEM spot may be closer to a flat square than a Gaussian.
+- DLEM 4k datasheet (archived): divergence "0.6 mrad x 0.7 mrad" (not round), rated with
+  0.5 s and 1 s measuring times.
+- Boresighting: DE102008056953B3 describes a beam splitter putting a visible point source in
+  a conjugate focal plane along the receiver axis; DE102013104308B4 (laser shooting
+  simulators) images the invisible beam with a camera through a beam splitter. Neither is
+  the AprilTag sweep method used in the article.
+- Not read (blocked): DE4237347C1, DE10246482B4 (speed measurement), DE10112833C1,
+  US20190215459A1 (SWIR camera alignment), and others listed in sources/INDEX.md.
 
 ## Sources for the targets
 

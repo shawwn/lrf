@@ -34,6 +34,13 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
 10. Write the full plan and notes under the repo as markdown (this file + NOTES.md).
 11. Targets: a 10 inch quad and a Shahed-136 fixed wing drone (replaces the 5 inch FPV).
 12. DLEM uses a 0.8 mrad beam; go with that.
+13. Use a subagent to look up Jenoptik's patents for more details (done, stopped early at the
+    user's request because of token use; results in NOTES.md "Patent research").
+14. The DLEM 20 reports range in 0.1 m steps (e.g. 123.7 m, not 123.78 m).
+15. Research agents must save every fetched document's raw text in the repo
+    (docs/lrf/sources/).
+16. Commit as you go, one logical change per commit, with explanatory messages; don't push.
+17. The datasheet check plot was too noisy (overlapping labels); fixed with a legend.
 
 ## Decisions (from Q&A)
 
@@ -45,6 +52,9 @@ can be pointed at a different LRF (narrower divergence, more power, etc.).
 | Mount | Pan + tilt turret; camera and LRF share one plate |
 | Camera | Visible CMOS (cannot see 1.55 um). Illustrative 1920x1080, 10 deg HFOV, LRF 4 cm to the right of the camera |
 | Calibration target | AprilTag, swept across by the turret |
+| Rating measurement time | 0.5 s (from the DLEM SR datasheet), replacing the 0.1 s guess |
+| Pulse length | 30 ns (4.5 m echo), replacing the 10 ns guess; from patent research, unverified |
+| Git | Work on local branch `lrf-article`, not pushed; no Co-authored-by lines |
 
 ## Files
 
@@ -122,6 +132,8 @@ Each line: demo id, what it shows, controls. Demos marked (A) are animated.
 9. **Pulse Accumulation**
    - `accumulate` (A): pulses fire one by one and add into a histogram; peak grows ~N, noise ~sqrt(N). Play/reset; slider: drone range.
    - `accum_range`: max range vs N for small (N^(1/8)) and extended (N^(1/4)) targets.
+   - `subbin` (A): close up of an accumulated echo across 1 m bins; Gaussian fit center;
+     reported value in 0.1 m steps; jitter vs SNR. Explains resolution (0.1 m) vs accuracy (0.5 m).
 10. **Measurement Rate**
    - `rate_timeline` (A): a second split into 1/f windows; histogram of the current window; detection ranges for drone and wall. Slider: rate 1 to 25 Hz.
    - `prf_ambiguity`: pulse train and echoes; when PRF > c/2R the echo of pulse k lands after pulse k+1. Slider: PRF.
@@ -143,7 +155,7 @@ Each line: demo id, what it shows, controls. Demos marked (A) are animated.
 15. **Calibrating with an AprilTag**
    - `mount_3d`: 3D turret; pan/tilt sliders; camera axis and beam axis drawn; rigid plate means the beam's pixel trace is fixed in the camera image.
    - `apriltag_pose`: tag corners give 6 DoF pose (PnP) and exact distance. Sliders: tag distance, tag yaw.
-   - `apriltag_sweep` (A): step and stare raster across the tag; each LRF sample is hit (range near tag distance) or miss; samples plotted in image space. Play/reset; slider: sweep step.
+   - `apriltag_sweep` (A): step and stare raster across a tag 50 m away (4 px steps); each LRF sample is hit (range near tag distance) or miss; dots at the tag's center in image space. Play/reset; slider: echo strength (grows/shrinks the hit square, center fixed).
    - `calib_hypothesis`: drag a hypothesized beam pixel; samples re-plotted in tag coordinates; hits inside / misses outside only for the right hypothesis; misclassification count.
    - `calib_two_ranges`: blob centers at 2 to 3 tag distances on a pixel vs 1/R plot; line fit recovers offset (slope) and boresight (intercept). Segmented: 1 / 2 / 3 distances.
 16. **Your LRF (calculator)**
@@ -168,6 +180,15 @@ See the header comment in the file. Key points:
 - Serve the repo with `python3 -m http.server` and screenshot sections in headless Chrome; check the console for errors.
 - `node --check js/lrf.js` for syntax.
 
+## Open items
+
+- Re-run `docs/lrf/sources/fetch_sources.py` when Google Patents stops returning 503, then
+  re-verify the patent figures (pulse length, pulse rate) and commit the archived text.
+- Optional model extension: a flat square beam profile (`beam_profile: "square"`) as an
+  alternative to the Gaussian, since Jenoptik's beam shaping patents describe square far
+  field spots. The brochure's ratings fit the Gaussian slightly better.
+- Optional: velocity compensated (shift and add) accumulation in the calculator.
+
 ## Status
 
 - [x] Study repo style (GPS, Lights and Shadows, Cameras and Lenses, Sound; base.js / base.css)
@@ -175,10 +196,13 @@ See the header comment in the file. Key points:
 - [x] Q&A with user
 - [x] `js/lrf_model.js` written and checked in Node
 - [x] PLAN.md / NOTES.md
-- [ ] `laser-range-finder/index.html` prose and containers
-- [ ] `css/lrf.css`
-- [ ] `js/lrf.js` framework + helpers + 3D renderer
-- [ ] Scenes, section by section
-- [ ] Calculator
-- [ ] Browser testing, screenshots, console clean
-- [ ] Final read through (dashes, numbers match model, links)
+- [x] `laser-range-finder/index.html` prose and containers
+- [x] `css/lrf.css`
+- [x] `js/lrf.js` framework + helpers + 3D renderer
+- [x] Scenes, section by section (34 demos incl. calculator)
+- [x] Calculator
+- [x] Browser testing at 760 px and 400 px (headless Chrome via puppeteer-core), console clean
+- [x] Model updated to 0.5 s rating time and 30 ns pulses; prose numbers are live values
+- [x] Sub-bin interpolation demo and 0.1 m readouts
+- [x] Sources archived (datasheets, pages); patents pending (503)
+- [ ] Final read through by the user
