@@ -2066,7 +2066,8 @@ let lrf_demos = {};
             let xr = X(R);
             line(ctx, xr, cy - half(R) - 6, xr, cy + half(R) + 6, col.range, 2);
             let D0 = M.beam_diameter(spec, R);
-            halo_text(ctx, fmt_dist(R) + ": footprint " + fmt_len(D0), clamp(xr, x0 + 90, x1 - 90), cy + half(R) + fs * 0.9 + 4, col.range, fs, "center", "middle", 500);
+            // fixed position: next to the marker it would collide with the panels at long range
+            halo_text(ctx, "footprint " + fmt_len(D0) + " at " + fmt_dist(R), 10, 10, col.range, fs, "left", "middle", 500);
             for (let r = 1000; r <= 5000; r += 1000)
                 text(ctx, (r / 1000) + " km", X(r), top - 4, col.light_text, fs - 3);
             text(ctx, "vertical scale exaggerated", x1, 10, col.light_text, fs - 3, "right");
@@ -2129,7 +2130,7 @@ let lrf_demos = {};
             halo_text(ctx, fmt_pct(frac) + " of the power", cx, cy + sq / 2 - fs, "#fff", fs, "center", "middle", 500, "rgba(30,34,40,0.8)");
 
             // profile plot
-            let px = cx + sq / 2 + fs * 2.5, pw = w - px - 12;
+            let px = cx + sq / 2 + 58, pw = w - px - 12;
             let plot = new Plot(ctx, px, 14, pw, h - 14 - fs * 3, {
                 xmin: -2, xmax: 2, ymin: 0, ymax: 1.08, fs: fs - 1,
                 xticks: [-2, -1, 0, 1, 2], xfmt: v => v === 0 ? "0" : (v > 0 ? "" : "−") + abs(v) + "w",
@@ -2741,10 +2742,10 @@ let lrf_demos = {};
             halo_text(ctx, "N = " + fmt_int(st.N) + " pulses", plot.x + 8, 14, col.hist, fs, "left", "middle", 500);
             halo_text(ctx, "echo SNR = √N × " + snr1.toFixed(2) + " = " + (snr1 * sqrt(N)).toFixed(1), plot.x + plot.w, 14, "#B07800", fs, "right", "middle", 500);
             if (found) {
-                plot.dot(peak_b + 0.5, peak, col.quad, 5);
+                plot.dot(peak_b + 0.5, min(peak, ymax), col.quad, 5);
                 let vals = Array.from(st.sum);
                 let c = echo_center(vals, peak_b, i => i + 0.5, 2);
-                halo_text(ctx, "measured: " + fmt_reported(c), plot.X(peak_b + 0.5) + (peak_b > 700 ? -8 : 8), plot.Y(peak) - 2, col.quad, fs - 1, peak_b > 700 ? "right" : "left", "middle", 500);
+                halo_text(ctx, "measured: " + fmt_reported(c), plot.X(peak_b + 0.5) + (peak_b > 700 ? -8 : 8), max(plot.y + fs * 0.9, plot.Y(peak) - 2), col.quad, fs - 1, peak_b > 700 ? "right" : "left", "middle", 500);
             }
 
             // latest single pulse
@@ -3185,11 +3186,11 @@ let lrf_demos = {};
             round_rect(ctx, bx, by, bw, 16, 4, "#EEE");
             round_rect(ctx, bx, by, bw * clamp(soFar, 0, 1), 16, 4, col.echo);
             line(ctx, bx + bw * factor, by - 4, bx + bw * factor, by + 20, "#B07800", 2);
-            text(ctx, fmt_pct(factor) + " of a hovering quad", bx, by + fs * 2, "#B07800", fs - 1, "left", "middle", 500);
+            text(ctx, fmt_pct(factor) + (w < 500 ? " of hovering" : " of a hovering quad"), bx, by + fs * 2, "#B07800", fs - 1, "left", "middle", 500);
             let deg_s = omega * 180 / pi;
             text(ctx, "crosses at " + (omega * 1000).toFixed(1) + " mrad/s", bx, by + fs * 4, col.speed, fs - 1, "left");
-            text(ctx, "like panning at " + deg_s.toFixed(deg_s < 10 ? 2 : 1) + "°/s", bx, by + fs * 5.3, col.speed, fs - 1, "left");
-            text(ctx, "time in the footprint: " + (v > 0 ? fmt_time(2 * wr / v) : "∞"), bx, by + fs * 7, col.text, fs - 1, "left");
+            text(ctx, "= panning " + deg_s.toFixed(deg_s < 10 ? 2 : 1) + "°/s", bx, by + fs * 5.3, col.speed, fs - 1, "left");
+            text(ctx, "in footprint: " + (v > 0 ? fmt_time(2 * wr / v) : "∞"), bx, by + fs * 7, col.text, fs - 1, "left");
             text(ctx, "measurement: " + fmt_time(T), bx, by + fs * 8.3, col.time, fs - 1, "left");
         },
     };
