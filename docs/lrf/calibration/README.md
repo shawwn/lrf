@@ -11,9 +11,10 @@ the beam points relative to the camera.
   `python3 lrf_calibration.py stops.json --out calibration.json`.
 - `simulate.py`: a simulated turret, 4K camera, and DLEM 20, used to check the
   algorithm against known truth. `python3 simulate.py` (two boards outdoors),
-  `--office` (two boards indoors, a wall 2.5 m behind each), `--single` (one
-  board), `--orientations N` (random board placements; combine with
-  `--office`).
+  `--office` (the indoor setup: 47 cm boards at 7.5 m and 12.5 m, a wall
+  2.5 m behind each), `--single` (one board), `--orientations N` (random
+  board placements; combine with `--office`), and `--distances`, `--board`,
+  `--hfov` to try other setups.
 
 Needs numpy and scipy. Uses OpenCV for the tag pose if it's installed, and
 pupil-apriltags in `detect_tag_corners` for a real camera.
@@ -151,15 +152,21 @@ region is symmetric (the simulation's true beam is rolled 1.5 degrees with
 The simulated range finder has 0.3 m of range noise (1 sigma) and reports
 in 0.1 m steps.
 
-Indoors (`--office`): boards at 12.5 m and 25 m, a wall 2.5 m behind each
-(60% albedo against the board's 80%), about 1,200 stops and 7 minutes of
-turret time. The boresight comes out within 1 px of the truth (reported
-uncertainty 0.8 px), the origin within 0.5 mm, the range offset within
-1 cm. Over 10 random placements (walls 1.5 to 4 m behind, 30 to 80%
-albedo, any board orientation) the worst boresight error was 2.5 px
-(0.11 mrad), the median about 1.2 px. With a single board at 12.5 m and
-the drawings 1.1 and 1.4 mm off, the error is 3 px, all of it from the
-drawings.
+Indoors (`--office`), the actual setup: 47 cm boards at 7.5 m and 12.5 m
+(the 30 cm tag size is an assumption), a wall 2.5 m behind each (60% albedo
+against the board's 80%), and a camera with a 20 degree field of view
+(assumed; the article's 10 degree camera can't keep the tag in view at
+7.5 m). One pixel is then 0.092 mrad and the beam about 8.7 px across.
+About 1,200 stops and 7 minutes of turret time. The boresight comes out
+within 0.85 px (0.08 mrad) of the truth, against a reported 0.7 px; the
+origin within 0.4 mm; the range offset within 4 cm. Over 15 random
+placements (walls 1.5 to 4 m behind, 30 to 80% albedo, boards yawed up to
+50 degrees, pitched up to 35, any roll) the median boresight error was
+0.75 px (0.07 mrad) and the worst 1.9 px (0.18 mrad), well inside the
+beam's flat top. With the earlier 60 cm boards at 12.5 m and 25 m and the
+10 degree camera: worst 2.5 px (0.11 mrad) over 10 placements. With a
+single board at 12.5 m and the drawings 1.1 and 1.4 mm off, the error is
+0.14 mrad, all of it from the drawings.
 
 Outdoors: two boards (20 m, 12 degrees of yaw; 80 m, rolled 90 degrees, tag off
 center, wall 40 m behind), about 790 stops and 5 minutes of turret time:

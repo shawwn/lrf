@@ -20,9 +20,9 @@ puts the sweep in depth mode.
     python3 simulate.py                   # boards at 20 m and 80 m
     python3 simulate.py --single          # one board at 20 m, origin from the drawings
     python3 simulate.py --orientations 8  # random board orientations and offsets
-    python3 simulate.py --office          # boards indoors, a wall 2.5 m behind each
-    python3 simulate.py --office --single # one board at 12.5 m, a wall 2.5 m behind
-    python3 simulate.py --office --distances 7.5 12.5 --board 0.36 0.16
+    python3 simulate.py --office          # 47 cm boards at 7.5 and 12.5 m, walls 2.5 m behind
+    python3 simulate.py --office --single # just the 7.5 m board
+    python3 simulate.py --office --distances 12.5 25 --board 0.6 0.3 --hfov 10
 """
 
 from __future__ import annotations
@@ -248,6 +248,12 @@ def errors(cal, truth, intr):
     return out
 
 
+# The user's indoor setup: 47 cm boards (the tag size is assumed) at 7.5 m
+# and 12.5 m, a wall about 2.5 m behind each, and a camera wider than the
+# article's 10 degrees (assumed), so the tag stays in view up close.
+OFFICE = dict(distances=(7.5, 12.5), board=(0.47, 0.30), hfov=20.0)
+
+
 def random_placement(rng, distance, office=False):
     return Placement(distance, right_m=rng.uniform(-0.08, 0.08) * distance,
                      up_m=rng.uniform(-0.03, 0.06) * distance,
@@ -274,10 +280,12 @@ def random_board(rng, size=None):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--single", action="store_true", help="one board")
-    ap.add_argument("--office", action="store_true", help="indoors: boards at 12.5 m and 25 m, walls 2.5 m behind")
+    ap.add_argument("--office", action="store_true",
+                    help="indoors: 47 cm boards at 7.5 m and 12.5 m, walls 2.5 m behind, 20 degree camera")
     ap.add_argument("--distances", type=float, nargs=2, metavar=("NEAR", "FAR"),
                     help="the two boards' distances in meters")
-    ap.add_argument("--hfov", type=float, default=10.0, help="the camera's horizontal field of view, degrees")
+    ap.add_argument("--hfov", type=float, help="the camera's horizontal field of view, degrees "
+                                               "(default 10, or 20 with --office)")
     ap.add_argument("--board", type=float, nargs=2, metavar=("SIDE", "TAG"),
                     help="board and tag size in meters (default 0.6 and 0.3; random in --orientations)")
     ap.add_argument("--orientations", type=int, metavar="N", help="N trials with random boards")
@@ -287,6 +295,11 @@ def main(argv=None):
     ap.add_argument("--save-stops", metavar="PATH")
     ap.add_argument("--out", metavar="PATH", help="write the calibration (JSON)")
     args = ap.parse_args(argv)
+    if args.office:
+        args.distances = args.distances or OFFICE["distances"]
+        args.board = args.board or OFFICE["board"]
+        args.hfov = args.hfov or OFFICE["hfov"]
+    args.hfov = args.hfov or 10.0
 
     if args.orientations:
         rng = np.random.default_rng(args.seed)
@@ -294,27 +307,36 @@ def main(argv=None):
                 "origin_x_mm", "origin_y_mm"]
         print("trial  " + "  ".join("%13s" % k for k in keys))
         worst = {k: 0.0 for k in keys}
+        refused = 0
         for i in range(args.orientations):
-            far = args.distances or ((12.5, 25) if args.office else (20, 80))
+            far = args.distances or (20, 80)
             pls = [random_placement(rng, far[0], args.office), random_placement(rng, far[1], args.office)]
             bds = [random_board(rng, args.board), random_board(rng, args.board)]
-            cal, truth, intr, _ = run(pls, bds, seed=args.seed + i, nd=args.nd, bootstrap=0, quiet=True,
-                                      hfov=args.hfov)
+            boards = ", ".join("yaw %+.0f pitch %+.0f roll %.0f" % (p.yaw_deg, p.pitch_deg, p.roll_deg)
+                               for p in pls)
+            try:
+                cal, truth, intr, _ = run(pls, bds, seed=args.seed + i, nd=args.nd, bootstrap=0,
+                                          quiet=True, hfov=args.hfov)
+            except RuntimeError as err:
+                # the calibration refused the setup (e.g. the tag would leave the view)
+                refused += 1
+                print("%5d  refused: %s   boards: %s" % (i, str(err).split(":")[0], boards))
+                continue
             e = errors(cal, truth, intr)
-            print("%5d  " % i + "  ".join("%+13.3f" % e[k] for k in keys) + "   boards: " +
-                  ", ".join("yaw %+.0f pitch %+.0f roll %.0f" % (p.yaw_deg, p.pitch_deg, p.roll_deg)
-                            for p in pls))
+            print("%5d  " % i + "  ".join("%+13.3f" % e[k] for k in keys) + "   boards: " + boards)
             for k in keys:
                 worst[k] = max(worst[k], abs(e[k]))
         print("worst  " + "  ".join("%13.3f" % worst[k] for k in keys))
+        print("one pixel is %.3f mrad; %d of %d placements refused"
+              % (1e3 / camera_4k(args.hfov).fx, refused, args.orientations))
         return 0
 
     if args.office:
-        pls = [Placement(12.5, right_m=0.3, up_m=0.2, yaw_deg=10, pitch_deg=-4, roll_deg=2,
+        pls = [Placement(7.5, right_m=0.2, up_m=0.1, yaw_deg=10, pitch_deg=-4, roll_deg=2,
                          wall_behind_m=2.5, wall_albedo=0.6),
-               Placement(25, right_m=-0.8, up_m=0.4, yaw_deg=-15, pitch_deg=5, roll_deg=-3,
+               Placement(12.5, right_m=-0.5, up_m=0.3, yaw_deg=-15, pitch_deg=5, roll_deg=-3,
                          wall_behind_m=2.5, wall_albedo=0.6)]
-        bds = [Board(), Board(center_in_tag_m=(0.05, 0.0))]
+        bds = [Board(), Board(center_in_tag_m=(0.02, 0.0))]
         if args.distances:
             pls = [replace(pl, distance_m=dist) for pl, dist in zip(pls, args.distances)]
         if args.board:
