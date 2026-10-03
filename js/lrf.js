@@ -1310,6 +1310,9 @@ let lrf_demos = {};
      *   animated: bool                 runs every frame while visible, with play/pause
      *   reset(d)                       adds a restart button
      *   finished(d) -> bool            the animation has run to its end; play rewinds first
+     * d.touched becomes true once the reader uses any of the demo's controls
+     * (sliders, buttons, segments, dragging, links in the text); demos that
+     * would otherwise repeat their animation forever stop at the end then.
      *   init(d)                        called once before controls are created
      *   drag: { begin(d,x,y)->bool, move(d,x,y), end(d), cursor(d,x,y)->css }
      *   orbit: bool                    dragging rotates d.st.yaw / d.st.pitch
@@ -1389,6 +1392,7 @@ let lrf_demos = {};
             let play = document.createElement("div");
             play.classList.add("play_pause_button");
             play.onclick = () => {
+                self.touched = true;
                 if (self.paused && scene.reset && scene.finished && scene.finished(self))
                     scene.reset(self);
                 self.set_paused(!self.paused);
@@ -1404,6 +1408,7 @@ let lrf_demos = {};
             r.classList.add("restart_button");
             r.style.left = scene.animated ? "50px" : "0px";
             r.onclick = () => {
+                self.touched = true;
                 scene.reset(self);
                 self.set_paused(false);
                 self.request();
@@ -1437,8 +1442,10 @@ let lrf_demos = {};
             self.sliders[i] = new Slider(track, x => {
                 self.v[i] = sd.map.to(x);
                 // the reader took over: stop this slider's animation
-                if (!constructing)
+                if (!constructing) {
                     self.stop_slider_anim(i);
+                    self.touched = true;
+                }
                 if (sd.on)
                     sd.on(self, self.v[i]);
                 self.update_label(i);
@@ -1471,6 +1478,7 @@ let lrf_demos = {};
                     return;
                 }
                 self.seg[i] = k;
+                self.touched = true;
                 if (scene.on_seg)
                     scene.on_seg(self, i, k);
                 self.update_slider_visibility();
@@ -1490,6 +1498,7 @@ let lrf_demos = {};
         if (scene.drag || scene.orbit) {
             new TouchHandler(canvas, function(e) {
                 let p = coords(e);
+                self.touched = true;
                 if (scene.drag && scene.drag.begin(self, p[0], p[1])) {
                     self.dragging = "drag";
                     self.request();
@@ -1713,6 +1722,7 @@ let lrf_demos = {};
         let d = lrf_demos[id];
         if (!d)
             return;
+        d.touched = true;
         Object.assign(d.st, st || {});
         (segs || []).forEach((k, i) => {
             if (k === null || k === undefined)
@@ -2769,8 +2779,12 @@ let lrf_demos = {};
         d.st.last = new Float32Array(ACC_BINS);
         d.st.N = 0;
         d.st.clock = 0;
-        d.st.rng = make_rng(4242 + round(d.v[0]));
+        d.st.hold = 0;
+        // fresh noise for every repeat
+        d.st.rng = make_rng(4242 + round(d.v[0]) + 7919 * (d.st.loops || 0));
     }
+
+    const ACC_HOLD = 3;     // seconds to show the finished result before starting over
 
     SCENES.accumulate = {
         animated: true,
@@ -2798,8 +2812,14 @@ let lrf_demos = {};
                 st.N++;
             }
             if (st.N >= ACC_MAX && !d.paused) {
-                // finished: keep showing, stop animating
-                d.set_paused(true);
+                if (d.touched) {
+                    // the reader took over: keep showing the result
+                    d.set_paused(true);
+                } else if ((st.hold += dt) > ACC_HOLD) {
+                    // nobody's touched it: start over, with new noise
+                    st.loops = (st.loops || 0) + 1;
+                    acc_reset(d);
+                }
             }
             let N = max(1, st.N);
 
@@ -4339,8 +4359,14 @@ let lrf_demos = {};
             let strength = d.v[0];
             let n = st.stops.length;
             let shown = min(n, floor(st.clock * 260));
-            if (shown >= n && !d.paused)
-                d.set_paused(true);
+            if (shown >= n && !d.paused) {
+                // repeat after a pause to show the result, until the reader
+                // touches the demo; then stop at the end
+                if (d.touched)
+                    d.set_paused(true);
+                else if (st.clock > n / 260 + 3)
+                    st.clock = 0;
+            }
             let b = sweep_truth();
             let span = SWEEP_SPAN + 10;
             let k = min(w, h - 30) / (2 * span);
