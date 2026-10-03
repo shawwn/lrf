@@ -43,6 +43,10 @@
     max-width: 600px;
 }
 
+.slider_row.hidden {
+    display: none;
+}
+
 .slider_row .slider_track {
     flex: 1 1 auto;
     min-width: 0;

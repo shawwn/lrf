@@ -1255,7 +1255,9 @@ let lrf_demos = {};
  *                                  fmt(v) -> text shown next to the slider,
  *                                  anim: { mode: "pingpong" | "loop", period, lo, hi, hold }
  *                                  moves the slider by itself (lo/hi in slider units,
- *                                  0 to 1) until the reader grabs it
+ *                                  0 to 1) until the reader grabs it,
+ *                                  visible(d) -> false hides the slider's row (e.g. when
+ *                                  a segmented control makes it irrelevant)
      *   segs: [[labels...]]            segmented controls (id_seg0, id_seg1, ...)
      *   animated: bool                 runs every frame while visible, with play/pause
      *   reset(d)                       adds a restart button
@@ -1360,11 +1362,14 @@ let lrf_demos = {};
         this.labels = [];
         this.sanim = [];
         this.anim_btns = [];
+        this.slider_divs = [];
+        this.slider_vis = [];
         (scene.sliders || []).forEach((sd, i) => {
             let div = document.getElementById(id + "_sl" + i);
             if (!div)
                 return;
             div.classList.add("slider_row");
+            self.slider_divs[i] = div;
             let btn = document.createElement("div");
             btn.className = "slider_play slider_play_spacer";
             let track = document.createElement("div");
@@ -1415,11 +1420,14 @@ let lrf_demos = {};
                 self.seg[i] = k;
                 if (scene.on_seg)
                     scene.on_seg(self, i, k);
+                self.update_slider_visibility();
                 self.request();
             }, labels);
             if (self.seg[i])
                 self.segs[i].set_selection(self.seg[i]);
         });
+
+        this.update_slider_visibility();
 
         function coords(e) {
             let r = canvas.getBoundingClientRect();
@@ -1489,7 +1497,21 @@ let lrf_demos = {};
     }
 
     Demo.prototype.running = function() {
-        return (this.scene.animated && !this.paused) || this.sanim.some(a => a && a.on);
+        return (this.scene.animated && !this.paused) ||
+            this.sanim.some((a, i) => a && a.on && this.slider_vis[i] !== false);
+    };
+
+    // Show or hide slider rows whose spec has a visible(d) predicate.
+    Demo.prototype.update_slider_visibility = function() {
+        (this.scene.sliders || []).forEach((sd, i) => {
+            if (!sd.visible || !this.slider_divs[i])
+                return;
+            let vis = !!sd.visible(this);
+            this.slider_vis[i] = vis;
+            if (vis) this.slider_divs[i].classList.remove("hidden");
+            else this.slider_divs[i].classList.add("hidden");
+        });
+        this.kick();
     };
 
     Demo.prototype.stop_slider_anim = function(i) {
@@ -1514,7 +1536,7 @@ let lrf_demos = {};
     Demo.prototype.advance_sliders = function(dt) {
         let changed = false;
         this.sanim.forEach((a, i) => {
-            if (!a || !a.on)
+            if (!a || !a.on || this.slider_vis[i] === false)
                 return;
             let sd = this.scene.sliders[i];
             a.t += dt;
@@ -1641,6 +1663,7 @@ let lrf_demos = {};
             if (d.segs[i]) d.segs[i].set_selection(k);
             else d.seg[i] = k;
         });
+        d.update_slider_visibility();
         (vals || []).forEach((v, i) => {
             if (v === null || v === undefined)
                 return;
@@ -3487,7 +3510,7 @@ let lrf_demos = {};
 
     SCENES.two_echoes = {
         sliders: [
-            { anim: { period: 18 }, fmt: v => "trees " + round(v) + " m behind", map: lin_map(0, 150), def: 60 },
+            { anim: { period: 18 }, fmt: v => "trees " + round(v) + " m behind", visible: d => d.seg[0] === 0, map: lin_map(0, 150), def: 60 },
             { fmt: v => "aim off " + v.toFixed(2) + " mrad", map: lin_map(0, 0.6), def: 0.15 },
         ],
         segs: [["Trees behind", "Sky behind"]],
