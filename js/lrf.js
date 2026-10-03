@@ -4018,21 +4018,26 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let R = d.v[0];
             let mount = TRUE_MOUNT;
+            let hi = round(h * 0.56);           // camera image on top, top view below
+
+            // camera image: the beam's trace from 5 m to infinity
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(0, 0, w, hi);
+            ctx.clip();
             let u0 = -60, u1 = 400;
             let k = w / (u1 - u0);
-            let vh = h / k;
-            let v0 = -vh / 2 + 10;
+            let vh = hi / k;
+            let v0 = -vh / 2 + 6;
             let X = u => (u - u0) * k, Y = v => (v - v0) * k;
-            let g = ctx.createLinearGradient(0, 0, 0, h);
+            let g = ctx.createLinearGradient(0, 0, 0, hi);
             g.addColorStop(0, col.sky_top);
             g.addColorStop(1, col.sky_bottom);
             ctx.fillStyle = g;
-            ctx.fillRect(0, 0, w, h);
-            // image center crosshair
+            ctx.fillRect(0, 0, w, hi);
             line(ctx, X(0) - 10, Y(0), X(0) + 10, Y(0), col.axis, 1);
             line(ctx, X(0), Y(0) - 10, X(0), Y(0) + 10, col.axis, 1);
             text(ctx, "image center", X(0), Y(0) + 18, col.light_text, fs - 3);
-            // trace
             let pts = [];
             for (let i = 0; i <= 200; i++) {
                 let r = 5 * pow(1e6, i / 200);
@@ -4048,22 +4053,69 @@ let lrf_demos = {};
             }
             let bs = M.boresight_pixel(cam, mount);
             let bx = X(bs[0] - cam.width_px / 2), by = Y(bs[1] - cam.height_px / 2);
-            line(ctx, bx - 6, by - 6, bx + 6, by + 6, col.mis, 2);
-            line(ctx, bx - 6, by + 6, bx + 6, by - 6, col.mis, 2);
-            halo_text(ctx, "boresight (∞)", bx - 10, by + 16, col.mis, fs - 2, "right", "middle", 500, "rgba(230,238,246,0.85)");
-            // quad aimed at the boresight, beam at its distance
             let size = 0.43 / R * FPX * k;
             ctx.globalAlpha = size > w * 0.3 ? 0.35 : 1;
             draw_quad_sprite(ctx, bx, by, size, "#2D3439", 0, 0);
             ctx.globalAlpha = 1;
+            line(ctx, bx - 6, by - 6, bx + 6, by + 6, col.mis, 2);
+            line(ctx, bx - 6, by + 6, bx + 6, by - 6, col.mis, 2);
+            halo_text(ctx, "boresight (∞)", bx - 10, by + 16, col.mis, fs - 2, "right", "middle", 500, "rgba(230,238,246,0.85)");
             let p = M.beam_pixel(cam, mount, R);
             let px = X(p[0] - cam.width_px / 2), py = Y(p[1] - cam.height_px / 2);
             let rr = M.beam_radius(spec, R) / R * FPX * k;
             draw_beam_spot(ctx, px, py, rr, col.laser, 0.55);
             circle(ctx, px, py, rr, null, col.laser, 1.5);
+            ctx.restore();
+            let miss = BASELINE;   // meters between the drone's center and the beam's axis
+            let on = M.fraction_on_target(spec, QUAD, R, miss, 0) / M.fraction_on_target(spec, QUAD, R);
             halo_text(ctx, "quad " + fmt_dist(R) + " away, aimed at the boresight", 12, 16, col.quad, fs - 1, "left", "middle", 500, "rgba(255,255,255,0.8)");
-            let on = M.fraction_on_target(spec, QUAD, R, (p[0] - bs[0]) / FPX * R, -(p[1] - bs[1]) / FPX * R) / M.fraction_on_target(spec, QUAD, R);
             halo_text(ctx, "echo " + fmt_pct(clamp(on, 0, 1)) + " of a perfectly centered beam", 12, 16 + fs * 1.4, "#B07800", fs - 1, "left", "middle", 500, "rgba(255,255,255,0.8)");
+
+            // top view: sideways distances to scale, distance along the beam compressed.
+            // The camera's line of sight to the drone and the beam are parallel,
+            // BASELINE apart, all the way out.
+            let ty0 = hi + 8, th = h - ty0 - 4;
+            round_rect(ctx, 6, ty0, w - 12, th, 8, "#F1F4F7");
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(6, ty0, w - 12, th);
+            ctx.clip();
+            let wr = M.beam_radius(spec, R);
+            let span = max(0.75, 2 * (miss + 2.3 * wr));
+            let km = (th - 2 * fs) / span;              // pixels per meter sideways
+            let xa = 46, xd = w - 110;                   // camera end, drone end
+            let cyc = ty0 + fs * 1.2 + (th - 2 * fs) / 2 - miss * km / 2;   // camera's line
+            let cyb = cyc + miss * km;                   // beam's line (LRF on the camera's right = down)
+            // the beam spreading toward the drone (Gaussian across, compressed along)
+            let steps = 24;
+            for (let i = 0; i < steps; i++) {
+                let f0 = i / steps, f1 = (i + 1) / steps;
+                let w0 = wr * f0 * km, w1 = wr * f1 * km;
+                let x0 = lerp(xa, xd, f0), x1 = lerp(xa, xd, f1);
+                for (let u = 0; u < 3; u++) {
+                    let a = 0.22 * exp(-2 * (u * 0.75) * (u * 0.75));
+                    fill_poly(ctx, [[x0, cyb - (u + 1) * 0.75 * w0], [x1, cyb - (u + 1) * 0.75 * w1], [x1, cyb + (u + 1) * 0.75 * w1], [x0, cyb + (u + 1) * 0.75 * w0]], rgba(col.laser, a));
+                }
+            }
+            line(ctx, xa, cyb, xd + 40, cyb, col.laser, 1.5);
+            line(ctx, xa, cyc, xd, cyc, rgba(col.cam, 0.9), 1.5, [5, 4]);
+            draw_quad_top(ctx, xd, cyc, 0.43 * km, "#2D3439", pi / 2);
+            // footprint where it reaches the drone, to scale sideways
+            ctx.fillStyle = rgba(col.laser, 0.55);
+            ctx.fillRect(xd - 2, cyb - wr * km, 4, 2 * wr * km);
+            draw_camera_top(ctx, xa - 14, cyc, 6, "#5E5368");
+            draw_lrf_top(ctx, xa - 14, cyb, 5);
+            // the gap between the two lines, at both ends
+            let lab = round(miss * 1000) + " mm";
+            dimension(ctx, xa + 14, cyc, xa + 14, cyb, col.mount, "", fs - 2);
+            halo_text(ctx, lab, xa + 22, (cyc + cyb) / 2, col.mount, fs - 2, "left", "middle", 500, "rgba(241,244,247,0.9)");
+            let xq = xd - 0.215 * km - 14;
+            dimension(ctx, xq, cyc, xq, cyb, col.mount, "", fs - 2);
+            halo_text(ctx, lab, xq - 8, (cyc + cyb) / 2, col.mount, fs - 2, "right", "middle", 500, "rgba(241,244,247,0.9)");
+            ctx.restore();
+            text(ctx, "top view after calibration: sideways to scale, distance compressed", 14, ty0 + fs * 0.8, col.light_text, fs - 3, "left");
+            halo_text(ctx, "camera's line of sight", (xa + xq) / 2, cyc - 9, col.cam, fs - 2, "center", "middle", 500, "rgba(241,244,247,0.9)");
+            halo_text(ctx, "beam, footprint " + fmt_len(2 * wr), (xa + xq) / 2, cyb + max(10, wr * km * 0.5 + 9), col.laser, fs - 2, "center", "middle", 500, "rgba(241,244,247,0.9)");
         },
     };
 

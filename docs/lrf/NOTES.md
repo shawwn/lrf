@@ -151,9 +151,12 @@ from the small target is the most relevant choice for drones (point like regime)
 - Parallax pixel offset = f b / R = 1,580 / R px for b = 72 mm (4K camera): 158 px at 10 m,
   17.6 px (one beam width) at 90 m, 1.6 px at 1 km.
 - Pixel vs 1/R is a straight line: slope f b, intercept f alpha (misalignment).
-- Baseline vs drone: parallax error b/R and the drone's half size both scale as 1/R,
-  so a 72 mm offset never moves the beam off a drone whose solid core is wider than 14.4 cm
-  (the 10 inch quad's battery is ~15.6 cm wide).
+- Baseline vs drone: after calibration the beam is parallel to the camera's line of sight,
+  b to the side, so aiming at the boresight misses the drone's center by exactly b at every
+  range (in pixels: f b / R, shrinking like the drone). With b = 72 mm the beam stays on the
+  10 inch quad's body/battery (~15.6 cm wide) everywhere; echo relative to a centered beam:
+  97% at 5 m, 92% at 10 m, 63% at 26 m, 41% at 50 m, 43% at 100 m, 72% at 300 m, 95% at 1 km.
+  The parallax demo has a top view (sideways to scale) that shows the two parallel lines.
 
 ### AprilTag calibration (user's method: sweep across a tag)
 
