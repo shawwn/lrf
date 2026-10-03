@@ -2113,20 +2113,56 @@ let lrf_demos = {};
             let fs = base_font_size(w);
             let R = d.v[0], tilt = d.v[1] * pi / 180;
             let mode = d.seg[0];
-            let lx = 50, ly = h * 0.5;
-            let px = w - 110, py = h * 0.5;
+            let ly = h * 0.47;
+            let rx = 40;
+            let ax0 = rx + 46, ax1 = w - 64;
+            let X = r => ax0 + (ax1 - ax0) * log(r / 10) / log(500);
+            let px = X(R), py = ly;
+            let axis_y = h - fs * 2.4;
 
-            // receiver and laser on the left
-            draw_lrf_side(ctx, lx + 8, ly, 11);
-            text(ctx, "receiver", lx - 12, ly + 26, col.text, fs - 2, "left");
+            // distance axis (log scale), so the drone's surface visibly moves away
+            line(ctx, rx, axis_y, ax1 + 12, axis_y, col.axis, 1);
+            for (let r of [10, 30, 100, 300, 1000, 3000]) {
+                line(ctx, X(r), axis_y, X(r), axis_y + 5, col.axis, 1);
+                text(ctx, r >= 1000 ? (r / 1000) + " km" : r + " m", X(r), axis_y + fs * 0.9, col.light_text, fs - 3);
+            }
+            line(ctx, px, axis_y - 6, px, axis_y + 6, col.range, 2.5);
+            text(ctx, "distance (log scale)", rx, axis_y - fs * 0.8, col.light_text, fs - 3, "left");
+            halo_text(ctx, "R = " + fmt_dist(R), clamp(px, ax0 + 30, ax1 - 10), axis_y - fs * 0.9, col.range, fs, "center", "middle", 500);
+
+            // the hemisphere the scattered light spreads over, passing through the receiver
+            let nrm = pi + tilt;
+            if (mode === 0) {
+                let rad = px - rx;
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, 0, w, axis_y - 8);
+                ctx.clip();
+                ctx.setLineDash([5, 5]);
+                ctx.strokeStyle = rgba(col.echo, 0.75);
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(px, py, rad, nrm - pi / 2, nrm + pi / 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.restore();
+                let top_y = py - rad;
+                let lab_y = max(fs, top_y + fs * 0.9);
+                halo_text(ctx, "scattered light spreads over a hemisphere of area 2πR²", clamp(px - rad * 0.55, w * 0.32, w * 0.68), lab_y, "#B07800", fs - 2, "center", "middle", 500);
+            }
+
+            // receiver, with its lens highlighted
+            draw_lrf_side(ctx, rx, ly, 10);
+            line(ctx, rx + 2, ly - 1, rx + 2, ly + 9, col.echo, 3);
+            text(ctx, "receiver", rx - 14, ly + 26, col.text, fs - 2, "left");
 
             // incoming beam
-            arrow(ctx, lx + 20, ly - 3, px - 8, py - 3, rgba(col.laser, 0.9), 2.5, 10);
+            arrow(ctx, rx + 14, ly - 3, px - 8, py - 3, rgba(col.laser, 0.9), 2.5, 10);
 
-            // surface patch, normal direction points left (toward -x) rotated by tilt
+            // surface patch; its normal points left, rotated by the tilt
             let nx = -cos(tilt), ny = -sin(tilt);
             let tx = -ny, ty = nx;
-            let L = h * 0.32;
+            let L = min(h * 0.3, 90);
             ctx.save();
             ctx.translate(px, py);
             ctx.lineWidth = 6;
@@ -2140,41 +2176,32 @@ let lrf_demos = {};
                 line(ctx, ox - nx * 2, oy - ny * 2, ox - nx * 10 + tx * 6, oy - ny * 10 + ty * 6, "#9AA3AB", 1);
             }
             ctx.restore();
+            text(ctx, "drone's surface", px + 12, py + L * 0.62, "#5C6670", fs - 2, "left");
 
-            let lobe = h * 0.34;
+            let lobe = min(h * 0.3, (px - rx) * 0.8);
             let frac_text;
             if (mode === 0) {
-                // Lambertian: arrows with length cos(angle from normal)
                 for (let i = -8; i <= 8; i++) {
                     let a = i / 8 * (pi / 2 - 0.08);
                     let c = cos(a);
                     let dx = nx * cos(a) - ny * sin(a), dy = nx * sin(a) + ny * cos(a);
                     arrow(ctx, px + dx * 4, py + dy * 4, px + dx * (4 + lobe * c), py + dy * (4 + lobe * c), rgba(col.echo, 0.75), 1.8, 7);
                 }
-                let toward = cos(tilt);
-                let f = 3.14e-4 * max(0, toward) / (pi * R * R);
+                // the sliver that reaches the receiver's lens
+                fill_poly(ctx, [[px - 6, py], [rx + 3, ly - 1], [rx + 3, ly + 9]], rgba(col.echo, 0.35));
+                let f = 3.14e-4 * max(0, cos(tilt)) / (pi * R * R);
                 frac_text = "fraction reaching the receiver: 1 in " + fmt_sci(1 / f);
             } else if (mode === 1) {
-                // mirror: reflect the incoming direction (+x) about the normal
-                let ix = 1, iy = 0;
-                let dot = ix * nx + iy * ny;
-                let rx = ix - 2 * dot * nx, ry = iy - 2 * dot * ny;
-                arrow(ctx, px + rx * 4, py + ry * 4, px + rx * lobe * 1.5, py + ry * lobe * 1.5, rgba(col.echo, 0.95), 3, 12);
+                let dot = nx;
+                let rxv = 1 - 2 * dot * nx, ryv = -2 * dot * ny;
+                arrow(ctx, px + rxv * 4, py + ryv * 4, px + rxv * lobe * 1.4, py + ryv * lobe * 1.4, rgba(col.echo, 0.95), 3, 12);
                 let back = abs(tilt) < 0.4 * pi / 180;
                 frac_text = back ? "the reflection points straight back: a strong glint" : "the reflection misses the receiver entirely";
             } else {
-                arrow(ctx, px - 6, py + 4, lx + 30, ly + 4, rgba(col.echo, 0.95), 3, 12);
+                arrow(ctx, px - 6, py + 4, rx + 16, ly + 4, rgba(col.echo, 0.95), 3, 12);
                 frac_text = "light returns toward the source in a narrow cone";
             }
-
-            // cone toward the receiver, shrinking with distance
-            if (mode === 0) {
-                let half = clamp(16 * 60 / R, 0.4, 16);
-                fill_poly(ctx, [[px - 6, py], [lx + 26, ly - half], [lx + 26, ly + half]], rgba(col.echo, 0.25));
-            }
-            halo_text(ctx, "R = " + fmt_dist(R), (lx + px) / 2, ly + h * 0.12, col.range, fs, "center", "middle", 500);
-            halo_text(ctx, frac_text, w / 2, h - fs, col.text, fs, "center", "middle", 400);
-            text(ctx, "drone's surface", px + 18, py + L * 0.62, "#5C6670", fs - 2, "left");
+            halo_text(ctx, frac_text, w / 2, fs * 0.9 + (mode === 0 ? fs * 1.4 : 0), col.text, fs, "center", "middle", 500);
         },
     };
 
