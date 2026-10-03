@@ -16,8 +16,12 @@
  *
  *     S(R) = albedo * F(R) * T(R)^2 / R^2
  *
- *   F(R)  fraction of the transmitted beam power that lands on the target,
- *         for a Gaussian beam whose 1/e^2 full angle is the divergence.
+ *   F(R)  fraction of the transmitted beam power that lands on the target.
+ *         The beam is a rectangle: the collimating lens projects an image of
+ *         the laser diode's emitter, lighting the footprint evenly, and
+ *         diffraction at the exit aperture blurs its edges. The divergence is
+ *         the rectangle's full angle (beam_shape "gaussian" switches to a
+ *         round Gaussian beam with the divergence as its 1/e^2 full angle).
  *   T(R)  one way atmospheric transmission, exp(-alpha * R).
  *   1/R^2 the receiver aperture's share of the light scattered back by a
  *         Lambertian (matte) target.
@@ -61,7 +65,10 @@
         dlem20: {
             name: "DLEM 20",
             wavelength_nm: 1550,
-            divergence_mrad: 0.8,       // full angle; treated as 1/e^2 width
+            beam_shape: "rect",         // Jenoptik: "symmetrical beam divergence", so a square
+            divergence_mrad: 0.8,       // full angle across the footprint, horizontally
+            divergence_y_mrad: undefined,   // vertically, if different
+            edge_blur_mrad: 0.1,        // assumed 1 sigma softness of the edges, about diffraction at the 8 mm aperture
             // rating_divergence_mrad: divergence the ratings were measured with
             // (defaults to divergence_mrad; set it when exploring a different beam
             // on the same laser and receiver)
@@ -332,48 +339,105 @@
         return spec.divergence_mrad * 1e-3;
     }
 
-    // 1/e^2 beam radius at range R.
-    function beam_radius(spec, R) {
+    function theta_y(spec) {
+        return (spec.divergence_y_mrad || spec.divergence_mrad) * 1e-3;
+    }
+
+    function is_gaussian(spec) {
+        return spec.beam_shape === "gaussian";
+    }
+
+    // Half widths [x, y] of the footprint at range R: the rectangle's half
+    // sides (the exit aperture plus the divergence), or a Gaussian beam's
+    // 1/e^2 radius.
+    function beam_half_widths(spec, R) {
         let d0 = spec.exit_beam_mm * 1e-3;
-        let d = theta(spec) * R;
-        return 0.5 * Math.sqrt(d0 * d0 + d * d);
+        if (is_gaussian(spec))
+            return [0.5 * Math.hypot(d0, theta(spec) * R), 0.5 * Math.hypot(d0, theta_y(spec) * R)];
+        return [0.5 * (d0 + theta(spec) * R), 0.5 * (d0 + theta_y(spec) * R)];
+    }
+
+    // 1 sigma blur of the rectangle's edges at range R.
+    function beam_edge_sigma(spec, R) {
+        return Math.max(0.5e-3, (spec.edge_blur_mrad || 0) * 1e-3 * R);
+    }
+
+    // Horizontal half width: half the footprint's side (or a Gaussian's 1/e^2 radius).
+    function beam_radius(spec, R) {
+        return beam_half_widths(spec, R)[0];
     }
 
     function beam_diameter(spec, R) {
         return 2 * beam_radius(spec, R);
     }
 
-    // Irradiance of a unit power Gaussian beam at distance r from its axis (1/m^2).
-    function beam_irradiance(spec, R, r) {
-        let w = beam_radius(spec, R);
-        return 2 / (Math.PI * w * w) * Math.exp(-2 * r * r / (w * w));
+    // Standard normal CDF that stays accurate far into the lower tail.
+    function phi_cdf(z) {
+        return z < -3 ? norm_sf(-z) : norm_cdf(z);
     }
 
-    // Fraction of beam power inside a centered circle of radius a.
-    function fraction_disk(spec, R, a) {
-        let w = beam_radius(spec, R);
-        return 1 - Math.exp(-2 * a * a / (w * w));
+    // z Phi(z) + phi(z), the antiderivative of the standard normal CDF.
+    function phi_int(z) {
+        let pdf = Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+        if (z < -4) {
+            let z2 = z * z;
+            return pdf * (1 / z2 - 3 / (z2 * z2) + 15 / (z2 * z2 * z2) - 105 / (z2 * z2 * z2 * z2));
+        }
+        return z * phi_cdf(z) + pdf;
+    }
+
+    // Fraction of the beam's power left of x, along one axis (0: x, 1: y),
+    // measured from the beam's center. The rectangle's profile is a uniform
+    // distribution on [-h, h] blurred by a Gaussian of sigma s, whose CDF is
+    // the average of Phi((x - u) / s) over u.
+    function profile_cdf(spec, R, axis, x) {
+        let h = beam_half_widths(spec, R)[axis];
+        if (is_gaussian(spec))
+            return phi_cdf(2 * x / h);
+        let sg = beam_edge_sigma(spec, R);
+        return Math.min(1, Math.max(0, sg * (phi_int((x + h) / sg) - phi_int((x - h) / sg)) / (2 * h)));
+    }
+
+    // Power per meter along one axis at x (the derivative of profile_cdf).
+    function profile_density(spec, R, axis, x) {
+        let h = beam_half_widths(spec, R)[axis];
+        if (is_gaussian(spec)) {
+            let sg = h / 2;
+            return Math.exp(-0.5 * (x / sg) * (x / sg)) / (sg * Math.sqrt(2 * Math.PI));
+        }
+        let sg = beam_edge_sigma(spec, R);
+        return Math.max(0, phi_cdf((x + h) / sg) - phi_cdf((x - h) / sg)) / (2 * h);
+    }
+
+    function fraction_interval(spec, R, axis, lo, hi) {
+        return Math.max(0, profile_cdf(spec, R, axis, hi) - profile_cdf(spec, R, axis, lo));
+    }
+
+    // Irradiance of a unit power beam at (dx, dy) from its axis (1/m^2).
+    function beam_irradiance(spec, R, dx, dy = 0) {
+        return profile_density(spec, R, 0, dx) * profile_density(spec, R, 1, dy);
     }
 
     // Fraction of beam power on an axis aligned square of side s, with its
     // center offset by (dx, dy) from the beam axis.
     function fraction_square(spec, R, s, dx = 0, dy = 0) {
-        let w = beam_radius(spec, R);
-        let k = Math.SQRT2 / w;
         let a = s / 2;
-        let fx = 0.5 * (erf(k * (dx + a)) - erf(k * (dx - a)));
-        let fy = 0.5 * (erf(k * (dy + a)) - erf(k * (dy - a)));
-        return fx * fy;
+        return fraction_interval(spec, R, 0, dx - a, dx + a) * fraction_interval(spec, R, 1, dy - a, dy + a);
     }
 
     // Fraction of beam power on the rectangle [x0, x1] x [y0, y1], with the
     // beam axis at the origin.
     function fraction_rect(spec, R, x0, x1, y0, y1) {
-        let w = beam_radius(spec, R);
-        let k = Math.SQRT2 / w;
-        let fx = 0.5 * (erf(k * x1) - erf(k * x0));
-        let fy = 0.5 * (erf(k * y1) - erf(k * y0));
-        return fx * fy;
+        return fraction_interval(spec, R, 0, x0, x1) * fraction_interval(spec, R, 1, y0, y1);
+    }
+
+    // Fraction of beam power inside a centered circle of radius a.
+    function fraction_disk(spec, R, a) {
+        if (is_gaussian(spec)) {
+            let w = beam_radius(spec, R);
+            return 1 - Math.exp(-2 * a * a / (w * w));
+        }
+        return fraction_square(spec, R, Math.sqrt(Math.PI) * a);     // the equal area square
     }
 
     // Fraction of beam power intercepted by a target description.
@@ -394,22 +458,24 @@
         if (target.kind === "disk") {
             let a = target.diameter_m / 2;
             let fill = target.fill === undefined ? 1 : target.fill;
-            if (offset_m === 0)
+            if (offset_m === 0 && offset_y_m === 0)
                 return fill * fraction_disk(spec, R, a);
             // equal area square is a good stand in for an offset disk
             let s = Math.sqrt(Math.PI) * a;
-            return fill * fraction_square(spec, R, s, offset_m, 0);
+            return fill * fraction_square(spec, R, s, offset_m, offset_y_m);
         }
         if (target.kind === "point") {
-            return target.area_m2 * beam_irradiance(spec, R, offset_m);
+            return target.area_m2 * beam_irradiance(spec, R, offset_m, offset_y_m);
         }
         return 0;
     }
 
-    // Range at which the beam's 1/e^2 diameter equals the target size.
+    // Range at which the footprint's width equals the target size.
     function crossover_range(spec, size_m) {
         let d0 = spec.exit_beam_mm * 1e-3;
-        return Math.sqrt(Math.max(0, size_m * size_m - d0 * d0)) / theta(spec);
+        if (is_gaussian(spec))
+            return Math.sqrt(Math.max(0, size_m * size_m - d0 * d0)) / theta(spec);
+        return Math.max(0, size_m - d0) / theta(spec);
     }
 
     /* ------------------------------------------------------------------ */
@@ -567,14 +633,14 @@
     }
 
     // Average fraction of the beam's on-axis power a point target gets while
-    // it moves across the beam: offset goes from offset0 to offset0 + omega * t,
-    // in radians, sampled over the measurement.
+    // it moves across the beam (horizontally): offset goes from offset0 to
+    // offset0 + omega * t, in radians, sampled over the measurement.
     function crossing_factor(spec, R, offset0_rad, omega_rad_s, t_s) {
-        let w = beam_radius(spec, R);
+        let peak = profile_density(spec, R, 0, 0);
         let n = 64, acc = 0;
         for (let i = 0; i < n; i++) {
             let off = (offset0_rad + omega_rad_s * t_s * (i + 0.5) / n) * R;
-            acc += Math.exp(-2 * off * off / (w * w));
+            acc += profile_density(spec, R, 0, off) / peak;
         }
         return acc / n;
     }
@@ -688,6 +754,11 @@
         beam_radius,
         beam_diameter,
         beam_irradiance,
+        beam_half_widths,
+        beam_edge_sigma,
+        profile_cdf,
+        profile_density,
+        fraction_interval,
         fraction_disk,
         fraction_square,
         fraction_rect,

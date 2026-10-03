@@ -46,7 +46,8 @@ Notes:
 
 | Parameter | Value used | Why |
 | --- | --- | --- |
-| Divergence definition | 1/e^2 full angle of a Gaussian beam | common convention; datasheet doesn't define it |
+| Beam profile | Evenly lit square, 0.8 mrad full angle per side, edges blurred by a Gaussian of 0.1 mrad (1 sigma); the side is where the brightness falls to half | the user: the beam is rectangular; Jenoptik: "symmetrical beam divergence", so square; the patents' imaged emitter gives a flat top. The blur is assumed (about diffraction at the 8 mm aperture). Was a Gaussian with the divergence as its 1/e^2 full angle; `beam_shape: "gaussian"` still selects it |
+| Footprint size | d0 + theta R (geometric: exit aperture plus divergence) | Gaussian option keeps sqrt(d0^2 + (theta R)^2) |
 | Exit beam diameter | 8 mm | the module is 22 mm wide |
 | Internal pulse rate (PRF) | 10 kHz | must be < c / 2R_max = 30 kHz for 5 km |
 | Echo width (FWHM, in range) | 4.5 m (30 ns pulses) | was 1.5 m (10 ns) with no evidence; a Jenoptik patent example uses 50 ns pulses in accumulation mode and a DLEM 20 listing snippet says 30 ns (both from the patent research, not re-verified; see "Patent research" below) |
@@ -66,13 +67,17 @@ Notes:
 P_r = P_t * eta * F(R) * albedo * (A_r / (pi R^2)) * T(R)^2
 
 - F(R): fraction of beam power intercepted by the target. For a target larger than the
-  footprint F ~ 1 (extended); for a target much smaller, F ~ A_t * 2 / (pi w^2) with
-  w = theta R / 2, so F ~ 8 A_t / (pi theta^2 R^2).
+  footprint F ~ 1 (extended); for a target much smaller, the evenly lit square footprint of
+  side theta R gives F ~ A_t / (theta^2 R^2). (A Gaussian beam with the same 1/e^2 full
+  angle would give 8 A_t / (pi theta^2 R^2), 2.5 times more on axis.)
+- The square profile along each axis is a uniform distribution blurred by a Gaussian, so
+  fractions on rectangles are closed form: CDF(x) = s [I((x + h)/s) - I((x - h)/s)] / 2h
+  with I(z) = z Phi(z) + phi(z).
 - So P_r ~ 1/R^2 for beam filling targets and ~1/R^4 for small targets. Line targets
   (wires) give 1/R^3.
-- Crossover: beam 1/e^2 diameter equals target size: R_x = d / theta. At 0.8 mrad:
-  10 inch quad core (~0.15 m) ~190 m, whole quad (0.43 m) ~540 m; Shahed fuselage
-  (0.45 m) ~560 m, Shahed span (2.5 m) ~3.1 km. The crossover is also where the target
+- Crossover: footprint width equals target size: R_x = (d - d0) / theta. At 0.8 mrad:
+  10 inch quad core (~0.15 m) ~180 m, whole quad (0.43 m) ~530 m; Shahed fuselage
+  (0.45 m) ~550 m, Shahed span (2.5 m) ~3.1 km. The crossover is also where the target
   and the beam have the same angular size in the camera.
 - Local log slope (model, 25 km visibility):
   10 inch quad side: -2.1 (50 m), -2.8 (200 m), -3.5 (500 m), -3.8 (1 km), -4.1 (2 km).
@@ -101,11 +106,12 @@ Signal S = albedo * F * T^2 / R^2 at each rated range:
 | Extended, 50%, 50 km | 5,000 m (cap) | 1.63e-8 |
 
 All within ~30% of each other, so a single sensitivity explains the brochure.
-Calibrating from the small target predicts NATO 3,030 m (rated 3,300) and extended
-4,310 m at its 50 km visibility (rated 5,000 = instrument cap).
+Calibrating from the small target predicts NATO 3,510 m (rated 3,300) and extended
+5,910 m at its 50 km visibility (rated 5,000 = instrument cap). The square beam fits the
+brochure better than the Gaussian did (NATO 3,030 m, extended 4,310 m).
 
 For DLEM 30 / 45 the NATO and extended ratings are more conservative than the small target
-rating implies (predicted NATO 5,440 / 8,090 m vs rated 4,100 / 5,700 m). Calibrating
+rating implies (predicted NATO 5,820 / 8,350 m vs rated 4,100 / 5,700 m). Calibrating
 from the small target is the most relevant choice for drones (point like regime).
 
 ### Pulse accumulation and rate
@@ -116,9 +122,11 @@ from the small target is the most relevant choice for drones (point like regime)
 - Extended: R_max ~ N^(1/4).
 - Detection range, DLEM 20 model (0.5 s rating, 30 ns pulses), 25 km visibility,
   at 1 / 2 / 5 / 10 / 25 Hz:
-  10 inch quad side 767 / 698 / 615 / 558 / 490 m; below 854 / 777 / 683 / 619 / 541 m.
-  Shahed head on (gray) 1776 / 1614 / 1419 / 1286 / 1126 m; black paint (5%) at 2 Hz 1015 m.
-  Shahed side 2196 / 1961 / 1686 / 1502 / 1285 m; below 2850 / 2522 / 2135 / 1874 / 1567 m.
+  10 inch quad side 756 / 692 / 614 / 560 / 494 m; below 846 / 775 / 688 / 627 / 554 m.
+  Shahed head on (gray) 1786 / 1625 / 1435 / 1306 / 1154 m; black paint (5%) at 2 Hz 1051 m.
+  Shahed side 2395 / 2140 / 1848 / 1654 / 1428 m; below 3320 / 2975 / 2550 / 2260 / 1922 m.
+  (Square beam. The Gaussian gave the quad 767 / 698 / 615 / 558 / 490 m: small targets
+  barely change, since the sensitivity is backed out of a small target rating.)
   (2 Hz = the 0.5 s rating time, which is what the datasheet section of the article quotes.)
 - Per pulse SNR at the 10 Hz detection range: ~0.2 (invisible in one shot).
 - Max PRF without ambiguity for 5 km: c / 2R = 30 kHz.
@@ -154,8 +162,8 @@ from the small target is the most relevant choice for drones (point like regime)
 - Baseline vs drone: after calibration the beam is parallel to the camera's line of sight,
   b to the side, so aiming at the boresight misses the drone's center by exactly b at every
   range (in pixels: f b / R, shrinking like the drone). With b = 72 mm the beam stays on the
-  10 inch quad's body/battery (~15.6 cm wide) everywhere; echo relative to a centered beam:
-  97% at 5 m, 92% at 10 m, 63% at 26 m, 41% at 50 m, 43% at 100 m, 72% at 300 m, 95% at 1 km.
+  10 inch quad (side view) everywhere, on its arm up close; echo relative to a centered beam:
+  83% at 5 m, 62% at 10 m, ~30 to 36% from 25 to 55 m, 50% at 100 m, 93% at 300 m, 99% at 1 km.
   The parallax demo has a top view (sideways to scale) that shows the two parallel lines.
 
 ### AprilTag calibration (user's method: sweep across a tag)
@@ -181,7 +189,7 @@ from the small target is the most relevant choice for drones (point like regime)
   ~9 px), 4 px raster steps (0.36 mrad of pan/tilt), raster extends +-70 px around the spot.
   At 20 m the tag is ~200 px versus a ~10 px beam, and the hit/miss pattern barely depends
   on the beam, which made the demo uninformative.
-- Hit test: fraction of a Gaussian beam on the tag's paper (albedo 0.8), SNR from the model
+- Hit test: fraction of the (square) beam on the tag's paper (albedo 0.8), SNR from the model
   for a 40 ms measurement, times an echo strength factor, compared with the threshold. The
   guess view uses the same test for the guessed spot, so the true spot gives zero misplaced
   stops.
@@ -228,7 +236,8 @@ archived yet either; see `sources/INDEX.md` and re-run `sources/fetch_sources.py
 - US11237399B2 / DE102016112557B4 / EP3353592B1 (Jenoptik, generic): ball lens images the
   diode emitter into an intermediate plane, then an aspheric collimator; divergence
   tan(theta) = image size / collimator focal length; diode position chosen for a square
-  far field spot. Suggests the DLEM spot may be closer to a flat square than a Gaussian.
+  far field spot. Suggests the DLEM spot may be closer to a flat square than a Gaussian
+  (now the model's default, after the user confirmed the beam is rectangular).
 - DLEM 4k datasheet (archived): divergence "0.6 mrad x 0.7 mrad" (not round), rated with
   0.5 s and 1 s measuring times.
 - Boresighting: DE102008056953B3 describes a beam splitter putting a visible point source in

@@ -130,7 +130,7 @@ Each line: demo id, what it shows, controls. Demos marked (A) are animated.
    - `tof_basic`: pulse leaves LRF, bounces off a wall, returns; timeline below with the detector waveform. Sliders: time, distance. R = c t / 2.
 2. **A Spreading Beam**
    - `beam_cone`: side view of the beam cone (vertical exaggeration labeled), footprint to scale next to the 10" quad, the Shahed-136 head on, and the 0.75 m / 2.3 m datasheet targets. Slider: range (log). Footprint D = theta R.
-   - `beam_profile`: Gaussian cross section, 1/e^2 width, encircled power vs radius. Slider: circle radius.
+   - `beam_profile`: square footprint with blurred edges, a slice through it, and the power inside a centered square. Slider: the square's size relative to the footprint. (Was Gaussian until the user said the beam is rectangular.)
 3. **Light on Target**
    - `beam_fill`: looking down the beam at range R: footprint heat map + drone silhouette; fraction intercepted; log-log plot of fraction vs R. Segmented: 10" quad / Shahed-136 head on / 0.75 m square. Slider: range.
 4. **Light Coming Back**
@@ -184,7 +184,9 @@ Each line: demo id, what it shows, controls. Demos marked (A) are animated.
 
 See the header comment in the file. Key points:
 
-- Gaussian beam, 1/e^2 full angle = divergence; radius w(R) = 0.5 sqrt(D0^2 + (theta R)^2).
+- Square beam (rectangular in general: divergence_y_mrad), evenly lit, side D0 + theta R,
+  edges blurred by a Gaussian of edge_blur_mrad (0.1, assumed). beam_shape "gaussian" keeps
+  the old model: 1/e^2 full angle = divergence, radius 0.5 sqrt(D0^2 + (theta R)^2).
 - Fraction on target via erf for squares, encircled energy for disks, point approximation available.
 - Atmosphere: Kim visibility model at the spec's wavelength, two way.
 - Sensitivity backed out of a datasheet rating (default: small target), measured with `rating_divergence_mrad`.
@@ -202,9 +204,6 @@ See the header comment in the file. Key points:
 
 - Re-run `docs/lrf/sources/fetch_sources.py` when Google Patents stops returning 503, then
   re-verify the patent figures (pulse length, pulse rate) and commit the archived text.
-- Optional model extension: a flat square beam profile (`beam_profile: "square"`) as an
-  alternative to the Gaussian, since Jenoptik's beam shaping patents describe square far
-  field spots. The brochure's ratings fit the Gaussian slightly better.
 - Optional: velocity compensated (shift and add) accumulation in the calculator.
 
 ## Status

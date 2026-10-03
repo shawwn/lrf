@@ -607,11 +607,22 @@ let lrf_demos = {};
     /* Beam footprint heat map                                            */
     /* ------------------------------------------------------------------ */
 
-    // Offscreen image of a Gaussian spot. The 1/e^2 radius is a quarter of
-    // the image's width, so the image covers +-2 w.
+    // Offscreen image of the beam's footprint: a square (the DLEM 20's beam
+    // is symmetrical) with edges blurred as in the model, relative to its
+    // half width h. The image covers +-2 h.
     let beam_image_cache = {};
 
-    // gamma < 1 brightens the faint wings, closer to how the eye sees a spot
+    function beam_edge_ratio() {
+        return spec.edge_blur_mrad / (spec.divergence_mrad / 2);
+    }
+
+    // Brightness across one axis, 1 in the middle, u in units of the half width.
+    function beam_profile_1d(u) {
+        let b = beam_edge_ratio();
+        return (M.norm_cdf((u + 1) / b) - M.norm_cdf((u - 1) / b)) / (2 * M.norm_cdf(1 / b) - 1);
+    }
+
+    // gamma < 1 brightens the dim edges, closer to how the eye sees a spot
     function beam_image(hex, peak_alpha, gamma) {
         gamma = gamma || 1;
         let key = hex + peak_alpha + "/" + gamma;
@@ -624,16 +635,17 @@ let lrf_demos = {};
         let g = c.getContext("2d");
         let img = g.createImageData(n, n);
         let rgb = hex_rgb(hex);
+        let prof = [];
+        for (let i = 0; i < n; i++)
+            prof.push(beam_profile_1d((i + 0.5) / n * 4 - 2));
         for (let j = 0; j < n; j++) {
             for (let i = 0; i < n; i++) {
-                let x = (i + 0.5) / n * 4 - 2;
-                let y = (j + 0.5) / n * 4 - 2;
-                let I = pow(exp(-2 * (x * x + y * y)), gamma);
+                let I = pow(prof[i] * prof[j], gamma);
                 let k = (j * n + i) * 4;
                 img.data[k + 0] = rgb[0];
                 img.data[k + 1] = rgb[1];
                 img.data[k + 2] = rgb[2];
-                img.data[k + 3] = round(255 * peak_alpha * I);
+                img.data[k + 3] = round(255 * peak_alpha * min(1, I));
             }
         }
         g.putImageData(img, 0, 0);
@@ -641,10 +653,19 @@ let lrf_demos = {};
         return c;
     }
 
-    // Draw a Gaussian spot with 1/e^2 radius w_px centered at (x, y).
-    function draw_beam_spot(ctx, x, y, w_px, hex, alpha, gamma) {
+    // Draw the footprint with half width h_px centered at (x, y).
+    function draw_beam_spot(ctx, x, y, h_px, hex, alpha, gamma) {
         let img = beam_image(hex || col.laser, alpha === undefined ? 0.85 : alpha, gamma);
-        ctx.drawImage(img, x - 2 * w_px, y - 2 * w_px, 4 * w_px, 4 * w_px);
+        ctx.drawImage(img, x - 2 * h_px, y - 2 * h_px, 4 * h_px, 4 * h_px);
+    }
+
+    // Outline of the footprint's nominal edge (half width h_px).
+    function beam_outline(ctx, x, y, h_px, color, width, dash) {
+        ctx.strokeStyle = color || col.laser;
+        ctx.lineWidth = width || 1.5;
+        ctx.setLineDash(dash || []);
+        ctx.strokeRect(x - h_px, y - h_px, 2 * h_px, 2 * h_px);
+        ctx.setLineDash([]);
     }
 
     /* ------------------------------------------------------------------ */
@@ -1924,7 +1945,7 @@ let lrf_demos = {};
                 ctx.stroke();
             }
             let bx = ix + iw / 2 + 3, by = iy + ih / 2 + 1;
-            circle(ctx, bx, by, 5, null, col.laser, 1.5);
+            beam_outline(ctx, bx, by, 4.5, col.laser, 1.5);
             line(ctx, bx - 11, by, bx - 7, by, col.laser, 1.5);
             line(ctx, bx + 7, by, bx + 11, by, col.laser, 1.5);
             ctx.restore();
@@ -2156,7 +2177,7 @@ let lrf_demos = {};
                 let cx = px + pw / 2, cy2 = py + ph / 2;
                 panels[i].draw(cx, cy2, ppm);
                 draw_beam_spot(ctx, cx, cy2, max(0.6, wr * ppm), col.laser, 0.8);
-                circle(ctx, cx, cy2, max(0.5, wr * ppm), null, rgba(col.laser, 0.9), 1);
+                beam_outline(ctx, cx, cy2, max(0.5, wr * ppm), rgba(col.laser, 0.9), 1);
                 ctx.restore();
                 text(ctx, panels[i].name, px + pw / 2, py + ph + fs * 0.9, panels[i].color, fs - 1, "center", "middle", 500);
             }
@@ -2171,48 +2192,48 @@ let lrf_demos = {};
     /* -------------------------- beam profile -------------------------- */
 
     SCENES.beam_profile = {
-        sliders: [{ anim: { period: 12, lo: 0.1, hi: 0.9 }, fmt: v => "r = " + v.toFixed(2) + " w", map: lin_map(0, 2), def: 1 }],
+        sliders: [{ anim: { period: 12, lo: 0.1, hi: 0.9 }, fmt: v => "square " + v.toFixed(2) + "×", map: lin_map(0, 2), def: 1 }],
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let rr = d.v[0];
             let sq = min(h - 20, w * 0.42);
             let cx = 10 + sq / 2, cy = h / 2;
             round_rect(ctx, cx - sq / 2, cy - sq / 2, sq, sq, 6, "#1E2228");
-            let wpx = sq / 4.4;
-            draw_beam_spot(ctx, cx, cy, wpx, "#FF5A4E", 1);
-            circle(ctx, cx, cy, wpx, null, "rgba(255,255,255,0.45)", 1);
-            ctx.setLineDash([3, 3]);
-            circle(ctx, cx, cy, wpx, null, "rgba(255,255,255,0.45)", 1);
-            ctx.setLineDash([]);
-            circle(ctx, cx, cy, rr * wpx, null, col.range, 2.5);
-            let frac = 1 - exp(-2 * rr * rr);
+            let hpx = sq / 4.4;
+            draw_beam_spot(ctx, cx, cy, hpx, "#FF5A4E", 1);
+            beam_outline(ctx, cx, cy, hpx, "rgba(255,255,255,0.45)", 1, [3, 3]);
+            if (rr > 0)
+                beam_outline(ctx, cx, cy, rr * hpx, col.range, 2.5);
+            // a kilometer out, where the footprint's size is all divergence
+            let R = 1000, hw = M.beam_radius(spec, R);
+            let frac = M.fraction_square(spec, R, 2 * rr * hw);
             halo_text(ctx, fmt_pct(frac) + " of the power", cx, cy + sq / 2 - fs, "#fff", fs, "center", "middle", 500, "rgba(30,34,40,0.8)");
 
             // profile plot
             let px = cx + sq / 2 + 58, pw = w - px - 12;
             let plot = new Plot(ctx, px, 14, pw, h - 14 - fs * 3, {
                 xmin: -2, xmax: 2, ymin: 0, ymax: 1.08, fs: fs - 1,
-                xticks: [-2, -1, 0, 1, 2], xfmt: v => v === 0 ? "0" : (v > 0 ? "" : "−") + abs(v) + "w",
-                yticks: [0, 0.135, 0.5, 1], yfmt: v => v === 0.135 ? "13.5%" : round(v * 100) + "%",
+                xticks: [-1, 0, 1], xfmt: v => v === 0 ? "center" : "edge",
+                yticks: [0, 0.5, 1], yfmt: v => round(v * 100) + "%",
                 xlabel: "distance from the beam's axis",
             });
             plot.frame();
             plot.clip();
-            // shaded area inside the circle
+            // shaded area inside the square
             let pts = [[plot.X(-rr), plot.Y(0)]];
             for (let i = 0; i <= 80; i++) {
                 let x = -rr + 2 * rr * i / 80;
-                pts.push([plot.X(x), plot.Y(exp(-2 * x * x))]);
+                pts.push([plot.X(x), plot.Y(beam_profile_1d(x))]);
             }
             pts.push([plot.X(rr), plot.Y(0)]);
             if (rr > 0)
                 fill_poly(ctx, pts, rgba(col.range, 0.18));
-            plot.hline(exp(-2), col.axis, 1, [4, 4]);
-            plot.curve(x => exp(-2 * x * x), col.laser, 2.5);
+            plot.hline(0.5, col.axis, 1, [4, 4]);
+            plot.curve(beam_profile_1d, col.laser, 2.5, null, 200);
             plot.vline(-rr, col.range, 1.5);
             plot.vline(rr, col.range, 1.5);
             plot.unclip();
-            text(ctx, "1/e² edge", plot.X(1) + 4, plot.Y(exp(-2)) - fs * 0.7, col.light_text, fs - 2, "left");
+            halo_text(ctx, "edge: half as bright", plot.X(-2) + 6, plot.Y(0.5) - fs * 0.7, col.light_text, fs - 2, "left", "middle", 400);
         },
     };
 
@@ -2247,7 +2268,7 @@ let lrf_demos = {};
                 draw_silhouette(ctx, target, cx, cy, ppm, d.seg[0] < 2 ? "#2F363B" : "#7A7F84");
             }
             draw_beam_spot(ctx, cx, cy, max(0.8, wr * ppm), col.laser, 0.75);
-            circle(ctx, cx, cy, max(0.6, wr * ppm), null, rgba(col.laser, 0.8), 1);
+            beam_outline(ctx, cx, cy, max(0.6, wr * ppm), rgba(col.laser, 0.8), 1);
             ctx.restore();
 
             let F = M.fraction_on_target(spec, target, R);
@@ -3219,7 +3240,7 @@ let lrf_demos = {};
             let ppm = (left - 30) / view;
             let cx = left / 2, cy = h / 2;
             draw_beam_spot(ctx, cx, cy, wr * ppm, col.laser, 0.75);
-            circle(ctx, cx, cy, wr * ppm, null, rgba(col.laser, 0.8), 1);
+            beam_outline(ctx, cx, cy, wr * ppm, rgba(col.laser, 0.8), 1);
             let xs = -v * T / 2, xe = v * T / 2;
             line(ctx, cx + xs * ppm, cy + 26, cx + xe * ppm, cy + 26, col.speed, 2, [4, 4]);
             let pp = clamp(p, 0, 1);
@@ -3233,9 +3254,10 @@ let lrf_demos = {};
             let soFar = 0;
             if (pp > 0) {
                 let n = 40;
+                let peak = M.profile_density(spec, R, 0, 0);
                 for (let i = 0; i < n; i++) {
                     let x = xs + (xe - xs) * pp * (i + 0.5) / n;
-                    soFar += exp(-2 * x * x / (wr * wr));
+                    soFar += M.profile_density(spec, R, 0, x) / peak;
                 }
                 soFar = soFar / n * pp;
             }
@@ -3451,7 +3473,7 @@ let lrf_demos = {};
             // the beam's footprint
             let wr = M.beam_radius(spec, R) * ppm;
             draw_beam_spot(ctx, X(aim[0]), Y(aim[1]), max(1.5, wr), col.laser, 0.55);
-            circle(ctx, X(aim[0]), Y(aim[1]), max(2, wr), null, col.laser, 1.5);
+            beam_outline(ctx, X(aim[0]), Y(aim[1]), max(2, wr), col.laser, 1.5);
             ctx.restore();
 
             // labels
@@ -3563,12 +3585,12 @@ let lrf_demos = {};
             let sky = d.seg[0] === 1;
             let Rq = TWO_R, Rb = TWO_R + gap;
             let top = h * 0.44;
-            let wq = M.beam_radius(spec, Rq);      // 1/e^2 beam radius at the quad
+            let wq = M.beam_radius(spec, Rq);      // half width of the footprint at the quad
             let offm = off * Rq;                   // how far the beam's axis passes from the quad
 
-            // side view: the beam is brightest along its axis and fades toward
-            // its edges; the quad sits offm off the axis, to scale with the
-            // beam's width (the distance along the beam is compressed)
+            // side view: the beam is evenly lit across, with soft edges; the
+            // quad sits offm off the axis, to scale with the beam's width (the
+            // distance along the beam is compressed)
             let isz = min(top - 12, w * 0.36);
             let sx1 = w - 20 - isz;
             round_rect(ctx, 10, 6, sx1 - 20, top - 12, 8, "#EEF3F8");
@@ -3581,11 +3603,11 @@ let lrf_demos = {};
             let X = r => x0 + (x1 - x0) * r / Rend;
             let cy = 6 + (top - 12) / 2;
             let Hend = (top - 12) / 2 / 2.4;
-            let half = r => Hend * r / Rend;       // drawn 1/e^2 half width
+            let half = r => Hend * r / Rend;       // drawn half width
             let endR = sky ? Rend : Rb;
-            // brightness on a perceptual (gamma 0.45) scale, so the beam's faint
-            // outer wings, which still carry light, stay visible
-            let BG = 0.45, U = 2.3;
+            // brightness on a perceptual (gamma 0.45) scale, so the dim, blurred
+            // edges, which still carry light, stay visible
+            let BG = 0.45, U = 1 + 4 * beam_edge_ratio();
             let cone = [[x0, cy], [X(endR), cy - U * half(endR)], [X(endR), cy + U * half(endR)]];
             if (ctx.createConicGradient) {
                 // brightness depends only on the angle around the apex
@@ -3594,14 +3616,14 @@ let lrf_demos = {};
                 for (let k = 0; k <= 46; k++) {
                     let u = -U + 2 * U * k / 46;
                     let ang = atan2(u * half(endR), dx);
-                    g.addColorStop((ang + pi) / (2 * pi), rgba(col.laser, 0.6 * pow(exp(-2 * u * u), BG)));
+                    g.addColorStop((ang + pi) / (2 * pi), rgba(col.laser, 0.6 * pow(beam_profile_1d(u), BG)));
                 }
                 fill_poly(ctx, cone, g);
             } else {
                 let n = 40;
                 for (let k = 0; k < n; k++) {
                     let u0 = -U + 2 * U * k / n, u1 = u0 + 2 * U / n, um = (u0 + u1) / 2;
-                    fill_poly(ctx, [[x0, cy], [X(endR), cy + u0 * half(endR)], [X(endR), cy + u1 * half(endR) + 0.5]], rgba(col.laser, 0.6 * pow(exp(-2 * um * um), BG)));
+                    fill_poly(ctx, [[x0, cy], [X(endR), cy + u0 * half(endR)], [X(endR), cy + u1 * half(endR) + 0.5]], rgba(col.laser, 0.6 * pow(beam_profile_1d(um), BG)));
                 }
             }
             draw_lrf_side(ctx, x0, cy, 6);
@@ -3616,7 +3638,8 @@ let lrf_demos = {};
             if (!sky)
                 dimension(ctx, X(Rq), top - 14, X(Rb), top - 14, col.bg, gap.toFixed(0) + " m", fs - 2, -1);
             let Fnow = M.fraction_on_target(spec, QUAD, Rq, 0, offm);
-            let where = Fnow < 0.001 ? "outside the beam" : offm / wq < 0.6 ? "in the bright core" : "in the faint fringe";
+            let rel = Fnow / M.fraction_on_target(spec, QUAD, Rq);
+            let where = Fnow < 0.001 ? "outside the beam" : rel > 0.95 ? "inside the footprint" : "on the footprint's edge";
             let off_label = offm < 0.005 ? (w < 500 ? "on axis" : "beam aimed at the quad") :
                 round(offm * 100) + " cm off axis, " + where;
             font(ctx, fs - 2, 500);
@@ -3632,12 +3655,10 @@ let lrf_demos = {};
             ctx.beginPath();
             ctx.rect(ix, iy, isz, isz);
             ctx.clip();
-            let pc = isz / (5.2 * wq);
+            let pc = isz / (3.6 * wq);
             let ccx = ix + isz / 2, ccy = iy + isz / 2;
             draw_beam_spot(ctx, ccx, ccy, wq * pc, "#FF5A4E", 0.55, 0.45);
-            ctx.setLineDash([3, 3]);
-            circle(ctx, ccx, ccy, wq * pc, null, "rgba(255,255,255,0.35)", 1);
-            ctx.setLineDash([]);
+            beam_outline(ctx, ccx, ccy, wq * pc, "rgba(255,255,255,0.35)", 1, [3, 3]);
             let cell = 2.5 / pc;                   // ~2.5 px cells, in meters
             for (let r of QUAD.shapes) {
                 let fill = r.fill === undefined ? 1 : r.fill;
@@ -3645,7 +3666,7 @@ let lrf_demos = {};
                     for (let my = r.y0; my < r.y1; my += cell) {
                         let cx2 = min(mx + cell, r.x1), cy2 = min(my + cell, r.y1);
                         let ux = (mx + cx2) / 2, uy = (my + cy2) / 2 - offm;
-                        let I = exp(-2 * (ux * ux + uy * uy) / (wq * wq));
+                        let I = beam_profile_1d(ux / wq) * beam_profile_1d(uy / wq);
                         ctx.globalAlpha = fill < 1 ? 0.35 : 1;
                         ctx.fillStyle = mix("#3A3F45", "#FFE08A", pow(I, 0.45));
                         ctx.fillRect(ccx + mx * pc, ccy + (offm - cy2) * pc, (cx2 - mx) * pc + 0.4, (cy2 - my) * pc + 0.4);
@@ -3905,7 +3926,7 @@ let lrf_demos = {};
             }
             let cx = (nw / 2) * k, cy = (nh / 2) * k;
             let beam_px = M.beam_diameter(spec, R) / R * FPX;
-            circle(ctx, cx, cy, beam_px / 2 * k, null, col.laser, 2);
+            beam_outline(ctx, cx, cy, beam_px / 2 * k, col.laser, 2);
             halo_text(ctx, (shahed ? "Shahed wingspan " : "quad ") + size.toFixed(1) + " px", 12, 18, shahed ? col.shahed : col.quad, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
             halo_text(ctx, "beam " + beam_px.toFixed(1) + " px", 12, 18 + fs * 1.4, col.laser, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
             halo_text(ctx, fmt_dist(R) + " away; one square = one camera pixel", w - 12, h - 14, col.text, fs - 2, "right", "middle", 400, "rgba(255,255,255,0.85)");
@@ -4073,7 +4094,7 @@ let lrf_demos = {};
             let px = X(p[0] - cam.width_px / 2), py = Y(p[1] - cam.height_px / 2);
             let rr = M.beam_radius(spec, R) / R * FPX * k;
             draw_beam_spot(ctx, px, py, rr, col.laser, 0.55);
-            circle(ctx, px, py, rr, null, col.laser, 1.5);
+            beam_outline(ctx, px, py, rr, col.laser, 1.5);
             ctx.restore();
             let miss = BASELINE;   // meters between the drone's center and the beam's axis
             let on = M.fraction_on_target(spec, QUAD, R, miss, 0) / M.fraction_on_target(spec, QUAD, R);
@@ -4095,17 +4116,11 @@ let lrf_demos = {};
             let xa = 46, xd = w - 110;                   // camera end, drone end
             let cyc = ty0 + fs * 1.2 + (th - 2 * fs) / 2 - miss * km / 2;   // camera's line
             let cyb = cyc + miss * km;                   // beam's line (LRF on the camera's right = down)
-            // the beam spreading toward the drone (Gaussian across, compressed along)
-            let steps = 24;
-            for (let i = 0; i < steps; i++) {
-                let f0 = i / steps, f1 = (i + 1) / steps;
-                let w0 = wr * f0 * km, w1 = wr * f1 * km;
-                let x0 = lerp(xa, xd, f0), x1 = lerp(xa, xd, f1);
-                for (let u = 0; u < 3; u++) {
-                    let a = 0.22 * exp(-2 * (u * 0.75) * (u * 0.75));
-                    fill_poly(ctx, [[x0, cyb - (u + 1) * 0.75 * w0], [x1, cyb - (u + 1) * 0.75 * w1], [x1, cyb + (u + 1) * 0.75 * w1], [x0, cyb + (u + 1) * 0.75 * w0]], rgba(col.laser, a));
-                }
-            }
+            // the beam spreading toward the drone: evenly lit across, with
+            // soft edges (distance along it compressed)
+            let h0 = spec.exit_beam_mm * 5e-4 * km, soft = 1 + 2 * beam_edge_ratio();
+            fill_poly(ctx, [[xa, cyb - h0], [xd, cyb - wr * km * soft], [xd, cyb + wr * km * soft], [xa, cyb + h0]], rgba(col.laser, 0.1));
+            fill_poly(ctx, [[xa, cyb - h0], [xd, cyb - wr * km], [xd, cyb + wr * km], [xa, cyb + h0]], rgba(col.laser, 0.24));
             line(ctx, xa, cyb, xd + 40, cyb, col.laser, 1.5);
             line(ctx, xa, cyc, xd, cyc, rgba(col.cam, 0.9), 1.5, [5, 4]);
             draw_quad_top(ctx, xd, cyc, 0.43 * km, "#2D3439", pi / 2);
@@ -4358,7 +4373,9 @@ let lrf_demos = {};
             }
             // truth: the beam's spot, which the calibration doesn't know
             let rr = M.beam_radius(spec, SWEEP_R) / SWEEP_R * FPX * k;
-            circle(ctx, X(b[0]), Y(b[1]), rr, rgba(col.laser, 0.2), col.laser, 1.5);
+            ctx.fillStyle = rgba(col.laser, 0.2);
+            ctx.fillRect(X(b[0]) - rr, Y(b[1]) - rr, 2 * rr, 2 * rr);
+            beam_outline(ctx, X(b[0]), Y(b[1]), rr, col.laser, 1.5);
             if (shown >= n && hn > 0) {
                 let ex = sx / hn, ey = sy / hn;
                 line(ctx, X(ex) - 14, Y(ey), X(ex) + 14, Y(ey), col.text, 2);
@@ -4424,7 +4441,9 @@ let lrf_demos = {};
             }
             let g = st.guess;
             let rr = max(5, M.beam_radius(spec, SWEEP_R) / SWEEP_R * FPX * k);
-            circle(ctx, X(g[0]), Y(g[1]), rr, rgba(col.laser, 0.3), col.laser, 2);
+            ctx.fillStyle = rgba(col.laser, 0.3);
+            ctx.fillRect(X(g[0]) - rr, Y(g[1]) - rr, 2 * rr, 2 * rr);
+            beam_outline(ctx, X(g[0]), Y(g[1]), rr, col.laser, 2);
             text(ctx, "camera image: drag the guess", ox + (u1 - u0) * k / 2, h - 12, col.light_text, fs - 2);
 
             // right: each stop placed on the tag, assuming the guess
