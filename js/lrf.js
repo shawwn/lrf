@@ -2670,14 +2670,24 @@ let lrf_demos = {};
             let pts = [];
             let fa = [];
             let det = false;
-            let peak_b = round(R);
-            for (let b = 0; b < 1000; b++) {
-                let s = snr1 * echo_shape(b + 0.5 - R);
-                let v = d.st.noise[b] + s;
-                pts.push([plot.X(b + 0.5), plot.Y(v)]);
+            // Neighboring bins above the threshold make one detection, as a
+            // receiver reports one target per crossing. It's the echo if the
+            // echo itself adds at least a noise sigma somewhere in it, since
+            // a strong, 4.5 m long echo spills over several 1 m bins.
+            let run = null;
+            for (let b = 0; b <= 1000; b++) {
+                let s = b < 1000 ? snr1 * echo_shape(b + 0.5 - R) : 0;
+                let v = b < 1000 ? d.st.noise[b] + s : -Infinity;
+                if (b < 1000)
+                    pts.push([plot.X(b + 0.5), plot.Y(v)]);
                 if (v > thr) {
-                    if (abs(b + 0.5 - R) < 2) det = true;
-                    else fa.push(b);
+                    if (!run) run = { peak: b, top: v, echo: false };
+                    if (v > run.top) { run.peak = b; run.top = v; }
+                    if (s >= 1) run.echo = true;
+                } else if (run) {
+                    if (run.echo) det = true;
+                    else fa.push(run.peak);
+                    run = null;
                 }
             }
             plot.clip();
