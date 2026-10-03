@@ -1322,7 +1322,8 @@ let lrf_demos = {};
      *   init(d)                        called once before controls are created
      *   drag: { begin(d,x,y)->bool, move(d,x,y), end(d), cursor(d,x,y)->css }
      *   orbit: bool                    dragging rotates d.st.yaw / d.st.pitch
-     *   hover(d, x, y)                 x, y are null when the pointer leaves
+     *   hover(d, x, y)                 x, y are null when the pointer leaves; on touch
+     *                                  screens a tap or sideways drag stands in for it
      *   on_spec(d)                     the global spec changed
      *   on_seg(d, i, k), on_set(d), special(d, i, name) -> value
      *
@@ -1558,6 +1559,18 @@ let lrf_demos = {};
                 scene.hover(self, null, null);
                 self.request();
             });
+            // Touch screens don't hover: a tap, or a sideways drag (vertical
+            // swipes still scroll the page), moves the reading, and it stays
+            // after the finger lifts.
+            let touch_hover = e => {
+                if (e.pointerType === "mouse")
+                    return;
+                let p = coords(e);
+                scene.hover(self, p[0], p[1]);
+                self.request();
+            };
+            canvas.addEventListener("pointerdown", touch_hover);
+            canvas.addEventListener("pointermove", touch_hover);
         }
 
         all_demos.push(this);
