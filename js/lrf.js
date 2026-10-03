@@ -2700,7 +2700,7 @@ let lrf_demos = {};
                         let v = st.noise[b] + st.sig[b];
                         if (v > peak) { peak = v; pb = b; }
                     }
-                    st.marks[st.k] = peak > spec.threshold_sigma && abs(pb * 2 + 1 - R) < 6;
+                    st.marks[st.k] = peak > spec.threshold_sigma && pb === floor(R / 2);
                 }
                 if (k === 0) st.marks = [];
                 st.k = k;
@@ -2708,11 +2708,9 @@ let lrf_demos = {};
                 let n = 600;
                 st.noise = new Float32Array(n);
                 st.sig = new Float32Array(n);
-                for (let b = 0; b < n; b++) {
+                for (let b = 0; b < n; b++)
                     st.noise[b] = rng.normal();
-                    let x = b * 2 + 1 - R;
-                    st.sig[b] = snr * exp(-x * x / (2 * 0.9 * 0.9));
-                }
+                st.sig[floor(R / 2)] = snr;
             }
 
             // timeline
@@ -2731,7 +2729,7 @@ let lrf_demos = {};
 
             // histogram of the current measurement
             let ph = h * 0.42;
-            let plot = new Plot(ctx, 44, ty + 40, w - 60, ph, {
+            let plot = new Plot(ctx, 44, ty + 40, w - 64, ph, {
                 xmin: 0, xmax: 1200, ymin: -3, ymax: max(9, snr * 1.15), fs: fs - 1, no_yticks: true,
                 xfmt: v => v === 0 ? "0" : v + " m",
             });
@@ -2741,8 +2739,8 @@ let lrf_demos = {};
             for (let b = 0; b < 600; b++) {
                 let v = p * st.sig[b] + sqrt(p) * st.noise[b];
                 let y0 = plot.Y(0), y1 = plot.Y(v);
-                ctx.fillStyle = st.sig[b] > 0.3 ? rgba(col.echo, 0.95) : rgba(col.hist, 0.7);
-                ctx.fillRect(plot.x + b * bw, min(y0, y1), max(0.8, bw - 0.2), abs(y1 - y0));
+                ctx.fillStyle = st.sig[b] > 0 ? rgba(col.echo, 1) : rgba(col.hist, 0.7);
+                ctx.fillRect(plot.x + b * bw, min(y0, y1), max(st.sig[b] > 0 ? 2 : 0.8, bw - 0.2), abs(y1 - y0));
             }
             plot.hline(spec.threshold_sigma * sqrt(p), col.thr, 1.2, [4, 3]);
             plot.unclip();
@@ -2755,7 +2753,7 @@ let lrf_demos = {};
                 { t: SHAHED, name: "Shahed", color: col.shahed },
             ];
             let Rmax = 3000;
-            let bx0 = 110, bx1 = w - 30;
+            let bx0 = 150, bx1 = w - 30;
             text(ctx, "maximum range at " + round(f) + " Hz", (bx0 + bx1) / 2, by - fs * 0.2, col.text, fs - 1, "center", "middle", 500);
             for (let i = 0; i < items.length; i++) {
                 let it = items[i];
