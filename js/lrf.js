@@ -4160,8 +4160,8 @@ let lrf_demos = {};
             draw_camera_top(ctx, cx, y0, 11, "#5E5368");
             text(ctx, "top view", 10, 12, col.light_text, fs - 3, "left");
 
-            // camera image: the central 800 x 450 pixels
-            let crop = 1600;
+            // camera image: the full frame
+            let crop = cam.width_px;
             let ix = left + 10, iw = w - left - 20;
             let ih = iw * 9 / 16;
             if (ih > h - 50) { ih = h - 50; iw = ih * 16 / 9; ix = left + 10 + (w - left - 20 - iw) / 2; }
@@ -4179,20 +4179,23 @@ let lrf_demos = {};
             let map = (u, v) => proj(v3_add(center, v3_add(v3_scale(right, u * TAG_SIZE), v3_scale(down, v * TAG_SIZE))));
             draw_tag(ctx, map, { outline: true });
             let corners = [map(-0.5, -0.5), map(0.5, -0.5), map(0.5, 0.5), map(-0.5, 0.5)];
+            // markers shrink with a distant tag so they don't hide it
+            let tw = FPX * k * TAG_SIZE / D;
+            let mr = clamp(tw / 12, 1, 3), mw = clamp(tw / 30, 0.75, 2);
             for (let c of corners)
-                circle(ctx, c[0], c[1], 3, null, col.hit, 2);
+                circle(ctx, c[0], c[1], mr, null, col.hit, mw);
             // pose axes from the tag's center
             let c0 = proj(center);
             let ax = (dv, color) => {
                 let p = proj(v3_add(center, v3_scale(dv, 0.2)));
-                line(ctx, c0[0], c0[1], p[0], p[1], color, 2);
+                line(ctx, c0[0], c0[1], p[0], p[1], color, mw);
             };
             ax(right, "#E53935");
             ax([0, -1, 0], "#43A047");
             ax([-sin(yaw), 0, -cos(yaw)], "#1E88E5");
             ctx.restore();
             let span = abs(corners[1][0] - corners[0][0]) / k;
-            text(ctx, "camera image, central 1600 × 900 pixels", ix + iw / 2, iy - 10, col.cam, fs - 2, "center", "middle", 500);
+            text(ctx, "camera image, " + cam.width_px + " × " + cam.height_px, ix + iw / 2, iy - 10, col.cam, fs - 2, "center", "middle", 500);
             text(ctx, "distance " + D.toFixed(2) + " m,  yaw " + round(d.v[1]) + "°,  tag spans " + round(span) + " px", ix + iw / 2, iy + ih + fs * 1.2, col.text, fs - 1, "center", "middle", 500);
         },
     };
