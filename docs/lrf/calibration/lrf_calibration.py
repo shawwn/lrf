@@ -186,7 +186,8 @@ class LRFSpec:
     edge_blur_mrad: float = 0.1                 # 1 sigma edge softness (assumed: about diffraction at 8 mm)
     beam_roll_deg: float = 0.0
     exit_beam_mm: float = 8.0
-    min_range_m: float = 10.0
+    min_range_m: float = 1.0                    # the DLEM measures this close,
+    recommended_min_m: float = 10.0             # but its datasheet's range starts here
     resolution_m: float = 0.1
     accuracy_m: float = 0.5
     discrimination_m: float = 25.0              # closer echoes merge into one
@@ -540,6 +541,7 @@ class Collector:
         self.rng = np.random.default_rng(seed)
         self.gate_m = max(1.5, 3 * spec.accuracy_m)
         self.boards = {}            # session -> board, for fits that include earlier sessions
+        self.lost = 0               # stops without a usable tag pose
         self.modes = {}             # session -> ("hits", None) or ("depth", background gap in m)
 
     def pose(self, board: Board):
@@ -598,7 +600,35 @@ class Collector:
             st = self.stop(board, session, guess, pan0 + dp, tilt0 + dt)
             if st is not None:
                 out.append(st)
+            else:
+                self.lost += 1
         return out
+
+    def check_view(self, board, guess, ref, s0, w, margin_px=10):
+        """Make sure the tag stays in the camera's view while the beam
+        visits every edge. A narrow camera close to a big board can't see
+        the tag while the beam is on the board's far edges, and those edges
+        would go unmeasured."""
+        _, _, R0, t0 = ref
+        o, d = np.array(guess.origin_m), guess.direction()
+        obj = np.c_[TAG_CORNERS_UNIT * board.tag_size_m, np.zeros(4)]
+        uv0 = self.intr.project(obj @ R0.T + t0)
+        x0, x1, y0, y1 = board.extents()
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        kx, ky = self.stretch(guess, ref)
+        reach = guess.tolerance_mrad * 1e-3 * s0 + 3 * w
+        for name, p in (("left", (x0 - reach * kx, cy)), ("right", (x1 + reach * kx, cy)),
+                        ("top", (cx, y0 - reach * ky)), ("bottom", (cx, y1 + reach * ky))):
+            dp, dt = pointing_delta(o, d, R0, t0, p)
+            # turning right moves the scene left in the image; turning up moves it down
+            uv = uv0 + np.array([-self.intr.fx * dp, self.intr.fy * dt])
+            if (uv.min(axis=0) < margin_px).any() or uv[:, 0].max() > self.intr.width - margin_px \
+                    or uv[:, 1].max() > self.intr.height - margin_px:
+                raise RuntimeError(
+                    "the tag would leave the camera's view with the beam past the board's %s edge: "
+                    "%.1f m away the camera sees only %.2f x %.2f m. Use a smaller board or tag, or "
+                    "move the board farther away." % (name, s0, self.intr.width / self.intr.fx * s0,
+                                                       self.intr.height / self.intr.fy * s0))
 
     def transects(self, board, n_per_edge, axes):
         """Lines of points crossing each edge of the board at right angles.
@@ -722,6 +752,9 @@ class Collector:
         if s0 < self.spec.min_range_m:
             raise RuntimeError("board at %.1f m is too close; the range finder's minimum is %.0f m"
                                % (s0, self.spec.min_range_m))
+        if s0 < self.spec.recommended_min_m:
+            self.log("  note: %.1f m is closer than the range finder's recommended %.0f m"
+                     % (s0, self.spec.recommended_min_m))
         w = float(self.spec.beam_radius(s0))
         kx, ky = self.stretch(guess, ref)
         _, _, d_tag = beam_on_board(np.array(guess.origin_m), guess.direction(), ref[2][None], ref[3][None])
@@ -731,6 +764,8 @@ class Collector:
                                % incidence)
         self.log("session %d: board %.1f m away, %.0f degrees from facing the beam, footprint ~%.1f cm"
                  % (session, s0, incidence, 200 * w))
+        self.check_view(board, guess, ref, s0, w)
+        lost0 = self.lost
         stops = self.check_background(board, session, guess, ref, s0)
         mode, gap = self.modes[session]
         guess, found = self.find_board(board, session, guess, ref, s0)
@@ -780,6 +815,8 @@ class Collector:
         for line in self.transects(board, 5, axes):
             stops += self.run_points(board, session, guess, ref, line)
         self.log("  fine: %d stops (%.0f s of computation)" % (len(stops) - n0, time.time() - t_start))
+        if self.lost > lost0:
+            self.log("  warning: %d stops had no usable tag pose and were skipped" % (self.lost - lost0))
         return stops, guess
 
 
@@ -1015,10 +1052,13 @@ def fit_beam(stops: Sequence[Stop], boards: dict, spec: LRFSpec, guess: MountGue
     """Maximum likelihood beam from all the measurements; bootstrap
     resampling of the stops gives the uncertainties."""
     if fit_origin is None:
-        # the origin is only observable with clearly different distances
-        dist = [np.median(np.linalg.norm(np.stack([s.t for s in stops if s.session == k]), axis=1))
-                for k in sorted(set(s.session for s in stops))]
-        fit_origin = len(dist) >= 2 and max(dist) / min(dist) > 1.8
+        # A sideways shift b of the origin moves the spot by b at every
+        # distance, which looks like a rotation by b / R, so the origin is
+        # observable when the boards' 1/R differ enough: 12.5 and 25 m differ
+        # by 0.04 per meter, 7.5 and 12.5 m by 0.053, 40 and 80 m by 0.0125.
+        inv = [1 / np.median(np.linalg.norm(np.stack([s.t for s in stops if s.session == k]), axis=1))
+               for k in sorted(set(s.session for s in stops))]
+        fit_origin = len(inv) >= 2 and max(inv) - min(inv) > 0.015
     model = SweepModel(stops, boards, spec, guess.origin_m, fit_origin, lapse)
     yaw0, pitch0 = _initial_angles(model, guess)
     geo0 = [yaw0, pitch0] + ([0.0, 0.0] if fit_origin else [])

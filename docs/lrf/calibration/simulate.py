@@ -22,6 +22,7 @@ puts the sweep in depth mode.
     python3 simulate.py --orientations 8  # random board orientations and offsets
     python3 simulate.py --office          # boards indoors, a wall 2.5 m behind each
     python3 simulate.py --office --single # one board at 12.5 m, a wall 2.5 m behind
+    python3 simulate.py --office --distances 7.5 12.5 --board 0.36 0.16
 """
 
 from __future__ import annotations
@@ -199,17 +200,18 @@ class SimRig:
         return sorted(round(r / spec.resolution_m) * spec.resolution_m for r in out)
 
 
-def camera_4k():
-    """The article's camera: 4K behind a 10 degree lens, with a principal
-    point a little off center and slight distortion, as a real one has."""
-    f = 1920 / math.tan(math.radians(5))
+def camera_4k(hfov_deg=10.0):
+    """The article's camera: 4K behind a 10 degree lens (by default), with a
+    principal point a little off center and slight distortion, as a real
+    one has."""
+    f = 1920 / math.tan(math.radians(hfov_deg / 2))
     return Intrinsics(f, f, 1919.5 + 12.3, 1079.5 - 7.8, 3840, 2160, (0.02, 0.0, 0.0, 0.0, 0.0))
 
 
 def run(placements, boards, seed=0, nd=0.1, bootstrap=20, fit_origin=None, quiet=False,
-        save=None):
+        save=None, hfov=10.0):
     log = (lambda *a: None) if quiet else print
-    intr, spec, truth = camera_4k(), LRFSpec(), Truth()
+    intr, spec, truth = camera_4k(hfov), LRFSpec(), Truth()
     rig = SimRig(intr, spec, truth, seed=seed, nd_transmission=nd)
     col = Collector(rig, intr, spec, log=log, seed=seed)
     guess = MountGuess()                # the drawings: 72 mm to the right, no misalignment
@@ -255,7 +257,13 @@ def random_placement(rng, distance, office=False):
                      wall_albedo=rng.uniform(0.3, 0.8) if office else 0.3)
 
 
-def random_board(rng):
+def random_board(rng, size=None):
+    if size:
+        # about the given size, the tag near the middle
+        side, tag = size
+        w, h = side * rng.uniform(0.95, 1.05), side * rng.uniform(0.95, 1.05)
+        return Board(tag_size_m=tag, width_m=w, height_m=h,
+                     center_in_tag_m=(rng.uniform(-0.02, 0.02), rng.uniform(-0.02, 0.02)))
     w, h = rng.uniform(0.55, 0.8), rng.uniform(0.55, 0.8)
     # the tag anywhere that leaves at least 10 cm of white around it
     cx = rng.uniform(-(w / 2 - 0.25), w / 2 - 0.25)
@@ -267,6 +275,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--single", action="store_true", help="one board")
     ap.add_argument("--office", action="store_true", help="indoors: boards at 12.5 m and 25 m, walls 2.5 m behind")
+    ap.add_argument("--distances", type=float, nargs=2, metavar=("NEAR", "FAR"),
+                    help="the two boards' distances in meters")
+    ap.add_argument("--hfov", type=float, default=10.0, help="the camera's horizontal field of view, degrees")
+    ap.add_argument("--board", type=float, nargs=2, metavar=("SIDE", "TAG"),
+                    help="board and tag size in meters (default 0.6 and 0.3; random in --orientations)")
     ap.add_argument("--orientations", type=int, metavar="N", help="N trials with random boards")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--nd", type=float, default=0.1, help="one way transmission of the attenuator")
@@ -282,10 +295,11 @@ def main(argv=None):
         print("trial  " + "  ".join("%13s" % k for k in keys))
         worst = {k: 0.0 for k in keys}
         for i in range(args.orientations):
-            far = (12.5, 25) if args.office else (20, 80)
+            far = args.distances or ((12.5, 25) if args.office else (20, 80))
             pls = [random_placement(rng, far[0], args.office), random_placement(rng, far[1], args.office)]
-            bds = [random_board(rng), random_board(rng)]
-            cal, truth, intr, _ = run(pls, bds, seed=args.seed + i, nd=args.nd, bootstrap=0, quiet=True)
+            bds = [random_board(rng, args.board), random_board(rng, args.board)]
+            cal, truth, intr, _ = run(pls, bds, seed=args.seed + i, nd=args.nd, bootstrap=0, quiet=True,
+                                      hfov=args.hfov)
             e = errors(cal, truth, intr)
             print("%5d  " % i + "  ".join("%+13.3f" % e[k] for k in keys) + "   boards: " +
                   ", ".join("yaw %+.0f pitch %+.0f roll %.0f" % (p.yaw_deg, p.pitch_deg, p.roll_deg)
@@ -301,6 +315,11 @@ def main(argv=None):
                Placement(25, right_m=-0.8, up_m=0.4, yaw_deg=-15, pitch_deg=5, roll_deg=-3,
                          wall_behind_m=2.5, wall_albedo=0.6)]
         bds = [Board(), Board(center_in_tag_m=(0.05, 0.0))]
+        if args.distances:
+            pls = [replace(pl, distance_m=dist) for pl, dist in zip(pls, args.distances)]
+        if args.board:
+            bds = [replace(b, width_m=args.board[0], height_m=args.board[0], tag_size_m=args.board[1])
+                   for b in bds]
         if args.single:
             pls, bds = pls[:1], bds[:1]
     elif args.single:
@@ -311,7 +330,7 @@ def main(argv=None):
                          wall_behind_m=40)]
         bds = [Board(), Board(center_in_tag_m=(0.05, 0.0))]
     cal, truth, intr, _ = run(pls, bds, seed=args.seed, nd=args.nd, bootstrap=args.bootstrap,
-                              save=args.save_stops)
+                              save=args.save_stops, hfov=args.hfov)
     print("\ncompared with the truth:")
     for k, v in errors(cal, truth, intr).items():
         print("  %-15s %+.3f" % (k, v))

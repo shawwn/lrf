@@ -117,14 +117,24 @@ region is symmetric (the simulation's true beam is rolled 1.5 degrees with
   matte wall at whatever angle. Nothing else between the board's edges and
   the wall (chairs, cables, the board's stand directly behind an edge).
   No attenuation is needed, since nothing depends on how strong the echo
-  is. The board must be at least 10 m away, the DLEM's minimum range.
+  is. The DLEM measures down to 1 m, though its datasheet's range starts
+  at 10 m; the code warns below that.
 - Outdoors (hit/miss mode): open sky, or nothing within 25 m behind the
   board.
 - Distances: with one board the origin comes from the drawings, and any
   error in them turns into an angle error of (origin error) / (distance):
   1 mm at 12.5 m is 0.08 mrad, almost 2 pixels at long range. Two
-  distances fix that by measuring the origin too: 12.5 and 25 m indoors,
-  20 and 80 m outdoors. The farther apart, the better.
+  distances fix that by measuring the origin too. What matters is how much
+  1/R differs between them: 7.5 and 12.5 m (0.053 per meter) work about as
+  well as 12.5 and 25 m (0.04 per meter) or 20 and 80 m (0.0375), while 40
+  and 80 m (0.0125) barely constrain the origin. In simulation, 7.5 + 12.5 m
+  and 12.5 + 25 m both gave a median boresight error near 1 px.
+- Camera view: the tag has to stay in the image while the beam is on each
+  of the board's edges, so the board can't be much bigger than the camera's
+  view at that distance. The code checks this before sweeping. With the
+  4K camera at 7.5 m, a 47 cm board with a 30 cm tag needs a horizontal
+  field of view of about 15 degrees (10 or 12 is too narrow); a 4.7 m board
+  with a 1 m tag in its middle needs about 75 degrees.
 - Attenuation (hit/miss mode only): up close the echo is enormous (by the
   article's model, a signal to noise ratio around 180,000 for a full
   footprint on white at 20 m), so even the footprint's dim, blurred edges
