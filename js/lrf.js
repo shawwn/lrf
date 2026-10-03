@@ -1945,7 +1945,7 @@ let lrf_demos = {};
                 ctx.stroke();
             }
             let bx = ix + iw / 2 + 3, by = iy + ih / 2 + 1;
-            beam_outline(ctx, bx, by, 4.5, col.laser, 1.5);
+            draw_beam_spot(ctx, bx, by, 4.5, col.laser, 0.9);
             line(ctx, bx - 11, by, bx - 7, by, col.laser, 1.5);
             line(ctx, bx + 7, by, bx + 11, by, col.laser, 1.5);
             ctx.restore();
@@ -2177,7 +2177,6 @@ let lrf_demos = {};
                 let cx = px + pw / 2, cy2 = py + ph / 2;
                 panels[i].draw(cx, cy2, ppm);
                 draw_beam_spot(ctx, cx, cy2, max(0.6, wr * ppm), col.laser, 0.8);
-                beam_outline(ctx, cx, cy2, max(0.5, wr * ppm), rgba(col.laser, 0.9), 1);
                 ctx.restore();
                 text(ctx, panels[i].name, px + pw / 2, py + ph + fs * 0.9, panels[i].color, fs - 1, "center", "middle", 500);
             }
@@ -2201,7 +2200,6 @@ let lrf_demos = {};
             round_rect(ctx, cx - sq / 2, cy - sq / 2, sq, sq, 6, "#1E2228");
             let hpx = sq / 4.4;
             draw_beam_spot(ctx, cx, cy, hpx, "#FF5A4E", 1);
-            beam_outline(ctx, cx, cy, hpx, "rgba(255,255,255,0.45)", 1, [3, 3]);
             if (rr > 0)
                 beam_outline(ctx, cx, cy, rr * hpx, col.range, 2.5);
             // a kilometer out, where the footprint's size is all divergence
@@ -2268,7 +2266,6 @@ let lrf_demos = {};
                 draw_silhouette(ctx, target, cx, cy, ppm, d.seg[0] < 2 ? "#2F363B" : "#7A7F84");
             }
             draw_beam_spot(ctx, cx, cy, max(0.8, wr * ppm), col.laser, 0.75);
-            beam_outline(ctx, cx, cy, max(0.6, wr * ppm), rgba(col.laser, 0.8), 1);
             ctx.restore();
 
             let F = M.fraction_on_target(spec, target, R);
@@ -3240,7 +3237,6 @@ let lrf_demos = {};
             let ppm = (left - 30) / view;
             let cx = left / 2, cy = h / 2;
             draw_beam_spot(ctx, cx, cy, wr * ppm, col.laser, 0.75);
-            beam_outline(ctx, cx, cy, wr * ppm, rgba(col.laser, 0.8), 1);
             let xs = -v * T / 2, xe = v * T / 2;
             line(ctx, cx + xs * ppm, cy + 26, cx + xe * ppm, cy + 26, col.speed, 2, [4, 4]);
             let pp = clamp(p, 0, 1);
@@ -3472,8 +3468,7 @@ let lrf_demos = {};
 
             // the beam's footprint
             let wr = M.beam_radius(spec, R) * ppm;
-            draw_beam_spot(ctx, X(aim[0]), Y(aim[1]), max(1.5, wr), col.laser, 0.55);
-            beam_outline(ctx, X(aim[0]), Y(aim[1]), max(2, wr), col.laser, 1.5);
+            draw_beam_spot(ctx, X(aim[0]), Y(aim[1]), max(1.5, wr), col.laser, 0.65);
             ctx.restore();
 
             // labels
@@ -3658,7 +3653,6 @@ let lrf_demos = {};
             let pc = isz / (3.6 * wq);
             let ccx = ix + isz / 2, ccy = iy + isz / 2;
             draw_beam_spot(ctx, ccx, ccy, wq * pc, "#FF5A4E", 0.55, 0.45);
-            beam_outline(ctx, ccx, ccy, wq * pc, "rgba(255,255,255,0.35)", 1, [3, 3]);
             let cell = 2.5 / pc;                   // ~2.5 px cells, in meters
             for (let r of QUAD.shapes) {
                 let fill = r.fill === undefined ? 1 : r.fill;
@@ -3926,7 +3920,8 @@ let lrf_demos = {};
             }
             let cx = (nw / 2) * k, cy = (nh / 2) * k;
             let beam_px = M.beam_diameter(spec, R) / R * FPX;
-            beam_outline(ctx, cx, cy, beam_px / 2 * k, col.laser, 2);
+            // the camera can't see the beam: a faint glow shows where it is
+            draw_beam_spot(ctx, cx, cy, beam_px / 2 * k, col.laser, 0.3);
             halo_text(ctx, (shahed ? "Shahed wingspan " : "quad ") + size.toFixed(1) + " px", 12, 18, shahed ? col.shahed : col.quad, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
             halo_text(ctx, "beam " + beam_px.toFixed(1) + " px", 12, 18 + fs * 1.4, col.laser, fs, "left", "middle", 500, "rgba(255,255,255,0.85)");
             halo_text(ctx, fmt_dist(R) + " away; one square = one camera pixel", w - 12, h - 14, col.text, fs - 2, "right", "middle", 400, "rgba(255,255,255,0.85)");
@@ -4093,8 +4088,7 @@ let lrf_demos = {};
             let p = M.beam_pixel(cam, mount, R);
             let px = X(p[0] - cam.width_px / 2), py = Y(p[1] - cam.height_px / 2);
             let rr = M.beam_radius(spec, R) / R * FPX * k;
-            draw_beam_spot(ctx, px, py, rr, col.laser, 0.55);
-            beam_outline(ctx, px, py, rr, col.laser, 1.5);
+            draw_beam_spot(ctx, px, py, rr, col.laser, 0.6);
             ctx.restore();
             let miss = BASELINE;   // meters between the drone's center and the beam's axis
             let on = M.fraction_on_target(spec, QUAD, R, miss, 0) / M.fraction_on_target(spec, QUAD, R);
@@ -4373,9 +4367,7 @@ let lrf_demos = {};
             }
             // truth: the beam's spot, which the calibration doesn't know
             let rr = M.beam_radius(spec, SWEEP_R) / SWEEP_R * FPX * k;
-            ctx.fillStyle = rgba(col.laser, 0.2);
-            ctx.fillRect(X(b[0]) - rr, Y(b[1]) - rr, 2 * rr, 2 * rr);
-            beam_outline(ctx, X(b[0]), Y(b[1]), rr, col.laser, 1.5);
+            draw_beam_spot(ctx, X(b[0]), Y(b[1]), rr, col.laser, 0.55);
             if (shown >= n && hn > 0) {
                 let ex = sx / hn, ey = sy / hn;
                 line(ctx, X(ex) - 14, Y(ey), X(ex) + 14, Y(ey), col.text, 2);
@@ -4441,9 +4433,7 @@ let lrf_demos = {};
             }
             let g = st.guess;
             let rr = max(5, M.beam_radius(spec, SWEEP_R) / SWEEP_R * FPX * k);
-            ctx.fillStyle = rgba(col.laser, 0.3);
-            ctx.fillRect(X(g[0]) - rr, Y(g[1]) - rr, 2 * rr, 2 * rr);
-            beam_outline(ctx, X(g[0]), Y(g[1]), rr, col.laser, 2);
+            draw_beam_spot(ctx, X(g[0]), Y(g[1]), rr, col.laser, 0.7);
             text(ctx, "camera image: drag the guess", ox + (u1 - u0) * k / 2, h - 12, col.light_text, fs - 2);
 
             // right: each stop placed on the tag, assuming the guess
