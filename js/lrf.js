@@ -3564,16 +3564,14 @@ let lrf_demos = {};
                     fill_poly(ctx, [[x0, cy], [X(endR), cy + u0 * half(endR)], [X(endR), cy + u1 * half(endR) + 0.5]], rgba(col.laser, 0.6 * exp(-2 * um * um)));
                 }
             }
-            ctx.setLineDash([4, 4]);
-            line(ctx, x0, cy, X(endR), cy - half(endR), rgba(col.laser, 0.55), 1);
-            line(ctx, x0, cy, X(endR), cy + half(endR), rgba(col.laser, 0.55), 1);
-            ctx.setLineDash([]);
             draw_lrf_side(ctx, x0, cy, 6);
             if (!sky)
                 draw_tree_line(ctx, X(Rb), x1 + 30, top - 6, (top - 12) * 0.8, 5);
             let pxm = half(Rq) / wq;               // pixels per meter across the beam at the quad
             let qy = cy + offm * pxm;
-            draw_quad_sprite(ctx, X(Rq), qy, 0.43 * pxm, "#2D3439", 0, 0);
+            // drawn smaller than to scale; the inset shows the true size
+            let qsize = max(22, 0.43 * pxm * 0.42);
+            draw_quad_sprite(ctx, X(Rq), qy, qsize, "#2D3439", 0, 0);
             ctx.restore();
             if (!sky)
                 dimension(ctx, X(Rq), top - 14, X(Rb), top - 14, col.bg, gap.toFixed(0) + " m", fs - 2, -1);
@@ -3581,7 +3579,7 @@ let lrf_demos = {};
                 round(offm * 100) + " cm off " + (w < 500 ? "axis" : "the beam's axis");
             font(ctx, fs - 2, 500);
             let tw = ctx.measureText(off_label).width;
-            halo_text(ctx, off_label, clamp(X(Rq), 14 + tw / 2, sx1 - 14 - tw / 2), max(18, qy - 0.25 * pxm - 12), col.text, fs - 2, "center", "middle", 500);
+            halo_text(ctx, off_label, clamp(X(Rq), 14 + tw / 2, sx1 - 14 - tw / 2), max(18, qy - qsize * 0.6 - 10), col.text, fs - 2, "center", "middle", 500);
             text(ctx, "distance compressed", sx1 - 16, 16, col.light_text, fs - 3, "right");
 
             // looking down the beam at the quad's distance: the quad is lit by
