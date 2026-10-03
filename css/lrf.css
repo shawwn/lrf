@@ -1,5 +1,12 @@
 /* Laser Range Finders */
 
+/* Never let a stray element make the page pan sideways on phones. clip,
+   unlike hidden, doesn't turn the body into its own scroll container, so
+   the window keeps scrolling (and the demos keep tracking it). */
+body {
+    overflow-x: clip;
+}
+
 .drawer_container {
     max-width: 640px;
 }
