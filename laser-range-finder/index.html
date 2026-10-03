@@ -454,7 +454,7 @@
 
 <p>Now we can calibrate. The turret slowly sweeps the beam across the tag, stopping for each measurement, so that the beam doesn't move during the accumulation. For every stop we record the camera's image and the range finder's measurement. Since the tag's distance is known, we can tell whether the beam hit the tag: if the range finder reports an echo within a meter or two of the tag's distance, it's a <span class="c_hit"><strong>hit</strong></span>, and if it reports something further away, or nothing at all, it's a <span class="c_miss"><strong>miss</strong></span>. For this to work the tag needs a clear background, at least 15 meters behind it.</p>
 
-<p>In the demonstration below the turret sweeps the tag in a raster pattern. From the camera's point of view, the beam stays put while the tag moves across the image. Every dot is placed at the tag's center as seen by the camera during one measurement:</p>
+<p>In the demonstration below the turret sweeps a tag placed 50 meters away in a raster pattern, stepping by about a third of a milliradian at a time. From the camera's point of view, the beam stays put while the tag moves across the image. Every dot is placed at the tag's center as seen by the camera during one measurement:</p>
 
 <div class="padding_wrapper">
 <div class="drawer_container full_width ratio_60" id="apriltag_sweep"></div>

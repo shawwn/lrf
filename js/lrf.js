@@ -3660,9 +3660,10 @@ let lrf_demos = {};
 
     /* -------------------------- apriltag sweep ------------------------ */
 
-    const SWEEP_R = 20;
-    const SWEEP_STEP = 6;       // pixels between stops
-    const SWEEP_SPAN = 132;     // half range of tag center offsets, pixels
+    const SWEEP_R = 50;         // tag distance during the sweep, m
+    const SWEEP_STEP = 4;       // pixels between stops (0.36 mrad of pan or tilt)
+    const SWEEP_SPAN = 70;      // half range of tag center offsets around the spot, pixels
+    const PAPER = TAG_SIZE * 1.25;  // the black square plus its white border
 
     function sweep_truth() {
         let p = M.beam_pixel(cam, TRUE_MOUNT, SWEEP_R);
@@ -3671,40 +3672,37 @@ let lrf_demos = {};
 
     // Is a stop with the tag's center at pixel offset (tx, ty) a hit, for a
     // beam whose spot is at pixel offset beam (default: the true spot)?
-    // The tag's paper (black square plus white border) is what reflects.
+    // strength scales the echo of the tag's white paper (albedo 0.8).
     function sweep_hit(tx, ty, strength, beam) {
         let b = beam || sweep_truth();
         let dx = (b[0] - tx) / FPX * SWEEP_R, dy = (b[1] - ty) / FPX * SWEEP_R;
-        let F = M.fraction_square(spec, SWEEP_R, TAG_SIZE + 0.075, dx, dy);
+        let F = M.fraction_square(spec, SWEEP_R, PAPER, dx, dy);
         let S = 0.8 * F / (SWEEP_R * SWEEP_R);
-        let snr = M.snr(spec, S, 0.04) * strength;
-        return snr > spec.threshold_sigma;
+        return M.snr(spec, S, 0.04) * strength > spec.threshold_sigma;
     }
 
     function sweep_stops() {
         let out = [];
         let n = round(SWEEP_SPAN * 2 / SWEEP_STEP);
         let b = sweep_truth();
+        // the raster isn't centered on the (unknown) spot
+        let ox = b[0] - SWEEP_SPAN + 1.3, oy = b[1] - SWEEP_SPAN - 0.9;
         for (let j = 0; j <= n; j++) {
             for (let ii = 0; ii <= n; ii++) {
                 let i = j % 2 ? n - ii : ii;
-                out.push([b[0] - SWEEP_SPAN + i * SWEEP_STEP + 3.7, b[1] - SWEEP_SPAN + j * SWEEP_STEP - 2.2]);
+                out.push([ox + i * SWEEP_STEP, oy + j * SWEEP_STEP]);
             }
         }
         return out;
     }
 
-    // Tag drawn in the image with its center at pixel offset (tx, ty), facing the camera.
-    function draw_tag_image(ctx, X, Y, tx, ty, k, alpha) {
-        let half = TAG_SIZE / SWEEP_R * FPX / 2;
-        ctx.globalAlpha = alpha === undefined ? 1 : alpha;
-        draw_tag(ctx, (u, v) => [X(tx + u * 2 * half), Y(ty + v * 2 * half)]);
-        ctx.globalAlpha = 1;
+    function tag_half_px() {
+        return TAG_SIZE / SWEEP_R * FPX / 2;
     }
 
     SCENES.apriltag_sweep = {
         animated: true,
-        sliders: [{ map: log_map(2e-5, 1), def: 1e-3 }],
+        sliders: [{ map: log_map(1.5e-4, 3), def: 3e-3 }],
         reset(d) { d.st.clock = 0; },
         init(d) {
             d.st.clock = 0;
@@ -3716,46 +3714,56 @@ let lrf_demos = {};
             st.clock += dt;
             let strength = d.v[0];
             let n = st.stops.length;
-            let shown = min(n, floor(st.clock * 320));
+            let shown = min(n, floor(st.clock * 260));
             if (shown >= n && !d.paused)
                 d.set_paused(true);
             let b = sweep_truth();
-            let u0 = b[0] - 160, u1 = b[0] + 160;
-            let k = w / (u1 - u0);
-            let vh = h / k;
-            let v0 = b[1] - vh / 2;
-            let X = u => (u - u0) * k, Y = v => (v - v0) * k;
-            ctx.fillStyle = "#F4F6F8";
-            ctx.fillRect(0, 0, w, h);
-            // current tag
+            let span = SWEEP_SPAN + 10;
+            let k = min(w, h - 30) / (2 * span);
+            let cx0 = w / 2, cy0 = (h - 30) / 2 + 4;
+            let X = u => cx0 + (u - b[0]) * k, Y = v => cy0 + (v - b[1]) * k;
+            round_rect(ctx, cx0 - span * k, cy0 - span * k, 2 * span * k, 2 * span * k, 6, "#F1F4F7");
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(cx0 - span * k, cy0 - span * k, 2 * span * k, 2 * span * k);
+            ctx.clip();
+            // the tag at the current stop
             let cur = st.stops[max(0, min(n - 1, shown - 1))];
-            draw_tag_image(ctx, X, Y, cur[0], cur[1], k, 0.35);
+            let hp = tag_half_px();
+            ctx.globalAlpha = 0.3;
+            draw_tag(ctx, (u, v) => [X(cur[0] + u * 2 * hp), Y(cur[1] + v * 2 * hp)]);
+            ctx.globalAlpha = 1;
+            poly(ctx, [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(q => [X(cur[0] + q[0] * 1.25 * hp), Y(cur[1] + q[1] * 1.25 * hp)]), "rgba(0,0,0,0.35)", 1, [3, 3], true);
+            line(ctx, X(cur[0]) - 5, Y(cur[1]), X(cur[0]) + 5, Y(cur[1]), col.tag, 1.5);
+            line(ctx, X(cur[0]), Y(cur[1]) - 5, X(cur[0]), Y(cur[1]) + 5, col.tag, 1.5);
             // stops so far
             let sx = 0, sy = 0, hn = 0;
             let ux0 = 1e9, ux1 = -1e9;
-            let rdot = max(1.2, SWEEP_STEP * k * 0.24);
+            let rdot = max(1, SWEEP_STEP * k * 0.28);
             for (let i = 0; i < shown; i++) {
                 let s = st.stops[i];
                 let hit = sweep_hit(s[0], s[1], strength);
                 if (hit) {
                     sx += s[0]; sy += s[1]; hn++;
                     ux0 = min(ux0, s[0]); ux1 = max(ux1, s[0]);
+                    circle(ctx, X(s[0]), Y(s[1]), rdot, col.hit);
+                } else {
+                    circle(ctx, X(s[0]), Y(s[1]), rdot * 0.6, col.miss);
                 }
-                if (hit) circle(ctx, X(s[0]), Y(s[1]), rdot, col.hit);
-                else circle(ctx, X(s[0]), Y(s[1]), rdot * 0.7, col.miss);
             }
-            // truth (the beam's spot, unknown to the calibration)
+            // truth: the beam's spot, which the calibration doesn't know
             let rr = M.beam_radius(spec, SWEEP_R) / SWEEP_R * FPX * k;
-            circle(ctx, X(b[0]), Y(b[1]), rr, null, rgba(col.laser, 0.9), 1.5);
+            circle(ctx, X(b[0]), Y(b[1]), rr, rgba(col.laser, 0.2), col.laser, 1.5);
             if (shown >= n && hn > 0) {
                 let ex = sx / hn, ey = sy / hn;
-                line(ctx, X(ex) - 12, Y(ey), X(ex) + 12, Y(ey), col.text, 2);
-                line(ctx, X(ex), Y(ey) - 12, X(ex), Y(ey) + 12, col.text, 2);
-                let err = hypot(ex - b[0], ey - b[1]);
-                halo_text(ctx, "hits span " + round(ux1 - ux0 + SWEEP_STEP) + " px; their center is " + err.toFixed(1) + " px from the true spot", w / 2, h - 14, col.text, fs - 1, "center", "middle", 500);
+                line(ctx, X(ex) - 14, Y(ey), X(ex) + 14, Y(ey), col.text, 2);
+                line(ctx, X(ex), Y(ey) - 14, X(ex), Y(ey) + 14, col.text, 2);
             }
-            halo_text(ctx, "tag at 20 m, " + shown + " of " + n + " stops", 10, 14, col.text, fs - 1, "left", "middle", 500);
-            halo_text(ctx, "beam's true spot", X(b[0]) + rr + 6, Y(b[1]) - rr - 6, col.laser, fs - 2, "left", "middle", 500);
+            ctx.restore();
+            let msg = shown < n ? "tag " + SWEEP_R + " m away, stop " + shown + " of " + n :
+                hn ? "hits span " + round(ux1 - ux0 + SWEEP_STEP) + " px; their center is " + hypot(sx / hn - b[0], sy / hn - b[1]).toFixed(1) + " px from the true spot" : "no hits";
+            text(ctx, msg, w / 2, h - 12, col.text, fs - 1, "center", "middle", 500);
+            halo_text(ctx, "true spot", X(b[0]) + rr + 4, Y(b[1]) - rr - 4, col.laser, fs - 2, "left", "middle", 500, "rgba(241,244,247,0.9)");
         },
     };
 
@@ -3767,74 +3775,85 @@ let lrf_demos = {};
             d.st.stops = sweep_stops();
         },
         drag: {
-            begin(d) { return true; },
+            begin(d, x, y) {
+                let L = d.st.layout;
+                return L && x < L.right_edge;
+            },
             move(d, x, y) {
                 let L = d.st.layout;
-                if (!L) return;
                 d.st.guess = [clamp(L.invX(x), L.u0, L.u1), clamp(L.invY(y), L.v0, L.v1)];
             },
-            cursor() { return "crosshair"; },
+            cursor(d, x) {
+                let L = d.st.layout;
+                return L && x < L.right_edge ? "crosshair" : "default";
+            },
         },
         draw(ctx, d, w, h) {
             let fs = base_font_size(w);
             let st = d.st;
-            let half_w = w / 2 - 8;
+            let strength = 3e-3;
             let b = sweep_truth();
-            let u0 = -60, u1 = 140;
-            let k = half_w / (u1 - u0);
-            let vh = (h - 20) / k;
-            let v0 = -vh / 2;
-            let X = u => 4 + (u - u0) * k, Y = v => 10 + (v - v0) * k;
-            st.layout = { invX: x => (x - 4) / k + u0, invY: y => (y - 10) / k + v0, u0, u1, v0, v1: v0 + vh };
-            if (st.guess[0] === 0 && st.guess[1] === 0 && !st.moved) st.guess = [0, 0];
+            let stops = st.stops;
+            if (!st.hits || st.hits_spec !== spec) {
+                st.hits = stops.map(s => sweep_hit(s[0], s[1], strength));
+                st.hits_spec = spec;
+            }
+            let hits = st.hits;
 
-            round_rect(ctx, 4, 10, half_w, h - 20, 6, "#F4F6F8");
-            text(ctx, "camera image: drag the guess", 4 + half_w / 2, h - 2, col.light_text, fs - 3);
+            // left: camera image around the image center, covering the raster
+            let pw = w / 2 - 10, ph = h - 34;
+            let u0 = min(-12, b[0] - SWEEP_SPAN - 8), u1 = b[0] + SWEEP_SPAN + 8;
+            let v0 = b[1] - SWEEP_SPAN - 8, v1 = b[1] + SWEEP_SPAN + 8;
+            let k = min(pw / (u1 - u0), ph / (v1 - v0));
+            let ox = 4 + (pw - (u1 - u0) * k) / 2, oy = 4 + (ph - (v1 - v0) * k) / 2;
+            let X = u => ox + (u - u0) * k, Y = v => oy + (v - v0) * k;
+            st.layout = { invX: x => (x - ox) / k + u0, invY: y => (y - oy) / k + v0, u0, u1, v0, v1, right_edge: w / 2 };
+            round_rect(ctx, ox, oy, (u1 - u0) * k, (v1 - v0) * k, 6, "#F1F4F7");
             line(ctx, X(0) - 8, Y(0), X(0) + 8, Y(0), col.axis, 1);
             line(ctx, X(0), Y(0) - 8, X(0), Y(0) + 8, col.axis, 1);
-            let rdot = max(1.2, SWEEP_STEP * k * 0.25);
-            let strength = 1e-3;
-            let stops = st.stops;
-            let hits = stops.map(s => sweep_hit(s[0], s[1], strength));
-            ctx.save();
-            ctx.beginPath();
-            ctx.rect(4, 10, half_w, h - 20);
-            ctx.clip();
+            let rdot = max(0.9, SWEEP_STEP * k * 0.3);
             for (let i = 0; i < stops.length; i++) {
                 let s = stops[i];
-                circle(ctx, X(s[0]), Y(s[1]), rdot, hits[i] ? col.hit : null, hits[i] ? null : col.miss, 0.8);
+                if (hits[i]) circle(ctx, X(s[0]), Y(s[1]), rdot, col.hit);
+                else circle(ctx, X(s[0]), Y(s[1]), rdot * 0.6, col.miss);
             }
             let g = st.guess;
             let rr = max(5, M.beam_radius(spec, SWEEP_R) / SWEEP_R * FPX * k);
-            circle(ctx, X(g[0]), Y(g[1]), rr, rgba(col.laser, 0.25), col.laser, 2);
-            ctx.restore();
+            circle(ctx, X(g[0]), Y(g[1]), rr, rgba(col.laser, 0.3), col.laser, 2);
+            text(ctx, "camera image: drag the guess", ox + (u1 - u0) * k / 2, h - 12, col.light_text, fs - 2);
 
-            // tag coordinates view
-            let rx0 = w / 2 + 8, rw = w / 2 - 12;
-            round_rect(ctx, rx0, 10, rw, h - 20, 6, "#F4F6F8");
-            text(ctx, "the same measurements on the tag", rx0 + rw / 2, h - 2, col.light_text, fs - 3);
-            let view = 0.75;
-            let km = min(rw, h - 20) / view;
-            let tcx = rx0 + rw / 2, tcy = 10 + (h - 20) / 2;
+            // right: each stop placed on the tag, assuming the guess
+            let rx0 = w / 2 + 6, rw = w / 2 - 10;
+            let view = PAPER * 1.9;
+            let km = min(rw, ph) / view;
+            let tcx = rx0 + rw / 2, tcy = 4 + ph / 2;
+            round_rect(ctx, tcx - view * km / 2, tcy - view * km / 2, view * km, view * km, 6, "#F1F4F7");
             ctx.save();
             ctx.beginPath();
-            ctx.rect(rx0, 10, rw, h - 20);
+            ctx.rect(tcx - view * km / 2, tcy - view * km / 2, view * km, view * km);
             ctx.clip();
+            ctx.globalAlpha = 0.45;
             draw_tag(ctx, (u, v) => [tcx + u * TAG_SIZE * km, tcy + v * TAG_SIZE * km]);
+            ctx.globalAlpha = 1;
+            let hpm = PAPER / 2 * km;
+            poly(ctx, [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(q => [tcx + q[0] * hpm, tcy + q[1] * hpm]), "rgba(0,0,0,0.35)", 1, [3, 3], true);
             let bad = 0;
+            let mpx = SWEEP_STEP / FPX * SWEEP_R * km * 0.3;
             for (let i = 0; i < stops.length; i++) {
                 let s = stops[i];
                 let qx = (g[0] - s[0]) / FPX * SWEEP_R, qy = (g[1] - s[1]) / FPX * SWEEP_R;
-                // would this stop have been a hit if the spot were at the guess?
+                // would this stop have been a hit if the spot were where we guessed?
                 let predicted = sweep_hit(s[0], s[1], strength, g);
-                if (predicted !== hits[i]) bad++;
-                circle(ctx, tcx + qx * km, tcy + qy * km, max(1.2, rdot * 0.8), hits[i] ? col.hit : null, hits[i] ? null : col.miss, 0.8);
+                let wrong = predicted !== hits[i];
+                if (wrong) bad++;
+                let x = tcx + qx * km, y = tcy + qy * km;
+                if (hits[i]) circle(ctx, x, y, max(0.9, mpx), wrong ? col.thr : col.hit);
+                else circle(ctx, x, y, max(0.6, mpx * 0.6), wrong ? col.thr : col.miss);
             }
             ctx.restore();
-            let ok = bad === 0;
-            halo_text(ctx, "misplaced measurements: " + bad, rx0 + rw / 2, 24, ok ? col.hit : col.thr, fs, "center", "middle", 500, "rgba(244,246,248,0.9)");
-            let err = hypot(g[0] - b[0], g[1] - b[1]);
-            halo_text(ctx, "guess is " + err.toFixed(1) + " px off", 4 + half_w / 2, 24, col.text, fs - 1, "center", "middle", 500, "rgba(244,246,248,0.9)");
+            text(ctx, "the same stops, on the tag", tcx, h - 12, col.light_text, fs - 2);
+            halo_text(ctx, bad ? "misplaced: " + bad : "all consistent", tcx, tcy - view * km / 2 + 14, bad ? col.thr : col.hit, fs, "center", "middle", 500, "rgba(241,244,247,0.9)");
+            halo_text(ctx, "guess is " + hypot(g[0] - b[0], g[1] - b[1]).toFixed(1) + " px off", ox + (u1 - u0) * k / 2, oy + 14, col.text, fs - 1, "center", "middle", 500, "rgba(241,244,247,0.9)");
         },
     };
 
