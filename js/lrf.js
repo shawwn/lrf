@@ -1755,6 +1755,34 @@ let lrf_demos = {};
         }
     };
 
+    // Links in the text: set a demo up, then bring it into view (with its
+    // segmented controls and sliders) unless it's already fully visible.
+    window.lrf_link = function(id, vals, segs) {
+        window.lrf_set(id, vals, segs);
+        let parts = [document.getElementById(id)];
+        for (let e of document.querySelectorAll("[id^='" + id + "_seg'], [id^='" + id + "_sl']"))
+            parts.push(e);
+        let top = Infinity, bottom = -Infinity;
+        for (let e of parts) {
+            if (!e)
+                continue;
+            let r = e.getBoundingClientRect();
+            if (r.height === 0)
+                continue;
+            top = min(top, r.top);
+            bottom = max(bottom, r.bottom);
+        }
+        if (!isFinite(top))
+            return;
+        let margin = 16, vh = window.innerHeight;
+        if (top >= margin && bottom <= vh - margin)
+            return;
+        let height = bottom - top;
+        let target = height + 2 * margin <= vh ? top - (vh - height) / 2 : top - margin;
+        let reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top: window.scrollY + target, behavior: reduce ? "auto" : "smooth" });
+    };
+
     window.lrf_set = function(id, vals, segs, st) {
         let d = lrf_demos[id];
         if (!d)
